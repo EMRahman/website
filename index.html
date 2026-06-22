@@ -362,7 +362,7 @@ class Component extends DCLogic {
     const gLabels = ['LAX', 'JFK', 'GRU', 'LHR', 'FRA', 'JNB', 'DXB', 'DEL', 'SIN', 'HKG', 'NRT', 'SYD', 'CDG'];
     // real [lon, lat] for each airport so it lands on the correct continent
     const gGeo = { LAX: [-118.41, 33.94], JFK: [-73.78, 40.64], GRU: [-46.47, -23.43], LHR: [-0.45, 51.47], FRA: [8.56, 50.03], JNB: [28.24, -26.13], DXB: [55.36, 25.25], DEL: [77.10, 28.56], SIN: [103.99, 1.36], HKG: [113.91, 22.31], NRT: [140.39, 35.76], SYD: [151.18, -33.94], CDG: [2.55, 49.01] };
-    const nodes = gLabels.map((l, i) => { const g = geo(gGeo[l][0], gGeo[l][1]); return { l, bx: g.nx, by: g.ny, st: i === 6 ? 'choke' : i === 3 ? 'ku' : 'known', ph: rnd(0, TAU) }; });
+    const nodes = gLabels.map((l, i) => { const c = gGeo[l] || [0, 0], g = geo(c[0], c[1]); return { l, bx: g.nx, by: g.ny, st: i === 6 ? 'choke' : i === 3 ? 'ku' : 'known', ph: rnd(0, TAU) }; });
     const edges = [[0, 1], [1, 3], [3, 4], [3, 12], [4, 6], [12, 6], [6, 7], [6, 8], [6, 9], [6, 5], [7, 8], [8, 9], [9, 10], [10, 0], [1, 2], [2, 5], [8, 11], [9, 11]].map(e => { e.push(Math.random()); return e; });
     const CHOKE = 6;
     // London/Paris/Frankfurt sit within a few px on a whole-world map — fan their labels
@@ -388,6 +388,9 @@ class Component extends DCLogic {
     ];
     // ocean labels at fixed [lon, lat, text]
     const OCEANS = [[-150, 25, 'N PACIFIC'], [-128, -28, 'S PACIFIC'], [-38, 28, 'N ATLANTIC'], [-18, -28, 'S ATLANTIC'], [78, -22, 'INDIAN OCEAN'], [8, 80, 'ARCTIC OCEAN'], [40, -72, 'SOUTHERN OCEAN']];
+    // project the static map geometry to normalized space once (only the per-frame map rect changes)
+    const worldProj = WORLD.map(poly => poly.map(c => geo(c[0], c[1])));
+    const oceansProj = OCEANS.map(o => { const g = geo(o[0], o[1]); return { nx: g.nx, ny: g.ny, txt: o[2] }; });
 
     const freshOf = (nx, ny, sweep) => { const ang = norm(Math.atan2(ny, nx)); return 1 - norm(sweep - ang) / TAU; };
     const drawTrack = (px, py, head, col, a, c1, c2, l1, l2, showL) => {
@@ -539,7 +542,8 @@ class Component extends DCLogic {
       const mw = Math.min(availW, availH * 2), mh = mw / 2;
       const map = { x: (W - mw) / 2, y: topPad + (availH - mh) / 2, w: mw, h: mh };
       const pr = (nx, ny) => ({ x: map.x + nx * map.w, y: map.y + ny * map.h });
-      const np = n => pr(n.bx + Math.sin(t * 0.4 + n.ph) * 0.006, n.by + Math.cos(t * 0.5 + n.ph) * 0.006);
+      const nrm = n => ({ x: n.bx + Math.sin(t * 0.4 + n.ph) * 0.006, y: n.by + Math.cos(t * 0.5 + n.ph) * 0.006 });
+      const np = n => { const q = nrm(n); return pr(q.x, q.y); };
       const hl = self._highlight, showL = self.props.showLabels !== false;
 
       // ---- world map backdrop: faint oceans + wireframe continents ----
@@ -550,10 +554,10 @@ class Component extends DCLogic {
       for (let lon = -120; lon <= 120; lon += 60) { const a = pr((lon + 180) / 360, 0), b = pr((lon + 180) / 360, 1); ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke(); }
       for (let lat = -60; lat <= 60; lat += 30) { const a = pr(0, (90 - lat) / 180), b = pr(1, (90 - lat) / 180); ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke(); }
       ctx.strokeStyle = 'rgba(70,226,160,0.2)'; ctx.fillStyle = 'rgba(70,226,160,0.045)';
-      WORLD.forEach(poly => { ctx.beginPath(); poly.forEach((c, i) => { const p = pr((c[0] + 180) / 360, (90 - c[1]) / 180); i ? ctx.lineTo(p.x, p.y) : ctx.moveTo(p.x, p.y); }); ctx.closePath(); ctx.fill(); ctx.stroke(); });
+      worldProj.forEach(poly => { ctx.beginPath(); poly.forEach((c, i) => { const p = pr(c.nx, c.ny); i ? ctx.lineTo(p.x, p.y) : ctx.moveTo(p.x, p.y); }); ctx.closePath(); ctx.fill(); ctx.stroke(); });
       ctx.restore();
       // ocean labels drawn unclipped so edge labels aren't cut off on narrow screens
-      if (showL) { ctx.font = '9px "JetBrains Mono", monospace'; ctx.fillStyle = 'rgba(120,170,160,0.45)'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; OCEANS.forEach(o => { const p = pr((o[0] + 180) / 360, (90 - o[1]) / 180); ctx.fillText(o[2], p.x, p.y); }); ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic'; }
+      if (showL) { ctx.font = '9px "JetBrains Mono", monospace'; ctx.fillStyle = 'rgba(120,170,160,0.45)'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; oceansProj.forEach(o => { const p = pr(o.nx, o.ny); ctx.fillText(o.txt, p.x, p.y); }); ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic'; }
 
       // a weather system drifts across the global network
       wx.x += wx.vx * dt * M; wx.y += wx.vy * dt * M;
@@ -572,20 +576,34 @@ class Component extends DCLogic {
       };
 
       let closed = 0;
+      // clip airways to the map so antimeridian-wrapped halves vanish cleanly off the edges
+      ctx.save(); ctx.beginPath(); ctx.rect(map.x, map.y, map.w, map.h); ctx.clip();
       edges.forEach(e => {
-        const a = np(nodes[e[0]]), b = np(nodes[e[1]]), hit = segHitsWx(a, b);
+        const A = nrm(nodes[e[0]]), B = nrm(nodes[e[1]]);
+        // a route crossing the dateline takes the short way across the Pacific: draw it as
+        // two halves (one off each edge) instead of a long line back across the whole map
+        const cross = Math.abs(A.x - B.x) > 0.5;
+        const lo = A.x < B.x ? A : B, hi = A.x < B.x ? B : A;
+        const segs = cross
+          ? [[pr(lo.x, lo.y), pr(hi.x - 1, hi.y)], [pr(lo.x + 1, lo.y), pr(hi.x, hi.y)]]
+          : [[pr(A.x, A.y), pr(B.x, B.y)]];
+        const hit = segs.some(s => segHitsWx(s[0], s[1]));
         if (hit) {
           closed++;
-          ctx.globalAlpha = 0.55; ctx.strokeStyle = RED; ctx.lineWidth = 1; ctx.setLineDash([4, 3]); ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1;
+          ctx.globalAlpha = 0.55; ctx.strokeStyle = RED; ctx.lineWidth = 1; ctx.setLineDash([4, 3]); segs.forEach(s => { ctx.beginPath(); ctx.moveTo(s[0].x, s[0].y); ctx.lineTo(s[1].x, s[1].y); ctx.stroke(); }); ctx.setLineDash([]); ctx.globalAlpha = 1;
         } else {
-          ctx.strokeStyle = 'rgba(70,226,160,0.12)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+          ctx.strokeStyle = 'rgba(70,226,160,0.12)'; ctx.lineWidth = 1; segs.forEach(s => { ctx.beginPath(); ctx.moveTo(s[0].x, s[0].y); ctx.lineTo(s[1].x, s[1].y); ctx.stroke(); });
           // rerouted traffic via the chokepoint runs a little hotter
           const viaChoke = e[0] === CHOKE || e[1] === CHOKE;
           e[2] = (e[2] + dt * (viaChoke && closed >= 0 ? 0.4 : 0.28) * M) % 1;
-          const px = a.x + (b.x - a.x) * e[2], py = a.y + (b.y - a.y) * e[2];
-          ctx.globalAlpha = 0.85; ctx.fillStyle = GREEN; ctx.beginPath(); ctx.arc(px, py, 1.7, 0, TAU); ctx.fill(); ctx.globalAlpha = 1;
+          // travel along the short (wrapped) path, then fold the dot back into the map
+          let bx = B.x; if (B.x - A.x > 0.5) bx -= 1; else if (A.x - B.x > 0.5) bx += 1;
+          let dx = A.x + (bx - A.x) * e[2]; if (dx < 0) dx += 1; else if (dx > 1) dx -= 1;
+          const dp = pr(dx, A.y + (B.y - A.y) * e[2]);
+          ctx.globalAlpha = 0.85; ctx.fillStyle = GREEN; ctx.beginPath(); ctx.arc(dp.x, dp.y, 1.7, 0, TAU); ctx.fill(); ctx.globalAlpha = 1;
         }
       });
+      ctx.restore();
 
       wxLog += dt;
       if (closed > 0 && !wxState && wxLog > 1) { wxState = true; wxLog = 0; self.pushLog('WARN', 'WX system — ' + closed + ' airway(s) closed'); self.pushLog('ALERT', nodes[CHOKE].l + ' chokepoint — rerouted traffic converging'); }
@@ -601,7 +619,7 @@ class Component extends DCLogic {
         if (isChoke) { const pulse = 0.5 + 0.5 * Math.sin(t * (closed > 0 ? 6 : 3)); ctx.globalAlpha = a * 0.55 * pulse; ctx.strokeStyle = col; ctx.lineWidth = 1.4; ctx.beginPath(); ctx.arc(p.x, p.y, 11 + pulse * (closed > 0 ? 6 : 3), 0, TAU); ctx.stroke(); ctx.globalAlpha = 1; }
         else if (n.st === 'ku') { const pulse = 0.5 + 0.5 * Math.sin(t * 3 + n.ph); ctx.globalAlpha = a * 0.5 * pulse; ctx.strokeStyle = AMBER; ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(p.x, p.y, 9 + pulse * 3, 0, TAU); ctx.stroke(); ctx.globalAlpha = 1; }
         ctx.globalAlpha = a; ctx.fillStyle = col; ctx.shadowColor = col; ctx.shadowBlur = isChoke ? 11 : 8; ctx.beginPath(); ctx.arc(p.x, p.y, isChoke ? 5 : 4, 0, TAU); ctx.fill(); ctx.shadowBlur = 0;
-        if (showL) { const lox = n.lo ? n.lo[0] : 0, loy = n.lo ? n.lo[1] : 18; if (n.lo) { ctx.globalAlpha = a * 0.4; ctx.strokeStyle = 'rgba(180,235,210,0.6)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p.x + lox, p.y + loy - 3); ctx.stroke(); } ctx.globalAlpha = a * 0.9; ctx.font = '10px "JetBrains Mono", monospace'; ctx.fillStyle = 'rgba(180,235,210,' + (a * 0.9) + ')'; ctx.textAlign = 'center'; ctx.fillText(n.l, p.x + lox, p.y + loy); if (isChoke) { ctx.fillStyle = col; ctx.font = '8px "JetBrains Mono", monospace'; ctx.fillText(closed > 0 ? 'CHOKEPOINT \u25b2' : 'hub', p.x, p.y - 11); } ctx.textAlign = 'left'; ctx.globalAlpha = 1; }
+        if (showL) { const lox = n.lo ? n.lo[0] : 0, loy = n.lo ? n.lo[1] : 18; if (n.lo) { ctx.globalAlpha = a * 0.4; ctx.strokeStyle = 'rgba(180,235,210,0.6)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p.x + lox, p.y + (loy > 0 ? loy - 9 : loy + 2)); ctx.stroke(); } ctx.globalAlpha = a * 0.9; ctx.font = '10px "JetBrains Mono", monospace'; ctx.fillStyle = 'rgba(180,235,210,' + (a * 0.9) + ')'; ctx.textAlign = 'center'; ctx.fillText(n.l, p.x + lox, p.y + loy); if (isChoke) { ctx.fillStyle = col; ctx.font = '8px "JetBrains Mono", monospace'; ctx.fillText(closed > 0 ? 'CHOKEPOINT \u25b2' : 'hub', p.x, p.y - 11); } ctx.textAlign = 'left'; ctx.globalAlpha = 1; }
       });
       self._live = { known: cK, ku: cKU, uu: closed };
     }
