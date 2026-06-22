@@ -1,6 +1,6 @@
 # ehsanrahman.com
 
-Personal portfolio site for Ehsan Rahman, Site Reliability Engineer.
+Personal portfolio site for Ehsan Rahman.
 
 ## Overview
 
