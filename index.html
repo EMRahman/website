@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;background:#080b0a;}
+@keyframes blink{0%,49%{opacity:1}50%,100%{opacity:0}}
+@keyframes fadeup{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes pulsedot{0%,100%{opacity:1}50%{opacity:0.3}}
+::selection{background:rgba(70,226,160,0.28);color:#eafff5;}
+::-webkit-scrollbar{width:9px;height:9px;}
+::-webkit-scrollbar-thumb{background:rgba(120,160,145,0.22);border-radius:6px;}
+::-webkit-scrollbar-track{background:transparent;}
+@media (max-width:760px){
+  .hero-shell{min-height:auto !important;padding:10px !important;}
+  .hero-grid{gap:10px !important;}
+  .scope-panel{min-height:74vh !important;flex-basis:100% !important;}
+  .quote-panel,.rail{flex-basis:100% !important;}
+  .content-main{padding-left:12px !important;padding-right:12px !important;}
+  .sec-pad{padding:28px 22px !important;}
+}
+</style>
+</helmet>
+
+<template id="__bundler_thumbnail"><svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" fill="#0a0e0c"/><g transform="translate(50,50)" fill="none" stroke="#46e2a0" stroke-width="1"><circle r="8" opacity="0.4"/><circle r="15" opacity="0.3"/><circle r="21" opacity="0.5"/><line x1="0" y1="0" x2="0" y2="-21" stroke="#9affcd" stroke-width="1.4"/></g><circle cx="62" cy="40" r="1.8" fill="#46e2a0"/><circle cx="40" cy="58" r="1.8" fill="#f0b73f"/><circle cx="58" cy="62" r="1.6" fill="#ef6b6b"/></svg></template>
+<div style="background:#080b0a;color:#cfe0d8;font-family:'IBM Plex Sans',system-ui,sans-serif;min-height:100vh;background-image:radial-gradient(rgba(120,160,145,0.045) 1px,transparent 1px);background-size:26px 26px;">
+
+  <!-- ===================== DASHBOARD HERO ===================== -->
+  <section data-screen-label="Hero" class="hero-shell" style="min-height:100vh;display:flex;flex-direction:column;padding:14px;gap:13px;box-sizing:border-box;">
+
+    <!-- topbar -->
+    <div style="flex:none;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:11px 16px;border:1px solid rgba(120,160,145,0.14);background:rgba(20,28,25,0.4);border-radius:5px;font-family:'JetBrains Mono',monospace;">
+      <div style="display:flex;align-items:center;gap:12px;font-size:13px;">
+        <span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#46e2a0;box-shadow:0 0 9px #46e2a0;animation:pulsedot 2.4s ease-in-out infinite;"></span>
+        <span style="color:#5bc8d6;letter-spacing:0.16em;font-weight:600;">OBSERVATORY</span>
+        <span style="color:#52655d;">ehsanrahman.com</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:18px;font-size:11px;color:#71867e;flex-wrap:wrap;">
+        <span>SYS <span style="color:#46e2a0;">OK</span></span>
+        <span>SWEEP <span style="color:#cfe0d8;">10 rpm</span></span>
+        <span>COVERAGE <span style="color:#cfe0d8;">98.2%</span></span>
+        <span style="color:#cfe0d8;">{{ clock }}</span>
+      </div>
+      <div style="display:flex;gap:18px;font-size:12px;">
+        <a href="#about" style="color:#9fb3aa;text-decoration:none;" style-hover="color:#5bc8d6;">./about</a>
+        <a href="#projects" style="color:#9fb3aa;text-decoration:none;" style-hover="color:#5bc8d6;">./projects</a>
+        <a href="#contact" style="color:#9fb3aa;text-decoration:none;" style-hover="color:#5bc8d6;">./contact</a>
+      </div>
+    </div>
+
+    <!-- dashboard grid -->
+    <div class="hero-grid" style="flex:1;min-height:0;display:flex;gap:13px;flex-wrap:wrap;align-items:stretch;">
+
+      <!-- QUOTE / DIRECTIVE panel -->
+      <div class="quote-panel" style="flex:1.05 1 260px;min-width:240px;display:flex;flex-direction:column;border:1px solid rgba(120,160,145,0.14);background:rgba(16,22,20,0.5);border-radius:5px;overflow:hidden;">
+        <div style="flex:none;display:flex;align-items:center;justify-content:space-between;padding:9px 13px;border-bottom:1px solid rgba(120,160,145,0.12);font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:0.15em;color:#7fb8ad;">
+          <span>DIRECTIVE · KNOWN-SPACE</span>
+          <span style="color:#52655d;">rumsfeld.txt</span>
+        </div>
+        <div style="flex:1;display:flex;flex-direction:column;justify-content:center;padding:26px 28px;">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.22em;color:#46e2a0;margin-bottom:22px;animation:fadeup .6s ease both;">// MONITORING THE KNOWN — HUNTING THE UNKNOWN</div>
+          <blockquote style="margin:0;font-size:clamp(20px,2.2vw,33px);line-height:1.34;font-weight:300;color:#eafff5;letter-spacing:-0.01em;animation:fadeup .7s ease .05s both;">
+            There are known knowns. <span style="color:#46e2a0;">Things we know we know.</span> There are known unknowns — <span style="color:#f0b73f;">things we know we do not know.</span> But there are also unknown unknowns — <span style="color:#ef6b6b;">the ones we don't know we don't know.</span>
+          </blockquote>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#71867e;margin-top:20px;animation:fadeup .7s ease .12s both;">— Donald Rumsfeld, 2002</div>
+          <div style="height:1px;background:rgba(120,160,145,0.14);margin:26px 0;"></div>
+          <div style="animation:fadeup .7s ease .2s both;">
+            <div style="font-size:18px;color:#eafff5;font-weight:500;">Ehsan Rahman<span style="display:inline-block;width:8px;height:17px;background:#46e2a0;margin-left:7px;vertical-align:-2px;animation:blink 1.1s steps(1) infinite;"></span></div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:12.5px;color:#7fb8ad;margin-top:6px;">Site Reliability Engineer · system monitoring &amp; dependency mapping</div>
+            <div style="font-size:13px;color:#9fb3aa;margin-top:13px;line-height:1.6;max-width:46ch;">I monitor infrastructure the way a controller works a sector: <span style="color:#7fb8ad;">hold the known traffic, chase the unverified, find the contact nobody filed.</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RADAR panel -->
+      <div class="scope-panel" style="flex:1.7 1 320px;min-width:300px;min-height:380px;display:flex;flex-direction:column;border:1px solid rgba(120,160,145,0.14);background:rgba(10,14,12,0.7);border-radius:5px;overflow:hidden;">
+        <div style="flex:none;display:flex;align-items:center;justify-content:space-between;padding:9px 13px;border-bottom:1px solid rgba(120,160,145,0.12);font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:0.15em;color:#7fb8ad;">
+          <span>{{ scopeTitle }}</span>
+          <span style="color:#ef6b6b;display:flex;align-items:center;gap:6px;"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#ef6b6b;box-shadow:0 0 8px #ef6b6b;animation:pulsedot 1.6s ease-in-out infinite;"></span>LIVE</span>
+        </div>
+        <div style="flex:1;min-height:0;position:relative;">
+          <canvas ref="{{ canvasRef }}" style="position:absolute;inset:0;width:100%;height:100%;display:block;cursor:crosshair;touch-action:pan-y;"></canvas>
+        </div>
+        <div style="flex:none;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:9px 13px;border-top:1px solid rgba(120,160,145,0.12);font-family:'JetBrains Mono',monospace;font-size:10.5px;">
+          <div style="display:flex;gap:14px;flex-wrap:wrap;">
+            <span onMouseEnter="{{ hlKnown }}" onMouseLeave="{{ hlClear }}" style="display:flex;align-items:center;gap:6px;color:#9fb3aa;cursor:default;padding:2px 4px;border-radius:3px;" style-hover="background:rgba(70,226,160,0.08);"><span style="width:7px;height:7px;border-radius:50%;background:#46e2a0;box-shadow:0 0 7px #46e2a0;"></span>known knowns</span>
+            <span onMouseEnter="{{ hlKU }}" onMouseLeave="{{ hlClear }}" style="display:flex;align-items:center;gap:6px;color:#9fb3aa;cursor:default;padding:2px 4px;border-radius:3px;" style-hover="background:rgba(240,183,63,0.08);"><span style="width:7px;height:7px;border-radius:50%;background:#f0b73f;box-shadow:0 0 7px #f0b73f;"></span>known unknowns</span>
+            <span onMouseEnter="{{ hlUnknown }}" onMouseLeave="{{ hlClear }}" style="display:flex;align-items:center;gap:6px;color:#9fb3aa;cursor:default;padding:2px 4px;border-radius:3px;" style-hover="background:rgba(239,107,107,0.08);"><span style="width:7px;height:7px;border-radius:50%;background:#ef6b6b;box-shadow:0 0 7px #ef6b6b;"></span>unknown unknowns</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;color:#52655d;">
+            <span>SCOPE</span>
+            <button onClick="{{ onRadar }}" style="{{ radarBtnStyle }}">radar</button>
+            <button onClick="{{ onGraph }}" style="{{ graphBtnStyle }}">airways</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT RAIL: stats + log -->
+      <div class="rail" style="flex:1 1 240px;min-width:220px;display:flex;flex-direction:column;gap:13px;">
+
+        <!-- stat tile: known -->
+        <div onMouseEnter="{{ hlKnown }}" onMouseLeave="{{ hlClear }}" style="flex:none;border:1px solid rgba(120,160,145,0.14);background:rgba(16,22,20,0.5);border-radius:5px;overflow:hidden;cursor:default;">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:7px 12px;border-bottom:1px solid rgba(120,160,145,0.1);font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:0.13em;color:#7fb8ad;">
+            <span>KNOWN KNOWNS</span><span style="width:7px;height:7px;border-radius:50%;background:#46e2a0;box-shadow:0 0 7px #46e2a0;"></span>
+          </div>
+          <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:10px;padding:10px 12px 4px;">
+            <div>
+              <div style="font-family:'JetBrains Mono',monospace;font-size:30px;line-height:1;color:#46e2a0;font-weight:600;">{{ knownN }}</div>
+              <div style="font-size:10.5px;color:#71867e;margin-top:5px;">tracked · transponder ok</div>
+            </div>
+            <svg viewBox="0 0 100 30" preserveAspectRatio="none" style="width:44%;height:30px;display:block;"><polyline points="{{ sparkKnown }}" fill="none" stroke="#46e2a0" strokeWidth="1.5" vectorEffect="non-scaling-stroke" strokeLinejoin="round"></polyline></svg>
+          </div>
+        </div>
+
+        <!-- stat tile: known unknown -->
+        <div onMouseEnter="{{ hlKU }}" onMouseLeave="{{ hlClear }}" style="flex:none;border:1px solid rgba(120,160,145,0.14);background:rgba(16,22,20,0.5);border-radius:5px;overflow:hidden;cursor:default;">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:7px 12px;border-bottom:1px solid rgba(120,160,145,0.1);font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:0.13em;color:#7fb8ad;">
+            <span>KNOWN UNKNOWNS</span><span style="width:7px;height:7px;border-radius:50%;background:#f0b73f;box-shadow:0 0 7px #f0b73f;"></span>
+          </div>
+          <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:10px;padding:10px 12px 4px;">
+            <div>
+              <div style="font-family:'JetBrains Mono',monospace;font-size:30px;line-height:1;color:#f0b73f;font-weight:600;">{{ kuN }}</div>
+              <div style="font-size:10.5px;color:#71867e;margin-top:5px;">primary only · watching</div>
+            </div>
+            <svg viewBox="0 0 100 30" preserveAspectRatio="none" style="width:44%;height:30px;display:block;"><polyline points="{{ sparkKU }}" fill="none" stroke="#f0b73f" strokeWidth="1.5" vectorEffect="non-scaling-stroke" strokeLinejoin="round"></polyline></svg>
+          </div>
+        </div>
+
+        <!-- stat tile: unknown unknown -->
+        <div onMouseEnter="{{ hlUnknown }}" onMouseLeave="{{ hlClear }}" style="flex:none;border:1px solid rgba(120,160,145,0.14);background:rgba(16,22,20,0.5);border-radius:5px;overflow:hidden;cursor:default;">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:7px 12px;border-bottom:1px solid rgba(120,160,145,0.1);font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:0.13em;color:#7fb8ad;">
+            <span>UNKNOWN UNKNOWNS</span><span style="width:7px;height:7px;border-radius:50%;background:#ef6b6b;box-shadow:0 0 7px #ef6b6b;animation:pulsedot 1.6s ease-in-out infinite;"></span>
+          </div>
+          <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:10px;padding:10px 12px 4px;">
+            <div>
+              <div style="font-family:'JetBrains Mono',monospace;font-size:30px;line-height:1;color:#ef6b6b;font-weight:600;">{{ uuN }}</div>
+              <div style="font-size:10.5px;color:#71867e;margin-top:5px;">unidentified · on sweep</div>
+            </div>
+            <svg viewBox="0 0 100 30" preserveAspectRatio="none" style="width:44%;height:30px;display:block;"><polyline points="{{ sparkUU }}" fill="none" stroke="#ef6b6b" strokeWidth="1.5" vectorEffect="non-scaling-stroke" strokeLinejoin="round"></polyline></svg>
+          </div>
+        </div>
+
+        <!-- event log -->
+        <div style="flex:1;min-height:120px;display:flex;flex-direction:column;border:1px solid rgba(120,160,145,0.14);background:rgba(10,14,12,0.7);border-radius:5px;overflow:hidden;">
+          <div style="flex:none;display:flex;align-items:center;justify-content:space-between;padding:7px 12px;border-bottom:1px solid rgba(120,160,145,0.1);font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:0.13em;color:#7fb8ad;">
+            <span>EVENT LOG · realtime</span><span style="color:#52655d;">tail -f</span>
+          </div>
+          <div style="flex:1;min-height:0;overflow:hidden;padding:8px 12px;font-family:'JetBrains Mono',monospace;font-size:10.5px;line-height:1.85;">
+            <sc-for list="{{ logLines }}" as="ln" hint-placeholder-count="8">
+              <div style="display:flex;gap:9px;white-space:nowrap;">
+                <span style="color:#52655d;flex:none;">{{ ln.t }}</span>
+                <span style="{{ ln.lvlStyle }}">{{ ln.lvl }}</span>
+                <span style="color:#a9bcb3;overflow:hidden;text-overflow:ellipsis;">{{ ln.msg }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== CONTENT ===================== -->
+  <main class="content-main" style="max-width:1180px;margin:0 auto;padding:64px 18px 0;">
+
+    <!-- ABOUT -->
+    <section id="about" data-screen-label="About" style="border:1px solid rgba(120,160,145,0.14);background:rgba(16,22,20,0.4);border-radius:5px;overflow:hidden;scroll-margin-top:20px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 16px;border-bottom:1px solid rgba(120,160,145,0.12);font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:0.15em;color:#7fb8ad;">
+        <span>ABOUT · whoami</span><span style="color:#52655d;">$ cat bio.md</span>
+      </div>
+      <div class="sec-pad" style="padding:42px 44px;max-width:820px;">
+        <h2 style="margin:0 0 22px;font-size:clamp(24px,2.6vw,34px);font-weight:400;line-height:1.2;color:#eafff5;letter-spacing:-0.01em;">I make complex systems explain themselves.</h2>
+        <p style="margin:0 0 18px;font-size:16.5px;line-height:1.7;color:#b4c6bd;text-wrap:pretty;">I treat the scope like a radar screen in a fast-moving storm: validate the main flow, pursue the unverified targets the moment they surface, and route proactively around the weather cells — before the airspace collapses.</p>
+        <p style="margin:0;font-size:16.5px;line-height:1.7;color:#b4c6bd;text-wrap:pretty;">Known traffic, known gaps, and the weather phenomenon meteorologists have yet to fully understand — the <span style="color:#ef6b6b;">unknown unknown</span>. The work is holding the first two on the screen, inferring the third, and acting before service — or lives — are at risk.</p>
+      </div>
+    </section>
+
+    <!-- ACTIVE PROJECTS (shipped) -->
+    <section id="projects" data-screen-label="Projects" style="margin-top:48px;border:1px solid rgba(120,160,145,0.14);background:rgba(16,22,20,0.4);border-radius:5px;overflow:hidden;scroll-margin-top:20px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 16px;border-bottom:1px solid rgba(120,160,145,0.12);font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:0.15em;color:#7fb8ad;">
+        <span>ACTIVE PROJECTS · ~/shipped</span><span style="color:#46e2a0;">known knowns</span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1px;background:rgba(120,160,145,0.12);">
+
+        <a href="https://github.com/EMRahman/DeuceMate" target="_blank" rel="noopener" style="display:block;text-decoration:none;background:#10140f;padding:26px 24px;transition:background .18s;" style-hover="background:rgba(70,226,160,0.04);">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;"><span style="width:7px;height:7px;border-radius:50%;background:#46e2a0;box-shadow:0 0 7px #46e2a0;"></span><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#52655d;letter-spacing:0.1em;">SHIPPED · watchOS / iOS</span></div>
+          <div style="font-size:18px;color:#eafff5;margin-bottom:10px;font-weight:500;">DeuceMate <span style="font-size:14px;">🎾</span></div>
+          <p style="margin:0 0 16px;font-size:14px;line-height:1.65;color:#a9bcb3;text-wrap:pretty;">Privacy-first tennis scoring for Apple Watch with an iPhone companion — live scoreboard, 20+ match stats, momentum &amp; heart-rate coaching, and one-tap AI coaching exports. Native SwiftUI, zero dependencies, built end-to-end with an AI-agent workflow.</p>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#5bc8d6;">github ↗</span>
+        </a>
+
+        <a href="https://emrahman.github.io/11PlusVocabVault/" target="_blank" rel="noopener" style="display:block;text-decoration:none;background:#10140f;padding:26px 24px;transition:background .18s;" style-hover="background:rgba(70,226,160,0.04);">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;"><span style="width:7px;height:7px;border-radius:50%;background:#46e2a0;box-shadow:0 0 7px #46e2a0;"></span><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#52655d;letter-spacing:0.1em;">LIVE · web app</span></div>
+          <div style="font-size:18px;color:#eafff5;margin-bottom:10px;font-weight:500;">11+ Vocab Builder <span style="font-size:14px;">📖</span></div>
+          <p style="margin:0 0 16px;font-size:14px;line-height:1.65;color:#a9bcb3;text-wrap:pretty;">A vocabulary trainer for the UK 11+ exam: themed readers, spoken stories and a dozen word games — quizzes, scramble, flash blitz, synonym snap and constellation explorers — with text-to-speech throughout.</p>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#5bc8d6;">open ↗</span>
+        </a>
+
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" data-screen-label="Contact" style="margin-top:48px;border:1px solid rgba(120,160,145,0.14);background:rgba(16,22,20,0.4);border-radius:5px;overflow:hidden;scroll-margin-top:20px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 16px;border-bottom:1px solid rgba(120,160,145,0.12);font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:0.15em;color:#7fb8ad;">
+        <span>CONTACT · ./connect</span><span style="color:#52655d;">exit 0</span>
+      </div>
+      <div class="sec-pad" style="padding:38px 44px;display:flex;flex-wrap:wrap;gap:14px;align-items:center;">
+        <a href="https://x.com/_EhsanR" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:9px;text-decoration:none;font-family:'JetBrains Mono',monospace;font-size:14px;color:#cfe0d8;border:1px solid rgba(120,160,145,0.2);padding:11px 18px;border-radius:4px;transition:all .18s;" style-hover="border-color:rgba(91,200,214,0.5);color:#5bc8d6;"><span style="color:#5bc8d6;">@</span>_EhsanR <span style="color:#52655d;">↗ x.com</span></a>
+        <a href="https://www.linkedin.com/in/ehsan-rahman-6a36486/" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:9px;text-decoration:none;font-family:'JetBrains Mono',monospace;font-size:14px;color:#cfe0d8;border:1px solid rgba(120,160,145,0.2);padding:11px 18px;border-radius:4px;transition:all .18s;" style-hover="border-color:rgba(91,200,214,0.5);color:#5bc8d6;">linkedin <span style="color:#52655d;">↗</span></a>
+        <a href="https://github.com/EMRahman" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:9px;text-decoration:none;font-family:'JetBrains Mono',monospace;font-size:14px;color:#cfe0d8;border:1px solid rgba(120,160,145,0.2);padding:11px 18px;border-radius:4px;transition:all .18s;" style-hover="border-color:rgba(91,200,214,0.5);color:#5bc8d6;">github <span style="color:#52655d;">↗</span></a>
+        <a href="mailto:mail@ehsanrahman.com" style="display:flex;align-items:center;gap:9px;text-decoration:none;font-family:'JetBrains Mono',monospace;font-size:14px;color:#cfe0d8;border:1px solid rgba(120,160,145,0.2);padding:11px 18px;border-radius:4px;transition:all .18s;" style-hover="border-color:rgba(91,200,214,0.5);color:#5bc8d6;">email <span style="color:#52655d;">↗</span></a>
+      </div>
+    </section>
+
+    <footer style="padding:40px 4px 48px;font-family:'JetBrains Mono',monospace;font-size:11px;color:#52655d;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+      <span>ehsanrahman.com — built in the open.</span>
+      <span>© {{ year }} Ehsan Rahman · all knowns reserved</span>
+    </footer>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;backgroundMode&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;radar&quot;,&quot;depgraph&quot;],&quot;default&quot;:&quot;radar&quot;,&quot;tsType&quot;:&quot;'radar'|'depgraph'&quot;},&quot;motionLevel&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;calm&quot;,&quot;normal&quot;,&quot;lively&quot;],&quot;default&quot;:&quot;normal&quot;,&quot;tsType&quot;:&quot;'calm'|'normal'|'lively'&quot;},&quot;showLabels&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;}}">
+class Component extends DCLogic {
+  canvasRef = React.createRef();
+  state = {
+    mode: null,
+    clock: '--:--:--',
+    counts: { known: 0, ku: 0, uu: 0 },
+    log: [],
+    sk: {
+      known: Array.from({ length: 40 }, () => 5 + Math.random() * 3),
+      ku: Array.from({ length: 40 }, () => 2 + Math.random() * 2),
+      uu: Array.from({ length: 40 }, () => Math.random() * 0.5)
+    }
+  };
+
+  getMode() { return this.state.mode || this.props.backgroundMode || 'radar'; }
+  getMotion() { const m = this.props.motionLevel || 'lively'; return m === 'calm' ? 0.55 : m === 'lively' ? 1.5 : 1; }
+
+  componentDidMount() {
+    this._highlight = null;
+    this._mouse = null;
+    this._live = { known: 0, ku: 0, uu: 0 };
+    this._log = [];
+    this.pushLog('INFO', 'observatory online — sweep nominal');
+    this.setup();
+    this._tick = setInterval(() => this.tick(), 800);
+  }
+  componentDidUpdate() { if (this.getMode() !== this._activeMode) this.restart(); }
+  componentWillUnmount() { this.teardown(); clearInterval(this._tick); }
+
+  teardown() {
+    cancelAnimationFrame(this._raf);
+    if (this._onResize) { window.removeEventListener('resize', this._onResize); window.removeEventListener('orientationchange', this._onResize); }
+    if (this._teardownCanvas) this._teardownCanvas();
+  }
+  restart() { this.teardown(); this.setup(); }
+
+  pushLog(lvl, msg) {
+    const t = new Date().toTimeString().slice(0, 8);
+    this._log.unshift({ t, lvl, msg });
+    if (this._log.length > 30) this._log.pop();
+  }
+
+  tick() {
+    const clock = new Date().toTimeString().slice(0, 8);
+    const L = this._live;
+    const push = (arr, v) => { const a = arr.slice(1); a.push(Math.max(0, v)); return a; };
+    const sk = this.state.sk;
+    this.setState({
+      clock,
+      counts: { known: L.known, ku: L.ku, uu: L.uu },
+      log: this._log.slice(0, 9),
+      sk: {
+        known: push(sk.known, 5 + L.known * 0.4 + Math.sin(Date.now() / 1400) * 1.6 + Math.random() * 1.4),
+        ku: push(sk.ku, 2 + L.ku * 0.7 + Math.random() * 1.3),
+        uu: push(sk.uu, L.uu * 1.8 + (Math.random() < 0.22 ? Math.random() * 1.8 : 0.15))
+      }
+    });
+  }
+
+  setup() {
+    const self = this;
+    const mode = this.getMode();
+    this._activeMode = mode;
+    const BG = '#0a0e0c', GREEN = '#46e2a0', AMBER = '#f0b73f', RED = '#ef6b6b';
+    const TAU = Math.PI * 2;
+    const norm = a => ((a % TAU) + TAU) % TAU;
+    const rnd = (a, b) => a + Math.random() * (b - a);
+    let W = 600, H = 400, cx = 300, cy = 200, R = 160, dpr = 1, ctx = null, curCanvas = null, lastW = 0, lastH = 0;
+
+    const onMove = e => { const cv = self.canvasRef.current; if (!cv) return; const pt = (e.touches && e.touches[0]) ? e.touches[0] : e; const r = cv.getBoundingClientRect(); self._mouse = { x: pt.clientX - r.left, y: pt.clientY - r.top }; };
+    const onLeave = () => { self._mouse = null; };
+    const onTouchEnd = () => { setTimeout(() => { self._mouse = null; }, 1400); };
+    const bind = cv => { cv.addEventListener('pointermove', onMove); cv.addEventListener('pointerleave', onLeave); cv.addEventListener('touchstart', onMove, { passive: true }); cv.addEventListener('touchmove', onMove, { passive: true }); cv.addEventListener('touchend', onTouchEnd); };
+    const unbind = cv => { cv.removeEventListener('pointermove', onMove); cv.removeEventListener('pointerleave', onLeave); cv.removeEventListener('touchstart', onMove); cv.removeEventListener('touchmove', onMove); cv.removeEventListener('touchend', onTouchEnd); };
+    this._onResize = () => { lastW = 0; };
+    window.addEventListener('resize', this._onResize);
+    window.addEventListener('orientationchange', this._onResize);
+    this._teardownCanvas = () => { if (curCanvas) unbind(curCanvas); };
+
+    // Re-acquire the live canvas node each frame so the loop always draws to
+    // whatever is currently mounted (survives re-render / remount), and re-size on change.
+    const ensure = () => {
+      const cv = self.canvasRef.current;
+      if (!cv) return false;
+      if (cv !== curCanvas) {
+        if (curCanvas) unbind(curCanvas);
+        curCanvas = cv; ctx = cv.getContext('2d');
+        bind(cv);
+        lastW = 0;
+      }
+      const r = cv.getBoundingClientRect();
+      const w = r.width || 600, h = r.height || 400;
+      if (Math.abs(w - lastW) > 0.5 || Math.abs(h - lastH) > 0.5) {
+        dpr = Math.min(window.devicePixelRatio || 1, 2);
+        cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr);
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        W = w; H = h; cx = w / 2; cy = h / 2; R = Math.min(w, h) * 0.44; lastW = w; lastH = h;
+      }
+      return true;
+    };
+
+    // ---------- radar entities ----------
+    const callsigns = ['BAW118', 'DLH204', 'AFR342', 'KLM61', 'SAS901', 'EZY88', 'UAE17'];
+    let aircraft = [], kus = [], ghosts = [], lastGhost = 2, ghostGap = rnd(3, 6), kuTimer = 0;
+    for (let i = 0; i < 5; i++) {
+      const ang = rnd(0, TAU), rad = rnd(0.25, 0.9), head = rnd(0, TAU), sp = rnd(0.03, 0.055);
+      aircraft.push({ nx: Math.cos(ang) * rad, ny: Math.sin(ang) * rad, vx: Math.cos(head) * sp, vy: Math.sin(head) * sp, name: callsigns[i % callsigns.length], mv: rnd(280, 400), mr: rnd(-12, 12) });
+    }
+    // two aircraft on a converging heading → loss of separation (the collision course)
+    const confAng = 2.2, dA = { x: Math.cos(confAng), y: Math.sin(confAng) }, dB = { x: Math.cos(confAng + 2.0), y: Math.sin(confAng + 2.0) };
+    const conf = { Pm: { x: 0.16, y: -0.1 }, period: 16, a: 'IBE451', b: 'TAP12', logged: false };
+    // one aircraft steadily burning down its reserve → running out of fuel
+    const sat = { name: 'QFA12', nx: -0.5, ny: 0.46, cycle: 13, loggedW: false, loggedA: false };
+    for (let i = 0; i < 3; i++) {
+      const ang = rnd(0, TAU), rad = rnd(0.35, 0.85), head = rnd(0, TAU), sp = rnd(0.008, 0.022);
+      kus.push({ nx: Math.cos(ang) * rad, ny: Math.sin(ang) * rad, vx: Math.cos(head) * sp, vy: Math.sin(head) * sp, seed: rnd(0, 10), lbl: ['NO SQUAWK', 'UNVERIFIED', '?? PRIMARY'][i % 3] });
+    }
+    // drifting weather cells on the radar — aircraft route around them
+    let weatherCells = [
+      { nx: rnd(-0.35, 0.35), ny: rnd(-0.35, 0.35), r: rnd(0.24, 0.34), vx: rnd(-0.02, 0.02), vy: rnd(-0.02, 0.02), sev: 1, seed: rnd(0, 9) },
+      { nx: rnd(-0.35, 0.35), ny: rnd(-0.35, 0.35), r: rnd(0.16, 0.24), vx: rnd(-0.02, 0.02), vy: rnd(-0.02, 0.02), sev: 0, seed: rnd(0, 9) }
+    ];
+    let wxLogT = 0;
+    const brg = (nx, ny) => String(Math.round(norm(Math.atan2(ny, nx)) * 180 / Math.PI)).padStart(3, '0');
+
+    // ---------- depgraph entities ----------
+    const gLabels = ['LAX', 'JFK', 'GRU', 'LHR', 'FRA', 'JNB', 'DXB', 'DEL', 'SIN', 'HKG', 'NRT', 'SYD', 'CDG'];
+    const gPos = [[0.10, 0.36], [0.24, 0.30], [0.33, 0.74], [0.45, 0.22], [0.49, 0.25], [0.56, 0.76], [0.63, 0.42], [0.71, 0.40], [0.79, 0.56], [0.83, 0.44], [0.91, 0.34], [0.95, 0.80], [0.46, 0.28]];
+    const nodes = gLabels.map((l, i) => ({ l, bx: gPos[i][0], by: gPos[i][1], st: i === 6 ? 'choke' : i === 3 ? 'ku' : 'known', ph: rnd(0, TAU) }));
+    const edges = [[0, 1], [1, 3], [3, 4], [3, 12], [4, 6], [12, 6], [6, 7], [6, 8], [6, 9], [6, 5], [7, 8], [8, 9], [9, 10], [10, 0], [1, 2], [2, 5], [8, 11], [9, 11]].map(e => { e.push(Math.random()); return e; });
+    const CHOKE = 6;
+    let wx = { x: 0.55, y: 0.42, r: 0.15, vx: 0.03, vy: 0.018 }, wxLog = 0, wxState = false;
+
+    const freshOf = (nx, ny, sweep) => { const ang = norm(Math.atan2(ny, nx)); return 1 - norm(sweep - ang) / TAU; };
+    const drawTrack = (px, py, head, col, a, c1, c2, l1, l2, showL) => {
+      ctx.globalAlpha = a * 0.55; ctx.strokeStyle = col; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(px + Math.cos(head) * 16, py + Math.sin(head) * 16); ctx.stroke();
+      ctx.globalAlpha = a; ctx.fillStyle = col; ctx.shadowColor = col; ctx.shadowBlur = 8; ctx.save(); ctx.translate(px, py); ctx.rotate(head); ctx.beginPath(); ctx.moveTo(5, 0); ctx.lineTo(-3, 3.2); ctx.lineTo(-3, -3.2); ctx.closePath(); ctx.fill(); ctx.restore(); ctx.shadowBlur = 0;
+      if (showL && a > 0.32) { const aa = Math.min(1, a); ctx.font = '9px "JetBrains Mono", monospace'; ctx.fillStyle = c1 + aa + ')'; ctx.fillText(l1, px + 9, py - 4); ctx.fillStyle = c2 + aa + ')'; ctx.fillText(l2, px + 9, py + 6); }
+      ctx.globalAlpha = 1;
+    };
+
+    // ---------- radar draw ----------
+    function radar(t, dt, M) {
+      const sweep = norm(t * (TAU / 6) * M);
+      ctx.lineWidth = 1;
+      for (let i = 1; i <= 4; i++) { ctx.beginPath(); ctx.arc(cx, cy, R * i / 4, 0, TAU); ctx.strokeStyle = 'rgba(70,226,160,0.09)'; ctx.stroke(); }
+      ctx.strokeStyle = 'rgba(70,226,160,0.18)'; ctx.beginPath(); ctx.arc(cx, cy, R, 0, TAU); ctx.stroke();
+      ctx.strokeStyle = 'rgba(70,226,160,0.06)'; ctx.beginPath(); ctx.moveTo(cx - R, cy); ctx.lineTo(cx + R, cy); ctx.moveTo(cx, cy - R); ctx.lineTo(cx, cy + R); ctx.stroke();
+      for (let a = 0; a < 360; a += 15) { const rad = a * Math.PI / 180, r0 = R * (a % 90 === 0 ? 0.92 : 0.97); ctx.strokeStyle = 'rgba(70,226,160,0.16)'; ctx.beginPath(); ctx.moveTo(cx + Math.cos(rad) * r0, cy + Math.sin(rad) * r0); ctx.lineTo(cx + Math.cos(rad) * R, cy + Math.sin(rad) * R); ctx.stroke(); }
+      const trail = Math.PI * 0.6, slices = 46;
+      for (let i = 0; i < slices; i++) { const a1 = sweep - trail * i / slices, a0 = sweep - trail * (i + 1) / slices; ctx.beginPath(); ctx.moveTo(cx, cy); ctx.arc(cx, cy, R, a0, a1); ctx.closePath(); ctx.fillStyle = 'rgba(70,226,160,' + (0.13 * (1 - i / slices)) + ')'; ctx.fill(); }
+      ctx.strokeStyle = 'rgba(150,255,205,0.6)'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + Math.cos(sweep) * R, cy + Math.sin(sweep) * R); ctx.stroke();
+      ctx.fillStyle = GREEN; ctx.beginPath(); ctx.arc(cx, cy, 2, 0, TAU); ctx.fill();
+
+      const hl = self._highlight, showL = self.props.showLabels !== false;
+      let cKnown = 0, cKU = 0, cUU = 0;
+
+      // weather cells drift across the scope
+      wxLogT += dt;
+      weatherCells.forEach(c => {
+        c.nx += c.vx * dt * M; c.ny += c.vy * dt * M;
+        if (c.nx < -0.95 || c.nx > 0.95) c.vx *= -1; if (c.ny < -0.95 || c.ny > 0.95) c.vy *= -1;
+        const px = cx + c.nx * R, py = cy + c.ny * R, pr = c.r * R, b = c.sev ? '239,107,107' : '240,183,63';
+        const g = ctx.createRadialGradient(px, py, 0, px, py, pr);
+        g.addColorStop(0, 'rgba(' + b + ',0.17)'); g.addColorStop(0.6, 'rgba(' + b + ',0.06)'); g.addColorStop(1, 'rgba(' + b + ',0)');
+        ctx.fillStyle = g; ctx.beginPath(); ctx.arc(px, py, pr, 0, TAU); ctx.fill();
+        ctx.globalAlpha = 0.35 + 0.18 * Math.sin(t * 3 + c.seed); ctx.strokeStyle = 'rgba(' + b + ',0.5)'; ctx.setLineDash([3, 4]); ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(px, py, pr, 0, TAU); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1;
+        if (showL) { ctx.font = '8px "JetBrains Mono", monospace'; ctx.fillStyle = 'rgba(' + b + ',0.85)'; ctx.fillText(c.sev ? 'WX +RA' : 'WX', px - 8, py); }
+      });
+
+      // tracked aircraft (known knowns) — callsign + flight level; reroute around weather
+      aircraft.forEach(p => {
+        p.nx += p.vx * dt * M; p.ny += p.vy * dt * M;
+        p.mv += p.mr * dt; if (p.mv < 240 || p.mv > 410) { p.mr *= -1; p.mv = Math.max(240, Math.min(410, p.mv)); }
+        const rr = Math.hypot(p.nx, p.ny);
+        if (rr > 1.08) { const ang = rnd(0, TAU); p.nx = Math.cos(ang) * 1.05; p.ny = Math.sin(ang) * 1.05; const head = Math.atan2(-p.ny, -p.nx) + rnd(-0.6, 0.6), sp = rnd(0.03, 0.055); p.vx = Math.cos(head) * sp; p.vy = Math.sin(head) * sp; self.pushLog('INFO', 'acquired ' + p.name + ' · FL' + Math.round(p.mv)); }
+        p.diverting = false;
+        weatherCells.forEach(c => {
+          const dx = p.nx - c.nx, dy = p.ny - c.ny, d = Math.hypot(dx, dy) || 1e-3;
+          if (d < c.r + 0.1) { p.vx += (dx / d) * (c.r + 0.1 - d) * dt * 2.6; p.vy += (dy / d) * (c.r + 0.1 - d) * dt * 2.6; const sp0 = Math.hypot(p.vx, p.vy) || 1e-3; p.vx = p.vx / sp0 * 0.045; p.vy = p.vy / sp0 * 0.045; p.diverting = true; }
+        });
+        if (p.diverting && !p.wxLogged && wxLogT > 1.4) { p.wxLogged = true; wxLogT = 0; self.pushLog('INFO', p.name + ' deviating — weather ahead'); }
+        if (!p.diverting) p.wxLogged = false;
+        cKnown++;
+        const px = cx + p.nx * R, py = cy + p.ny * R, f = freshOf(p.nx, p.ny, sweep), head = Math.atan2(p.vy, p.vx);
+        const col = p.diverting ? AMBER : GREEN;
+        let a = 0.4 + 0.55 * f * f; if (hl && hl !== 'known') a *= 0.16;
+        drawTrack(px, py, head, col, a, p.diverting ? 'rgba(245,210,130,' : 'rgba(180,245,215,', 'rgba(120,200,165,', p.name, p.diverting ? 'WX DIVERT' : 'FL' + Math.round(p.mv), showL);
+      });
+
+      // --- two aircraft on a converging heading → loss of separation ---
+      {
+        const ph = (t % conf.period) / conf.period, s = 0.92 - 1.84 * ph;
+        const ax = conf.Pm.x + dA.x * s, ay = conf.Pm.y + dA.y * s, bx = conf.Pm.x + dB.x * s, by = conf.Pm.y + dB.y * s;
+        const Apx = cx + ax * R, Apy = cy + ay * R, Bpx = cx + bx * R, Bpy = cy + by * R;
+        const sep = Math.hypot(ax - bx, ay - by), danger = sep < 0.36, crit = sep < 0.17;
+        const fA = freshOf(ax, ay, sweep), fB = freshOf(bx, by, sweep);
+        let aA = 0.45 + 0.5 * fA * fA, aB = 0.45 + 0.5 * fB * fB; if (hl && hl !== 'known') { aA *= 0.16; aB *= 0.16; }
+        cKnown += 2;
+        const col = crit ? RED : danger ? AMBER : GREEN;
+        if (danger) {
+          const link = crit ? RED : AMBER, la = (crit ? 0.9 : 0.6) * Math.max(aA, aB), mx = (Apx + Bpx) / 2, my = (Apy + Bpy) / 2;
+          ctx.globalAlpha = la; ctx.strokeStyle = link; ctx.lineWidth = 1.2; ctx.setLineDash([4, 3]); ctx.beginPath(); ctx.moveTo(Apx, Apy); ctx.lineTo(Bpx, Bpy); ctx.stroke(); ctx.setLineDash([]);
+          ctx.beginPath(); ctx.arc(mx, my, 5 + (crit ? (1 + Math.sin(t * 9)) * 4 : 2), 0, TAU); ctx.stroke();
+          if (showL) { ctx.fillStyle = link; ctx.font = '9px "JetBrains Mono", monospace'; ctx.fillText(crit ? '\u26a0 separation loss' : 'converging', mx + 8, my - 6); }
+          ctx.globalAlpha = 1;
+        }
+        const hA = Math.atan2(-dA.y, -dA.x), hB = Math.atan2(-dB.y, -dB.x);
+        drawTrack(Apx, Apy, hA, col, aA, 'rgba(180,245,215,', 'rgba(120,200,165,', conf.a, 'FL330', showL);
+        drawTrack(Bpx, Bpy, hB, col, aB, 'rgba(180,245,215,', 'rgba(120,200,165,', conf.b, 'FL330', showL);
+        if (crit && !conf.logged) { conf.logged = true; self.pushLog('ALERT', 'conflict ' + conf.a + ' \u21c4 ' + conf.b + ' — loss of separation'); }
+        if (!danger) conf.logged = false;
+      }
+
+      // --- one aircraft burning down its fuel reserve → running out of resource ---
+      {
+        const ph = (t % sat.cycle) / sat.cycle, v = 100 - 96 * ph;
+        const px = cx + sat.nx * R, py = cy + sat.ny * R, f = freshOf(sat.nx, sat.ny, sweep);
+        const col = v < 8 ? RED : v < 22 ? AMBER : GREEN;
+        let a = 0.5 + 0.45 * f * f; if (hl && hl !== 'known') a *= 0.16;
+        cKnown++;
+        if (v < 22) { const pulse = 0.5 + 0.5 * Math.sin(t * 7); ctx.globalAlpha = a * (0.3 + 0.5 * (22 - v) / 22) * (0.6 + 0.4 * pulse); ctx.strokeStyle = col; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.arc(px, py, 9 + (22 - v) / 4, 0, TAU); ctx.stroke(); ctx.globalAlpha = 1; }
+        ctx.globalAlpha = a; ctx.fillStyle = col; ctx.shadowColor = col; ctx.shadowBlur = 9; ctx.fillRect(px - 3.2, py - 3.2, 6.4, 6.4); ctx.shadowBlur = 0;
+        if (showL && a > 0.3) {
+          const gw = 34, gh = 3, gx = px + 9, gy = py + 1;
+          ctx.globalAlpha = a * 0.45; ctx.fillStyle = 'rgba(120,160,145,0.6)'; ctx.fillRect(gx, gy, gw, gh);
+          ctx.globalAlpha = a; ctx.fillStyle = col; ctx.fillRect(gx, gy, gw * v / 100, gh);
+          ctx.font = '9px "JetBrains Mono", monospace'; ctx.fillStyle = col; ctx.fillText(sat.name, px + 9, py - 5);
+          ctx.fillText('fuel ' + Math.round(v) + '%' + (v < 22 ? ' \u25bc' : ''), gx + gw + 5, gy + 4);
+          ctx.globalAlpha = 1;
+        }
+        if (v < 12 && !sat.loggedW) { sat.loggedW = true; self.pushLog('WARN', sat.name + ' fuel ' + Math.round(v) + '% — minimum fuel'); }
+        if (v < 4 && !sat.loggedA) { sat.loggedA = true; self.pushLog('ALERT', sat.name + ' fuel critical — declaring emergency'); }
+        if (ph < 0.04) { if (sat.loggedA) self.pushLog('INFO', sat.name + ' refuelled — reserve restored'); sat.loggedW = false; sat.loggedA = false; }
+      }
+
+      // known-unknowns
+      kuTimer += dt;
+      kus.forEach(p => {
+        p.nx += p.vx * dt * M; p.ny += p.vy * dt * M;
+        const rr = Math.hypot(p.nx, p.ny);
+        if (rr > 1.05) { const ang = rnd(0, TAU); p.nx = Math.cos(ang) * 1.02; p.ny = Math.sin(ang) * 1.02; const head = Math.atan2(-p.ny, -p.nx) + rnd(-0.7, 0.7), sp = rnd(0.008, 0.022); p.vx = Math.cos(head) * sp; p.vy = Math.sin(head) * sp; }
+        cKU++;
+        const px = cx + p.nx * R, py = cy + p.ny * R, f = freshOf(p.nx, p.ny, sweep), fl = 0.5 + 0.5 * Math.sin(t * 4 + p.seed);
+        let a = (0.18 + 0.5 * f * f) * (0.55 + 0.45 * fl); if (hl && hl !== 'ku') a *= 0.16;
+        ctx.globalAlpha = a * 0.5; ctx.strokeStyle = AMBER; ctx.setLineDash([3, 3]); ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(px, py, 12, 0, TAU); ctx.stroke(); ctx.setLineDash([]);
+        ctx.globalAlpha = a; ctx.fillStyle = AMBER; ctx.shadowColor = AMBER; ctx.shadowBlur = 8; ctx.save(); ctx.translate(px, py); ctx.rotate(Math.PI / 4); ctx.fillRect(-3, -3, 6, 6); ctx.restore(); ctx.shadowBlur = 0;
+        if (showL && a > 0.3) { ctx.globalAlpha = Math.min(1, a); ctx.font = '9px "JetBrains Mono", monospace'; ctx.fillStyle = 'rgba(245,210,130,' + Math.min(1, a) + ')'; ctx.fillText(p.lbl, px + 10, py - 3); }
+        ctx.globalAlpha = 1;
+      });
+      if (kuTimer > 3.5 && Math.random() < 0.5) { kuTimer = 0; const k = kus[Math.floor(rnd(0, kus.length))]; self.pushLog('WARN', 'primary return brg ' + brg(k.nx, k.ny) + ' — no squawk'); }
+
+      // unknown-unknowns
+      if (t - lastGhost > ghostGap && ghosts.length < 3) { lastGhost = t; ghostGap = rnd(3.5, 7) / M; const ang = rnd(0, TAU), rad = rnd(0.28, 0.95); const g = { nx: Math.cos(ang) * rad, ny: Math.sin(ang) * rad, born: t, life: rnd(6, 11), promoted: false, logged: false }; ghosts.push(g); }
+      ghosts = ghosts.filter(g => { if (t - g.born >= g.life) { if (!g.promoted) self.pushLog('LOST', 'primary contact lost — unresolved'); return false; } return true; });
+      ghosts.forEach(g => {
+        const age = t - g.born, env = Math.min(1, age / 1.2) * Math.min(1, (g.life - age) / 1.5), f = freshOf(g.nx, g.ny, sweep);
+        const px = cx + g.nx * R, py = cy + g.ny * R;
+        let near = 0; if (self._mouse) near = Math.hypot(self._mouse.x - px, self._mouse.y - py) < 42 ? 1 : 0;
+        cUU++;
+        let col = RED, a = env * (0.1 + 0.85 * f * f); if (near) a = Math.max(a, env * 0.85);
+        if (f > 0.92 && !g.logged) { g.logged = true; self.pushLog('ALERT', 'unidentified return brg ' + brg(g.nx, g.ny) + ' · ' + (Math.hypot(g.nx, g.ny) * 12).toFixed(1) + ' nm'); }
+        if (f > 0.9 && !g.promoted && Math.random() < 0.012) { g.promoted = true; self.pushLog('RECL', 'correlated → known traffic'); }
+        if (g.promoted) { col = AMBER; a = Math.max(a, env * 0.5); }
+        if (hl && hl !== 'unknown' && !g.promoted) a *= 0.18;
+        if (hl === 'unknown') a = Math.max(a, env * 0.55 * (0.3 + 0.7 * f));
+        ctx.globalAlpha = a; ctx.fillStyle = col; ctx.shadowColor = col; ctx.shadowBlur = 11; ctx.beginPath(); ctx.arc(px, py, 2.6, 0, TAU); ctx.fill(); ctx.shadowBlur = 0;
+        if (f > 0.8 || near) { ctx.globalAlpha = a * 0.7; ctx.strokeStyle = col; ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(px, py, 7 + (1 - f) * 5, 0, TAU); ctx.stroke(); if (showL) { ctx.globalAlpha = a; ctx.font = '9px "JetBrains Mono", monospace'; ctx.fillStyle = col; ctx.fillText(g.promoted ? '? CONTACT' : '?', px + 10, py + 3); } }
+        ctx.globalAlpha = 1;
+      });
+
+      self._live = { known: cKnown, ku: cKU, uu: cUU };
+    }
+
+    // ---------- depgraph draw ----------
+    function graph(t, dt, M) {
+      const padX = Math.max(50, W * 0.06), padY = 56;
+      const np = n => ({ x: padX + (n.bx + Math.sin(t * 0.4 + n.ph) * 0.006) * (W - 2 * padX), y: padY + (n.by + Math.cos(t * 0.5 + n.ph) * 0.006) * (H - 2 * padY) });
+      const hl = self._highlight, showL = self.props.showLabels !== false;
+
+      // a weather system drifts across the global network
+      wx.x += wx.vx * dt * M; wx.y += wx.vy * dt * M;
+      if (wx.x < 0.16 || wx.x > 0.84) wx.vx *= -1; if (wx.y < 0.18 || wx.y > 0.82) wx.vy *= -1;
+      const wpx = padX + wx.x * (W - 2 * padX), wpy = padY + wx.y * (H - 2 * padY), wpr = wx.r * Math.min(W, H);
+      const wg = ctx.createRadialGradient(wpx, wpy, 0, wpx, wpy, wpr);
+      wg.addColorStop(0, 'rgba(239,107,107,0.16)'); wg.addColorStop(0.6, 'rgba(240,183,63,0.07)'); wg.addColorStop(1, 'rgba(240,183,63,0)');
+      ctx.fillStyle = wg; ctx.beginPath(); ctx.arc(wpx, wpy, wpr, 0, TAU); ctx.fill();
+      ctx.globalAlpha = 0.4 + 0.2 * Math.sin(t * 3); ctx.strokeStyle = 'rgba(239,107,107,0.45)'; ctx.setLineDash([3, 4]); ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(wpx, wpy, wpr, 0, TAU); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1;
+      if (showL) { ctx.font = '9px "JetBrains Mono", monospace'; ctx.fillStyle = 'rgba(239,107,107,0.85)'; ctx.fillText('WX SYSTEM', wpx - 22, wpy - wpr - 6); }
+
+      const segHitsWx = (a, b) => {
+        const dx = b.x - a.x, dy = b.y - a.y, l2 = dx * dx + dy * dy || 1;
+        let s = ((wpx - a.x) * dx + (wpy - a.y) * dy) / l2; s = Math.max(0, Math.min(1, s));
+        return Math.hypot(wpx - (a.x + s * dx), wpy - (a.y + s * dy)) < wpr * 0.82;
+      };
+
+      let closed = 0;
+      edges.forEach(e => {
+        const a = np(nodes[e[0]]), b = np(nodes[e[1]]), hit = segHitsWx(a, b);
+        if (hit) {
+          closed++;
+          ctx.globalAlpha = 0.55; ctx.strokeStyle = RED; ctx.lineWidth = 1; ctx.setLineDash([4, 3]); ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1;
+        } else {
+          ctx.strokeStyle = 'rgba(70,226,160,0.12)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+          // rerouted traffic via the chokepoint runs a little hotter
+          const viaChoke = e[0] === CHOKE || e[1] === CHOKE;
+          e[2] = (e[2] + dt * (viaChoke && closed >= 0 ? 0.4 : 0.28) * M) % 1;
+          const px = a.x + (b.x - a.x) * e[2], py = a.y + (b.y - a.y) * e[2];
+          ctx.globalAlpha = 0.85; ctx.fillStyle = GREEN; ctx.beginPath(); ctx.arc(px, py, 1.7, 0, TAU); ctx.fill(); ctx.globalAlpha = 1;
+        }
+      });
+
+      wxLog += dt;
+      if (closed > 0 && !wxState && wxLog > 1) { wxState = true; wxLog = 0; self.pushLog('WARN', 'WX system — ' + closed + ' airway(s) closed'); self.pushLog('ALERT', nodes[CHOKE].l + ' chokepoint — rerouted traffic converging'); }
+      if (closed === 0 && wxState && wxLog > 1) { wxState = false; wxLog = 0; self.pushLog('INFO', 'WX clearing — airways restored'); }
+
+      let cK = 0, cKU = 0;
+      nodes.forEach(n => {
+        const p = np(n), isChoke = n.st === 'choke';
+        const col = isChoke ? (closed > 0 ? RED : AMBER) : n.st === 'ku' ? AMBER : GREEN;
+        (n.st === 'known') ? cK++ : cKU++;
+        let a = 1; if (hl === 'unknown') a = 0.16; else if (hl) { if (n.st === 'known' && hl !== 'known') a = 0.2; if ((n.st === 'ku' || isChoke) && hl !== 'ku') a = 0.2; }
+        if (self._mouse && Math.hypot(self._mouse.x - p.x, self._mouse.y - p.y) < 46) a = 1;
+        if (isChoke) { const pulse = 0.5 + 0.5 * Math.sin(t * (closed > 0 ? 6 : 3)); ctx.globalAlpha = a * 0.55 * pulse; ctx.strokeStyle = col; ctx.lineWidth = 1.4; ctx.beginPath(); ctx.arc(p.x, p.y, 11 + pulse * (closed > 0 ? 6 : 3), 0, TAU); ctx.stroke(); ctx.globalAlpha = 1; }
+        else if (n.st === 'ku') { const pulse = 0.5 + 0.5 * Math.sin(t * 3 + n.ph); ctx.globalAlpha = a * 0.5 * pulse; ctx.strokeStyle = AMBER; ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(p.x, p.y, 9 + pulse * 3, 0, TAU); ctx.stroke(); ctx.globalAlpha = 1; }
+        ctx.globalAlpha = a; ctx.fillStyle = col; ctx.shadowColor = col; ctx.shadowBlur = isChoke ? 11 : 8; ctx.beginPath(); ctx.arc(p.x, p.y, isChoke ? 5 : 4, 0, TAU); ctx.fill(); ctx.shadowBlur = 0;
+        if (showL) { ctx.globalAlpha = a * 0.9; ctx.font = '10px "JetBrains Mono", monospace'; ctx.fillStyle = 'rgba(180,235,210,' + (a * 0.9) + ')'; ctx.textAlign = 'center'; ctx.fillText(n.l, p.x, p.y + 18); if (isChoke) { ctx.fillStyle = col; ctx.font = '8px "JetBrains Mono", monospace'; ctx.fillText(closed > 0 ? 'CHOKEPOINT \u25b2' : 'hub', p.x, p.y - 11); } ctx.textAlign = 'left'; ctx.globalAlpha = 1; }
+      });
+      self._live = { known: cK, ku: cKU, uu: closed };
+    }
+
+    const t0 = performance.now(); let last = t0;
+    const frame = now => {
+      if (!ensure()) { self._raf = requestAnimationFrame(frame); return; }
+      const dt = Math.min(0.05, (now - last) / 1000); last = now; const t = (now - t0) / 1000, M = self.getMotion();
+      ctx.fillStyle = BG; ctx.fillRect(0, 0, W, H);
+      if (mode === 'radar') radar(t, dt, M); else graph(t, dt, M);
+      self._raf = requestAnimationFrame(frame);
+    };
+    this._raf = requestAnimationFrame(frame);
+  }
+
+  renderVals() {
+    const mode = this.getMode();
+    const baseBtn = { fontFamily: "'JetBrains Mono', monospace", fontSize: '10.5px', padding: '3px 9px', borderRadius: '3px', cursor: 'pointer', background: 'transparent', transition: 'all .15s' };
+    const active = { ...baseBtn, background: 'rgba(91,200,214,0.16)', color: '#5bc8d6', border: '1px solid rgba(91,200,214,0.45)' };
+    const idle = { ...baseBtn, color: '#71867e', border: '1px solid rgba(120,160,145,0.2)' };
+    const pad = n => String(Math.round(n)).padStart(2, '0');
+    const c = this.state.counts;
+    const toPts = (arr, max) => arr.map((v, i) => (i / (arr.length - 1) * 100).toFixed(1) + ',' + (29 - Math.min(1, v / max) * 27).toFixed(1)).join(' ');
+    const lvlColor = { INFO: '#46e2a0', OK: '#46e2a0', WARN: '#f0b73f', ALERT: '#ef6b6b', RECL: '#f0b73f', LOST: '#71867e' };
+    return {
+      canvasRef: this.canvasRef,
+      year: new Date().getFullYear(),
+      clock: this.state.clock,
+      scopeTitle: mode === 'depgraph' ? 'AIRWAY MAP · GLOBAL' : 'RADAR · SECTOR 7',
+      radarBtnStyle: mode === 'radar' ? active : idle,
+      graphBtnStyle: mode === 'depgraph' ? active : idle,
+      onRadar: () => this.setState({ mode: 'radar' }),
+      onGraph: () => this.setState({ mode: 'depgraph' }),
+      hlKnown: () => { this._highlight = 'known'; },
+      hlKU: () => { this._highlight = 'ku'; },
+      hlUnknown: () => { this._highlight = 'unknown'; },
+      hlClear: () => { this._highlight = null; },
+      knownN: pad(c.known), kuN: pad(c.ku), uuN: pad(c.uu),
+      sparkKnown: toPts(this.state.sk.known, 11),
+      sparkKU: toPts(this.state.sk.ku, 7),
+      sparkUU: toPts(this.state.sk.uu, 4),
+      logLines: this.state.log.map(l => ({ t: l.t, lvl: l.lvl, msg: l.msg, lvlStyle: { color: lvlColor[l.lvl] || '#a9bcb3', fontWeight: 600, minWidth: '40px', flex: 'none' } }))
+    };
+  }
+}
+</script>
+</body>
+</html>
