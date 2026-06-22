@@ -356,12 +356,38 @@ class Component extends DCLogic {
     const brg = (nx, ny) => String(Math.round(norm(Math.atan2(ny, nx)) * 180 / Math.PI)).padStart(3, '0');
 
     // ---------- depgraph entities ----------
+    // Equirectangular projection: real-world lon/lat -> normalized 0..1 on the world map.
+    // Shared by the airports, the airway weather system and the map backdrop so they stay aligned.
+    const geo = (lon, lat) => ({ nx: (lon + 180) / 360, ny: (90 - lat) / 180 });
     const gLabels = ['LAX', 'JFK', 'GRU', 'LHR', 'FRA', 'JNB', 'DXB', 'DEL', 'SIN', 'HKG', 'NRT', 'SYD', 'CDG'];
-    const gPos = [[0.10, 0.36], [0.24, 0.30], [0.33, 0.74], [0.45, 0.22], [0.49, 0.25], [0.56, 0.76], [0.63, 0.42], [0.71, 0.40], [0.79, 0.56], [0.83, 0.44], [0.91, 0.34], [0.95, 0.80], [0.46, 0.28]];
-    const nodes = gLabels.map((l, i) => ({ l, bx: gPos[i][0], by: gPos[i][1], st: i === 6 ? 'choke' : i === 3 ? 'ku' : 'known', ph: rnd(0, TAU) }));
+    // real [lon, lat] for each airport so it lands on the correct continent
+    const gGeo = { LAX: [-118.41, 33.94], JFK: [-73.78, 40.64], GRU: [-46.47, -23.43], LHR: [-0.45, 51.47], FRA: [8.56, 50.03], JNB: [28.24, -26.13], DXB: [55.36, 25.25], DEL: [77.10, 28.56], SIN: [103.99, 1.36], HKG: [113.91, 22.31], NRT: [140.39, 35.76], SYD: [151.18, -33.94], CDG: [2.55, 49.01] };
+    const nodes = gLabels.map((l, i) => { const g = geo(gGeo[l][0], gGeo[l][1]); return { l, bx: g.nx, by: g.ny, st: i === 6 ? 'choke' : i === 3 ? 'ku' : 'known', ph: rnd(0, TAU) }; });
     const edges = [[0, 1], [1, 3], [3, 4], [3, 12], [4, 6], [12, 6], [6, 7], [6, 8], [6, 9], [6, 5], [7, 8], [8, 9], [9, 10], [10, 0], [1, 2], [2, 5], [8, 11], [9, 11]].map(e => { e.push(Math.random()); return e; });
     const CHOKE = 6;
+    // London/Paris/Frankfurt sit within a few px on a whole-world map — fan their labels
+    // out with short leader lines so they stay legible; everything else labels straight down
+    const LBL = { LHR: [-16, -10], CDG: [2, 17], FRA: [17, -2], DEL: [15, -11] };
+    nodes.forEach(n => { n.lo = LBL[n.l] || null; });
     let wx = { x: 0.55, y: 0.42, r: 0.15, vx: 0.03, vy: 0.018 }, wxLog = 0, wxState = false;
+
+    // coarse, hand-simplified continent outlines as [lon, lat] rings — a faint radar-style
+    // backdrop (self-contained, no external map data / network needed)
+    const WORLD = [
+      [[-166, 66], [-160, 71], [-140, 70], [-125, 71], [-100, 72], [-82, 74], [-62, 61], [-56, 52], [-66, 46], [-70, 42], [-74, 40], [-76, 35], [-81, 25], [-83, 25], [-90, 29], [-97, 26], [-97, 18], [-96, 16], [-105, 20], [-112, 24], [-115, 30], [-118, 33], [-123, 38], [-124, 46], [-130, 54], [-140, 59], [-150, 59], [-158, 57], [-166, 59]],
+      [[-45, 60], [-50, 64], [-52, 68], [-58, 72], [-55, 76], [-40, 78], [-30, 76], [-22, 72], [-30, 68], [-38, 64]],
+      [[-80, 8], [-71, 11], [-62, 10], [-52, 5], [-50, 0], [-44, -2], [-35, -7], [-38, -13], [-48, -25], [-54, -34], [-58, -39], [-65, -46], [-70, -52], [-74, -52], [-73, -44], [-71, -32], [-70, -20], [-76, -14], [-81, -6], [-81, -3], [-78, 2]],
+      [[-17, 15], [-16, 20], [-10, 28], [-6, 36], [2, 37], [10, 37], [11, 34], [20, 32], [25, 32], [32, 31], [34, 28], [37, 22], [43, 12], [51, 12], [48, 5], [42, -2], [40, -10], [35, -18], [33, -26], [27, -34], [20, -35], [18, -34], [14, -23], [12, -16], [9, -5], [9, 2], [3, 5], [-8, 4], [-12, 8]],
+      [[-10, 36], [-9, 43], [-2, 44], [1, 47], [-1, 49], [2, 51], [7, 53], [6, 58], [11, 59], [10, 64], [16, 68], [24, 71], [34, 70], [48, 68], [62, 69], [78, 73], [95, 76], [112, 74], [132, 73], [150, 72], [165, 69], [178, 66], [180, 64], [170, 61], [162, 58], [160, 54], [154, 52], [143, 53], [140, 49], [135, 44], [130, 43], [127, 39], [122, 40], [121, 31], [113, 22], [108, 15], [106, 10], [104, 9], [100, 12], [99, 7], [98, 9], [97, 16], [91, 22], [88, 22], [82, 17], [77, 8], [73, 17], [69, 22], [64, 25], [57, 25], [59, 21], [52, 16], [45, 13], [39, 20], [35, 28], [34, 31], [36, 37], [30, 37], [25, 40], [19, 41], [13, 45], [6, 43], [2, 42], [-2, 36], [-6, 36]],
+      [[114, -22], [114, -28], [118, -35], [125, -32], [131, -31], [137, -35], [140, -38], [147, -38], [150, -37], [153, -28], [149, -21], [145, -15], [142, -11], [137, -12], [130, -12], [124, -15], [122, -18]],
+      [[-5, 50], [-3, 53], [-3, 55], [-5, 57], [-7, 55], [-5, 52]],
+      [[130, 31], [135, 34], [140, 37], [141, 41], [140, 38], [136, 35], [132, 33]],
+      [[44, -16], [50, -15], [50, -25], [45, -25], [43, -20]],
+      [[173, -35], [178, -38], [174, -41], [170, -44], [167, -46], [170, -42]],
+      [[109, 2], [117, 4], [119, -3], [110, -3]]
+    ];
+    // ocean labels at fixed [lon, lat, text]
+    const OCEANS = [[-150, 25, 'N PACIFIC'], [-128, -28, 'S PACIFIC'], [-38, 28, 'N ATLANTIC'], [-18, -28, 'S ATLANTIC'], [78, -22, 'INDIAN OCEAN'], [8, 80, 'ARCTIC OCEAN'], [40, -72, 'SOUTHERN OCEAN']];
 
     const freshOf = (nx, ny, sweep) => { const ang = norm(Math.atan2(ny, nx)); return 1 - norm(sweep - ang) / TAU; };
     const drawTrack = (px, py, head, col, a, c1, c2, l1, l2, showL) => {
@@ -506,14 +532,33 @@ class Component extends DCLogic {
 
     // ---------- depgraph draw ----------
     function graph(t, dt, M) {
-      const padX = Math.max(50, W * 0.06), padY = 56;
-      const np = n => ({ x: padX + (n.bx + Math.sin(t * 0.4 + n.ph) * 0.006) * (W - 2 * padX), y: padY + (n.by + Math.cos(t * 0.5 + n.ph) * 0.006) * (H - 2 * padY) });
+      // letterbox a 2:1 equirectangular world inside the canvas (no stretch) so the
+      // airports keep correct relative spacing on every screen — incl. narrow iPhone portrait
+      const mx = 10, topPad = 30, botPad = 30;
+      const availW = W - 2 * mx, availH = Math.max(40, H - topPad - botPad);
+      const mw = Math.min(availW, availH * 2), mh = mw / 2;
+      const map = { x: (W - mw) / 2, y: topPad + (availH - mh) / 2, w: mw, h: mh };
+      const pr = (nx, ny) => ({ x: map.x + nx * map.w, y: map.y + ny * map.h });
+      const np = n => pr(n.bx + Math.sin(t * 0.4 + n.ph) * 0.006, n.by + Math.cos(t * 0.5 + n.ph) * 0.006);
       const hl = self._highlight, showL = self.props.showLabels !== false;
+
+      // ---- world map backdrop: faint oceans + wireframe continents ----
+      ctx.save();
+      ctx.beginPath(); ctx.rect(map.x, map.y, map.w, map.h); ctx.clip();
+      ctx.fillStyle = 'rgba(8,22,22,0.55)'; ctx.fillRect(map.x, map.y, map.w, map.h);
+      ctx.lineWidth = 1; ctx.strokeStyle = 'rgba(70,226,160,0.05)';
+      for (let lon = -120; lon <= 120; lon += 60) { const a = pr((lon + 180) / 360, 0), b = pr((lon + 180) / 360, 1); ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke(); }
+      for (let lat = -60; lat <= 60; lat += 30) { const a = pr(0, (90 - lat) / 180), b = pr(1, (90 - lat) / 180); ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke(); }
+      ctx.strokeStyle = 'rgba(70,226,160,0.2)'; ctx.fillStyle = 'rgba(70,226,160,0.045)';
+      WORLD.forEach(poly => { ctx.beginPath(); poly.forEach((c, i) => { const p = pr((c[0] + 180) / 360, (90 - c[1]) / 180); i ? ctx.lineTo(p.x, p.y) : ctx.moveTo(p.x, p.y); }); ctx.closePath(); ctx.fill(); ctx.stroke(); });
+      ctx.restore();
+      // ocean labels drawn unclipped so edge labels aren't cut off on narrow screens
+      if (showL) { ctx.font = '9px "JetBrains Mono", monospace'; ctx.fillStyle = 'rgba(120,170,160,0.45)'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; OCEANS.forEach(o => { const p = pr((o[0] + 180) / 360, (90 - o[1]) / 180); ctx.fillText(o[2], p.x, p.y); }); ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic'; }
 
       // a weather system drifts across the global network
       wx.x += wx.vx * dt * M; wx.y += wx.vy * dt * M;
       if (wx.x < 0.16 || wx.x > 0.84) wx.vx *= -1; if (wx.y < 0.18 || wx.y > 0.82) wx.vy *= -1;
-      const wpx = padX + wx.x * (W - 2 * padX), wpy = padY + wx.y * (H - 2 * padY), wpr = wx.r * Math.min(W, H);
+      const wp = pr(wx.x, wx.y), wpx = wp.x, wpy = wp.y, wpr = wx.r * Math.min(map.w, map.h);
       const wg = ctx.createRadialGradient(wpx, wpy, 0, wpx, wpy, wpr);
       wg.addColorStop(0, 'rgba(239,107,107,0.16)'); wg.addColorStop(0.6, 'rgba(240,183,63,0.07)'); wg.addColorStop(1, 'rgba(240,183,63,0)');
       ctx.fillStyle = wg; ctx.beginPath(); ctx.arc(wpx, wpy, wpr, 0, TAU); ctx.fill();
@@ -556,7 +601,7 @@ class Component extends DCLogic {
         if (isChoke) { const pulse = 0.5 + 0.5 * Math.sin(t * (closed > 0 ? 6 : 3)); ctx.globalAlpha = a * 0.55 * pulse; ctx.strokeStyle = col; ctx.lineWidth = 1.4; ctx.beginPath(); ctx.arc(p.x, p.y, 11 + pulse * (closed > 0 ? 6 : 3), 0, TAU); ctx.stroke(); ctx.globalAlpha = 1; }
         else if (n.st === 'ku') { const pulse = 0.5 + 0.5 * Math.sin(t * 3 + n.ph); ctx.globalAlpha = a * 0.5 * pulse; ctx.strokeStyle = AMBER; ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(p.x, p.y, 9 + pulse * 3, 0, TAU); ctx.stroke(); ctx.globalAlpha = 1; }
         ctx.globalAlpha = a; ctx.fillStyle = col; ctx.shadowColor = col; ctx.shadowBlur = isChoke ? 11 : 8; ctx.beginPath(); ctx.arc(p.x, p.y, isChoke ? 5 : 4, 0, TAU); ctx.fill(); ctx.shadowBlur = 0;
-        if (showL) { ctx.globalAlpha = a * 0.9; ctx.font = '10px "JetBrains Mono", monospace'; ctx.fillStyle = 'rgba(180,235,210,' + (a * 0.9) + ')'; ctx.textAlign = 'center'; ctx.fillText(n.l, p.x, p.y + 18); if (isChoke) { ctx.fillStyle = col; ctx.font = '8px "JetBrains Mono", monospace'; ctx.fillText(closed > 0 ? 'CHOKEPOINT \u25b2' : 'hub', p.x, p.y - 11); } ctx.textAlign = 'left'; ctx.globalAlpha = 1; }
+        if (showL) { const lox = n.lo ? n.lo[0] : 0, loy = n.lo ? n.lo[1] : 18; if (n.lo) { ctx.globalAlpha = a * 0.4; ctx.strokeStyle = 'rgba(180,235,210,0.6)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p.x + lox, p.y + loy - 3); ctx.stroke(); } ctx.globalAlpha = a * 0.9; ctx.font = '10px "JetBrains Mono", monospace'; ctx.fillStyle = 'rgba(180,235,210,' + (a * 0.9) + ')'; ctx.textAlign = 'center'; ctx.fillText(n.l, p.x + lox, p.y + loy); if (isChoke) { ctx.fillStyle = col; ctx.font = '8px "JetBrains Mono", monospace'; ctx.fillText(closed > 0 ? 'CHOKEPOINT \u25b2' : 'hub', p.x, p.y - 11); } ctx.textAlign = 'left'; ctx.globalAlpha = 1; }
       });
       self._live = { known: cK, ku: cKU, uu: closed };
     }
