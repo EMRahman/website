@@ -4,7 +4,7 @@ Personal portfolio site for Ehsan Rahman, Site Reliability Engineer.
 
 ## Overview
 
-A single-page static site with a dark "Observatory" dashboard aesthetic. Built with vanilla HTML, CSS, and JavaScript — no frameworks or build step required.
+A single-page static site with a dark "Observatory" dashboard aesthetic. Uses React 18 (loaded at runtime from the unpkg CDN) for component rendering, with vanilla HTML and CSS for layout and styling.
 
 ## Structure
 
@@ -17,6 +17,8 @@ A single-page static site with a dark "Observatory" dashboard aesthetic. Built w
 ## Development
 
 Open `index.html` directly in a browser. No build tool or local server needed.
+
+**Note:** The page requires network access to load React 18 and ReactDOM from unpkg at runtime. It will not boot in offline environments or under restrictive CSPs that block `unpkg.com`.
 
 ## Deployment
 
