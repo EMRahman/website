@@ -2,6 +2,8 @@
 
 Personal portfolio site for Ehsan Rahman.
 
+**Live site:** https://emrahman.github.io/website/
+
 ## Overview
 
 A single-page static site with a dark "Observatory" dashboard aesthetic. Uses React 18 (loaded at runtime from the unpkg CDN) for component rendering, with vanilla HTML and CSS for layout and styling.
