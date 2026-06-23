@@ -733,11 +733,14 @@ class Component extends DCLogic {
       graphCanvasRef: this.graphCanvasRef,
       year: new Date().getFullYear(),
       clock: this.state.clock,
-      statusBadge: topCrit
-        ? (topCrit.msg.length > 30 ? topCrit.msg.slice(0, 29) + '…' : topCrit.msg)
-        : topUrgent
-          ? (topUrgent.msg.length > 30 ? topUrgent.msg.slice(0, 29) + '…' : topUrgent.msg)
-          : 'KK·' + pad(c.known) + ' · KU·' + pad(c.ku) + ' · UU·' + pad(c.uu),
+      statusBadge: (() => {
+        const top = topCrit || topUrgent;
+        if (top) {
+          const msg = top.msg.replace(/^(MAYDAY MAYDAY MAYDAY — |PAN PAN PAN — )/, '');
+          return msg.length > 30 ? msg.slice(0, 29) + '…' : msg;
+        }
+        return 'KK·' + pad(c.known) + ' · KU·' + pad(c.ku) + ' · UU·' + pad(c.uu);
+      })(),
       statusBadgeStyle: topMayday
         ? { fontFamily: mono, fontSize: '9.5px', fontWeight: 600, color: '#ff3333', animation: 'pulsedot 0.8s ease-in-out infinite' }
         : topAlert
