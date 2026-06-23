@@ -289,6 +289,8 @@ class Component extends DCLogic {
     this._live = { known: 0, ku: 0, uu: 0 };
     this._log = [];
     this._graphAlertLvl = null;
+    this._graphBadgeLvl = null;
+    this._graphBadgeMsg = null;
     this.pushLog('INFO', 'observatory online — sweep nominal');
     this.setup();
     this._tick = setInterval(() => this.tick(), 800);
@@ -388,7 +390,7 @@ class Component extends DCLogic {
     const confAng = 2.2, dA = { x: Math.cos(confAng), y: Math.sin(confAng) }, dB = { x: Math.cos(confAng + 2.0), y: Math.sin(confAng + 2.0) };
     const conf = { Pm: { x: 0.16, y: -0.1 }, period: 16, a: 'IBE451', b: 'TAP12', logged: false };
     // one aircraft steadily burning down its reserve → running out of fuel
-    const sat = { name: 'QFA12', nx: -0.5, ny: 0.46, cycle: 13, loggedW: false, loggedA: false };
+    const sat = { name: 'QFA12', nx: -0.5, ny: 0.46, cycle: 80, loggedW: false, loggedA: false };
     for (let i = 0; i < 3; i++) {
       const ang = rnd(0, TAU), rad = rnd(0.35, 0.85), head = rnd(0, TAU), sp = rnd(0.008, 0.022);
       kus.push({ nx: Math.cos(ang) * rad, ny: Math.sin(ang) * rad, vx: Math.cos(head) * sp, vy: Math.sin(head) * sp, seed: rnd(0, 10), lbl: ['NO SQUAWK', 'UNVERIFIED', '?? PRIMARY'][i % 3] });
@@ -454,9 +456,6 @@ class Component extends DCLogic {
       ctx.strokeStyle = 'rgba(70,226,160,0.18)'; ctx.beginPath(); ctx.arc(cx, cy, R, 0, TAU); ctx.stroke();
       ctx.strokeStyle = 'rgba(70,226,160,0.06)'; ctx.beginPath(); ctx.moveTo(cx - R, cy); ctx.lineTo(cx + R, cy); ctx.moveTo(cx, cy - R); ctx.lineTo(cx, cy + R); ctx.stroke();
       for (let a = 0; a < 360; a += 15) { const rad = a * Math.PI / 180, r0 = R * (a % 90 === 0 ? 0.92 : 0.97); ctx.strokeStyle = 'rgba(70,226,160,0.16)'; ctx.beginPath(); ctx.moveTo(cx + Math.cos(rad) * r0, cy + Math.sin(rad) * r0); ctx.lineTo(cx + Math.cos(rad) * R, cy + Math.sin(rad) * R); ctx.stroke(); }
-      const trail = Math.PI * 0.6, slices = 46;
-      for (let i = 0; i < slices; i++) { const a1 = sweep - trail * i / slices, a0 = sweep - trail * (i + 1) / slices; ctx.beginPath(); ctx.moveTo(cx, cy); ctx.arc(cx, cy, R, a0, a1); ctx.closePath(); ctx.fillStyle = 'rgba(70,226,160,' + (0.13 * (1 - i / slices)) + ')'; ctx.fill(); }
-      ctx.strokeStyle = 'rgba(150,255,205,0.6)'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + Math.cos(sweep) * R, cy + Math.sin(sweep) * R); ctx.stroke();
       ctx.fillStyle = GREEN; ctx.beginPath(); ctx.arc(cx, cy, 2, 0, TAU); ctx.fill();
 
       const hl = self._highlight, showL = self.props.showLabels !== false;
@@ -521,24 +520,26 @@ class Component extends DCLogic {
 
       // --- one aircraft burning down its fuel reserve → running out of resource ---
       {
-        const ph = (t % sat.cycle) / sat.cycle, v = 100 - 96 * ph;
-        const px = cx + sat.nx * R, py = cy + sat.ny * R, f = freshOf(sat.nx, sat.ny, sweep);
-        const col = v < 8 ? RED : v < 22 ? AMBER : GREEN;
-        let a = 0.5 + 0.45 * f * f; if (hl && hl !== 'known') a *= 0.16;
-        cKnown++;
-        if (v < 22) { const pulse = 0.5 + 0.5 * Math.sin(t * 7); ctx.globalAlpha = a * (0.3 + 0.5 * (22 - v) / 22) * (0.6 + 0.4 * pulse); ctx.strokeStyle = col; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.arc(px, py, 9 + (22 - v) / 4, 0, TAU); ctx.stroke(); ctx.globalAlpha = 1; }
-        ctx.globalAlpha = a; ctx.fillStyle = col; ctx.shadowColor = col; ctx.shadowBlur = 9; ctx.fillRect(px - 3.2, py - 3.2, 6.4, 6.4); ctx.shadowBlur = 0;
-        if (showL && a > 0.3) {
-          const gw = 34, gh = 3, gx = px + 9, gy = py + 1;
-          ctx.globalAlpha = a * 0.45; ctx.fillStyle = 'rgba(120,160,145,0.6)'; ctx.fillRect(gx, gy, gw, gh);
-          ctx.globalAlpha = a; ctx.fillStyle = col; ctx.fillRect(gx, gy, gw * v / 100, gh);
-          ctx.font = '9px "JetBrains Mono", monospace'; ctx.fillStyle = col; ctx.fillText(sat.name, px + 9, py - 5);
-          ctx.fillText('fuel ' + Math.round(v) + '%' + (v < 22 ? ' \u25bc' : ''), gx + gw + 5, gy + 4);
-          ctx.globalAlpha = 1;
+        const ph = Math.min(t / sat.cycle, 1), v = 100 * (1 - ph);
+        if (v > 0) {
+          const px = cx + sat.nx * R, py = cy + sat.ny * R, f = freshOf(sat.nx, sat.ny, sweep);
+          const col = v < 8 ? RED : v < 20 ? AMBER : GREEN;
+          const fadeOut = v < 5 ? v / 5 : 1;
+          let a = (0.5 + 0.45 * f * f) * fadeOut; if (hl && hl !== 'known') a *= 0.16;
+          cKnown++;
+          if (v < 20) { const pulse = 0.5 + 0.5 * Math.sin(t * 7); ctx.globalAlpha = a * (0.3 + 0.5 * (20 - v) / 20) * (0.6 + 0.4 * pulse); ctx.strokeStyle = col; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.arc(px, py, 9 + (20 - v) / 4, 0, TAU); ctx.stroke(); ctx.globalAlpha = 1; }
+          ctx.globalAlpha = a; ctx.fillStyle = col; ctx.shadowColor = col; ctx.shadowBlur = 9; ctx.fillRect(px - 3.2, py - 3.2, 6.4, 6.4); ctx.shadowBlur = 0;
+          if (showL && a > 0.3) {
+            const gw = 34, gh = 3, gx = px + 9, gy = py + 1;
+            ctx.globalAlpha = a * 0.45; ctx.fillStyle = 'rgba(120,160,145,0.6)'; ctx.fillRect(gx, gy, gw, gh);
+            ctx.globalAlpha = a; ctx.fillStyle = col; ctx.fillRect(gx, gy, gw * v / 100, gh);
+            ctx.font = '9px "JetBrains Mono", monospace'; ctx.fillStyle = col; ctx.fillText(sat.name, px + 9, py - 5);
+            ctx.fillText('fuel ' + Math.round(v) + '%' + (v < 20 ? ' \u25bc' : ''), gx + gw + 5, gy + 4);
+            ctx.globalAlpha = 1;
+          }
+          if (v < 15 && !sat.loggedW) { sat.loggedW = true; self.pushLog('PAN·PAN', 'PAN PAN PAN — ' + sat.name + ' minimum fuel ' + Math.round(v) + '%'); }
+          if (v < 5 && !sat.loggedA) { sat.loggedA = true; self.pushLog('MAYDAY', 'MAYDAY MAYDAY MAYDAY — ' + sat.name + ' fuel critical'); }
         }
-        if (v < 12 && !sat.loggedW) { sat.loggedW = true; self.pushLog('PAN·PAN', 'PAN PAN PAN — ' + sat.name + ' minimum fuel ' + Math.round(v) + '%'); }
-        if (v < 4 && !sat.loggedA) { sat.loggedA = true; self.pushLog('MAYDAY', 'MAYDAY MAYDAY MAYDAY — ' + sat.name + ' fuel critical'); }
-        if (ph < 0.04) { if (sat.loggedA) self.pushLog('INFO', sat.name + ' refuelled — reserve restored'); sat.loggedW = false; sat.loggedA = false; }
       }
 
       // known-unknowns
@@ -558,7 +559,7 @@ class Component extends DCLogic {
       if (kuTimer > 3.5 && Math.random() < 0.5) { kuTimer = 0; const k = kus[Math.floor(rnd(0, kus.length))]; self.pushLog('WARN', 'primary return brg ' + brg(k.nx, k.ny) + ' — no squawk'); }
 
       // unknown-unknowns
-      if (t - lastGhost > ghostGap && ghosts.length < 3) { lastGhost = t; ghostGap = rnd(3.5, 7) / M; const ang = rnd(0, TAU), rad = rnd(0.28, 0.95); const g = { nx: Math.cos(ang) * rad, ny: Math.sin(ang) * rad, born: t, life: rnd(6, 11), promoted: false, logged: false }; ghosts.push(g); }
+      if (t - lastGhost > ghostGap && ghosts.length < 1) { lastGhost = t; ghostGap = rnd(3.5, 7) / M; const ang = rnd(0, TAU), rad = rnd(0.28, 0.95); const g = { nx: Math.cos(ang) * rad, ny: Math.sin(ang) * rad, born: t, life: rnd(6, 11), promoted: false, logged: false }; ghosts.push(g); }
       ghosts = ghosts.filter(g => { if (t - g.born >= g.life) { if (!g.promoted) self.pushLog('LOST', 'primary contact lost — unresolved'); return false; } return true; });
       ghosts.forEach(g => {
         const age = t - g.born, env = Math.min(1, age / 1.2) * Math.min(1, (g.life - age) / 1.5), f = freshOf(g.nx, g.ny, sweep);
@@ -610,10 +611,10 @@ class Component extends DCLogic {
       if (wx.x < 0.16 || wx.x > 0.84) wx.vx *= -1; if (wx.y < 0.18 || wx.y > 0.82) wx.vy *= -1;
       const wp = pr(wx.x, wx.y), wpx = wp.x, wpy = wp.y, wpr = wx.r * Math.min(map.w, map.h);
       const wg = ctx.createRadialGradient(wpx, wpy, 0, wpx, wpy, wpr);
-      wg.addColorStop(0, 'rgba(239,107,107,0.16)'); wg.addColorStop(0.6, 'rgba(240,183,63,0.07)'); wg.addColorStop(1, 'rgba(240,183,63,0)');
+      wg.addColorStop(0, 'rgba(239,107,107,0.18)'); wg.addColorStop(0.6, 'rgba(239,107,107,0.07)'); wg.addColorStop(1, 'rgba(239,107,107,0)');
       ctx.fillStyle = wg; ctx.beginPath(); ctx.arc(wpx, wpy, wpr, 0, TAU); ctx.fill();
-      ctx.globalAlpha = 0.4 + 0.2 * Math.sin(t * 3); ctx.strokeStyle = 'rgba(239,107,107,0.45)'; ctx.setLineDash([3, 4]); ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(wpx, wpy, wpr, 0, TAU); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1;
-      if (showL) { ctx.font = '9px "JetBrains Mono", monospace'; ctx.fillStyle = 'rgba(239,107,107,0.85)'; ctx.fillText('WX SYSTEM', wpx - 22, wpy - wpr - 6); }
+      ctx.globalAlpha = 0.4 + 0.2 * Math.sin(t * 3); ctx.strokeStyle = 'rgba(239,107,107,0.5)'; ctx.setLineDash([3, 4]); ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(wpx, wpy, wpr, 0, TAU); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1;
+      if (showL) { ctx.font = '9px "JetBrains Mono", monospace'; ctx.fillStyle = 'rgba(239,107,107,0.85)'; ctx.fillText('WX SYSTEM ?', wpx - 28, wpy - wpr - 6); }
 
       const segHitsWx = (a, b) => {
         const dx = b.x - a.x, dy = b.y - a.y, l2 = dx * dx + dy * dy || 1;
@@ -641,7 +642,7 @@ class Component extends DCLogic {
           ctx.strokeStyle = 'rgba(70,226,160,0.12)'; ctx.lineWidth = 1; segs.forEach(s => { ctx.beginPath(); ctx.moveTo(s[0].x, s[0].y); ctx.lineTo(s[1].x, s[1].y); ctx.stroke(); });
           // rerouted traffic via the chokepoint runs a little hotter
           const viaChoke = e[0] === CHOKE || e[1] === CHOKE;
-          e[2] = (e[2] + dt * (viaChoke && closed >= 0 ? 0.4 : 0.28) * M) % 1;
+          e[2] = (e[2] + dt * (viaChoke && self._graphAlertLvl === 'ALERT' ? 0.10 : 0.07) * M) % 1;
           // travel along the short (wrapped) path, then fold the dot back into the map
           let bx = B.x; if (B.x - A.x > 0.5) bx -= 1; else if (A.x - B.x > 0.5) bx += 1;
           let dx = A.x + (bx - A.x) * e[2]; if (dx < 0) dx += 1; else if (dx > 1) dx -= 1;
@@ -655,11 +656,14 @@ class Component extends DCLogic {
       if (closed > 0 && !wxState && wxLog > 1) { wxState = true; wxLog = 0; self.pushLog('WARN', 'WX system — ' + closed + ' airway(s) closed', 'graph'); self.pushLog('ALERT', nodes[CHOKE].l + ' chokepoint — rerouted traffic converging', 'graph'); }
       if (closed === 0 && wxState && wxLog > 1) { wxState = false; wxLog = 0; self.pushLog('INFO', 'WX clearing — airways restored', 'graph'); }
       self._graphAlertLvl = closed > 0 ? 'ALERT' : null;
+      // Live badge state — keyed off current frame so badge clears as soon as WX lifts
+      self._graphBadgeLvl = closed > 0 ? 'ALERT' : null;
+      self._graphBadgeMsg = closed > 0 ? nodes[CHOKE].l + ' chokepoint — converging' : null;
 
       let cK = 0, cKU = 0;
       nodes.forEach(n => {
         const p = np(n), isChoke = n.st === 'choke';
-        const col = isChoke ? (closed > 0 ? RED : AMBER) : n.st === 'ku' ? AMBER : GREEN;
+        const col = isChoke ? AMBER : n.st === 'ku' ? AMBER : GREEN;
         (n.st === 'known') ? cK++ : cKU++;
         let a = 1; if (hl === 'unknown') a = 0.16; else if (hl) { if (n.st === 'known' && hl !== 'known') a = 0.2; if ((n.st === 'ku' || isChoke) && hl !== 'ku') a = 0.2; }
         if (self._mouse && Math.hypot(self._mouse.x - p.x, self._mouse.y - p.y) < 46) a = 1;
@@ -729,24 +733,25 @@ class Component extends DCLogic {
     const topWarn   = radarLogs.find(e => e.lvl === 'WARN');
     const topCrit   = topMayday || topAlert;
     const topUrgent = topPan    || topWarn;
-    const gLvl = this._graphAlertLvl;
+    const gBadgeLvl = this._graphBadgeLvl;
+    const gBadgeMsg = this._graphBadgeMsg;
     const mono = "'JetBrains Mono', monospace";
     return {
       radarCanvasRef: this.radarCanvasRef,
       graphCanvasRef: this.graphCanvasRef,
       year: new Date().getFullYear(),
       clock: this.state.clock,
-      globalBadge: gLvl === 'ALERT' ? 'ALERT' : 'live',
-      globalBadgeStyle: gLvl === 'ALERT'
+      globalBadge: gBadgeMsg ? (gBadgeMsg.length > 30 ? gBadgeMsg.slice(0, 29) + '…' : gBadgeMsg) : 'WARN',
+      globalBadgeStyle: gBadgeLvl === 'ALERT'
         ? { fontFamily: mono, fontSize: '9px', fontWeight: 600, color: '#ef6b6b', animation: 'pulsedot 1.6s ease-in-out infinite' }
-        : { color: '#52655d', fontSize: '9px' },
+        : { fontFamily: mono, fontSize: '9px', color: '#52655d' },
       statusBadge: (() => {
         const top = topCrit || topUrgent;
         if (top) {
           const msg = top.msg.replace(/^(MAYDAY MAYDAY MAYDAY — |PAN PAN PAN — )/, '');
           return msg.length > 30 ? msg.slice(0, 29) + '…' : msg;
         }
-        return 'KK·' + pad(c.known) + ' · KU·' + pad(c.ku) + ' · UU·' + pad(c.uu);
+        return '';
       })(),
       statusBadgeStyle: topMayday
         ? { fontFamily: mono, fontSize: '9.5px', fontWeight: 600, color: '#ff3333', animation: 'pulsedot 0.8s ease-in-out infinite' }
