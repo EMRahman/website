@@ -121,3 +121,19 @@ No JS changes needed — the section is purely static HTML, no reactive state.
 2. Confirm the topbar nav link scrolls to the new section
 3. Confirm all Wikipedia links open correctly
 4. Confirm section renders correctly on mobile (≤760px breakpoint)
+
+---
+
+## Implementation note (built)
+
+The shipped section is richer than the original two-part sketch above. After cross-referencing every incident against its official report (NTSB, AAIB, BFU, TSB Canada, ATSB, ANSV, TAIC, GPIAA, DGAC), the section was built around the finding that recurred in almost every inquiry: **the probable cause names the front-line operator; the root cause names the system; and the report usually under-weights the cost / influence / power that set the conditions.**
+
+Final structure of `#aci-logs`:
+1. **Thesis** — "every catastrophe is told twice" — with a three-term legend: `PROX` (what was blamed) · `ROOT` (what was true) · `POWER` (what was left out).
+2. **The blame gradient** — a capstone callout on how accountability concentrates on the lowest-power hand while the truth is dragged out by families, dissenting board members, whistleblowers, and lawsuits — and why a post-mortem must be blameless.
+3. **Failure modes** — 8 transferable patterns, each stated once for aviation and once generically ("SAME SHAPE →") so the analogy carries to any complex system without naming specific software.
+4. **The ledger** — 32 incidents as compact two-layer post-mortem cards (PROX / ROOT / POWER + pattern tags), ordered most-transferable first, each linking to the public record.
+
+Styling uses a small set of scoped `.aci-*` CSS classes added to the `<helmet>` block (cards, chips, responsive grid, pattern rows) rather than per-element inline hover, to keep the 32-card grid lightweight.
+
+Episode notes that could not be tied to a specific, verifiable flight (the "13 collision-alerts a day" ATC episode; the propeller-feathering lab-vs-flight episode) were folded into the relevant patterns rather than listed with a fabricated identity.
