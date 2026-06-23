@@ -171,7 +171,7 @@ html,body{margin:0;padding:0;background:#080b0a;}
             <span>EVENT LOG · realtime</span><span style="color:#52655d;">tail -f</span>
           </div>
           <div style="flex:1;min-height:0;overflow:hidden;padding:8px 12px;font-family:'JetBrains Mono',monospace;font-size:10.5px;line-height:1.85;">
-            <sc-for list="{{ logLines }}" as="ln" hint-placeholder-count="8">
+            <sc-for list="{{ logLines }}" as="ln" hint-placeholder-count="20">
               <div style="display:flex;gap:9px;white-space:nowrap;">
                 <span style="color:#52655d;flex:none;">{{ ln.t }}</span>
                 <span style="{{ ln.lvlStyle }}">{{ ln.lvl }}</span>
@@ -315,7 +315,7 @@ class Component extends DCLogic {
     this.setState({
       clock,
       counts: { known: L.known, ku: L.ku, uu: L.uu },
-      log: this._log.slice(0, 9),
+      log: this._log.slice(),
       sk: {
         known: push(sk.known, 5 + L.known * 0.4 + Math.sin(Date.now() / 1400) * 1.6 + Math.random() * 1.4),
         ku: push(sk.ku, 2 + L.ku * 0.7 + Math.random() * 1.3),
