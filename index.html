@@ -514,7 +514,7 @@ class Component extends DCLogic {
         const hA = Math.atan2(-dA.y, -dA.x), hB = Math.atan2(-dB.y, -dB.x);
         drawTrack(Apx, Apy, hA, col, aA, 'rgba(180,245,215,', 'rgba(120,200,165,', conf.a, 'FL330', showL);
         drawTrack(Bpx, Bpy, hB, col, aB, 'rgba(180,245,215,', 'rgba(120,200,165,', conf.b, 'FL330', showL);
-        if (crit && !conf.logged) { conf.logged = true; self.pushLog('ALERT', 'conflict ' + conf.a + ' \u21c4 ' + conf.b + ' — loss of separation'); }
+        if (crit && !conf.logged) { conf.logged = true; self.pushLog('MAYDAY', 'MAYDAY MAYDAY MAYDAY — ' + conf.a + ' \u21c4 ' + conf.b + ' sep loss'); }
         if (!danger) conf.logged = false;
       }
 
@@ -535,8 +535,8 @@ class Component extends DCLogic {
           ctx.fillText('fuel ' + Math.round(v) + '%' + (v < 22 ? ' \u25bc' : ''), gx + gw + 5, gy + 4);
           ctx.globalAlpha = 1;
         }
-        if (v < 12 && !sat.loggedW) { sat.loggedW = true; self.pushLog('WARN', sat.name + ' fuel ' + Math.round(v) + '% — minimum fuel'); }
-        if (v < 4 && !sat.loggedA) { sat.loggedA = true; self.pushLog('ALERT', sat.name + ' fuel critical — declaring emergency'); }
+        if (v < 12 && !sat.loggedW) { sat.loggedW = true; self.pushLog('PAN·PAN', 'PAN PAN PAN — ' + sat.name + ' minimum fuel ' + Math.round(v) + '%'); }
+        if (v < 4 && !sat.loggedA) { sat.loggedA = true; self.pushLog('MAYDAY', 'MAYDAY MAYDAY MAYDAY — ' + sat.name + ' fuel critical'); }
         if (ph < 0.04) { if (sat.loggedA) self.pushLog('INFO', sat.name + ' refuelled — reserve restored'); sat.loggedW = false; sat.loggedA = false; }
       }
 
@@ -693,7 +693,7 @@ class Component extends DCLogic {
     const pad = n => String(Math.round(n)).padStart(2, '0');
     const c = this.state.counts;
     const toPts = (arr, max) => arr.map((v, i) => (i / (arr.length - 1) * 100).toFixed(1) + ',' + (29 - Math.min(1, v / max) * 27).toFixed(1)).join(' ');
-    const lvlColor = { INFO: '#46e2a0', OK: '#46e2a0', WARN: '#f0b73f', ALERT: '#ef6b6b', RECL: '#f0b73f', LOST: '#71867e' };
+    const lvlColor = { INFO: '#46e2a0', OK: '#46e2a0', WARN: '#f0b73f', 'PAN·PAN': '#f97316', ALERT: '#ef6b6b', MAYDAY: '#ff3333', RECL: '#f0b73f', LOST: '#71867e' };
     // ---------- glossary popovers (hover / tap) ----------
     const G = {
       sector:     { title: 'Sector', edge: '#5bc8d6', img: './images/sector.png',
@@ -721,24 +721,35 @@ class Component extends DCLogic {
     const g = this.state.gloss;
     const gid = this.state.glossGid;
     const last8 = this.state.log.slice(0, 8);
-    const topAlert = last8.find(e => e.lvl === 'ALERT');
-    const topWarn  = last8.find(e => e.lvl === 'WARN');
+    const topMayday = last8.find(e => e.lvl === 'MAYDAY');
+    const topAlert  = last8.find(e => e.lvl === 'ALERT');
+    const topPan    = last8.find(e => e.lvl === 'PAN·PAN');
+    const topWarn   = last8.find(e => e.lvl === 'WARN');
+    const topCrit   = topMayday || topAlert;
+    const topUrgent = topPan    || topWarn;
     const mono = "'JetBrains Mono', monospace";
     return {
       radarCanvasRef: this.radarCanvasRef,
       graphCanvasRef: this.graphCanvasRef,
       year: new Date().getFullYear(),
       clock: this.state.clock,
-      statusBadge: topAlert
-        ? (topAlert.msg.length > 30 ? topAlert.msg.slice(0, 29) + '…' : topAlert.msg)
-        : topWarn
-          ? (topWarn.msg.length > 30 ? topWarn.msg.slice(0, 29) + '…' : topWarn.msg)
-          : 'KK·' + pad(c.known) + ' · KU·' + pad(c.ku) + ' · UU·' + pad(c.uu),
-      statusBadgeStyle: topAlert
-        ? { fontFamily: mono, fontSize: '9.5px', fontWeight: 600, color: '#ef6b6b', animation: 'pulsedot 1.6s ease-in-out infinite' }
-        : topWarn
-          ? { fontFamily: mono, fontSize: '9.5px', fontWeight: 600, color: '#f0b73f' }
-          : { fontFamily: mono, fontSize: '9.5px', color: '#46e2a0', letterSpacing: '0.05em' },
+      statusBadge: (() => {
+        const top = topCrit || topUrgent;
+        if (top) {
+          const msg = top.msg.replace(/^(MAYDAY MAYDAY MAYDAY — |PAN PAN PAN — )/, '');
+          return msg.length > 30 ? msg.slice(0, 29) + '…' : msg;
+        }
+        return 'KK·' + pad(c.known) + ' · KU·' + pad(c.ku) + ' · UU·' + pad(c.uu);
+      })(),
+      statusBadgeStyle: topMayday
+        ? { fontFamily: mono, fontSize: '9.5px', fontWeight: 600, color: '#ff3333', animation: 'pulsedot 0.8s ease-in-out infinite' }
+        : topAlert
+          ? { fontFamily: mono, fontSize: '9.5px', fontWeight: 600, color: '#ef6b6b', animation: 'pulsedot 1.6s ease-in-out infinite' }
+          : topPan
+            ? { fontFamily: mono, fontSize: '9.5px', fontWeight: 600, color: '#f97316', animation: 'pulsedot 1.2s ease-in-out infinite' }
+            : topWarn
+              ? { fontFamily: mono, fontSize: '9.5px', fontWeight: 600, color: '#f0b73f' }
+              : { fontFamily: mono, fontSize: '9.5px', color: '#46e2a0', letterSpacing: '0.05em' },
       hlKnown: () => { this._highlight = 'known'; },
       hlKU: () => { this._highlight = 'ku'; },
       hlUnknown: () => { this._highlight = 'unknown'; },
