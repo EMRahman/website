@@ -28,7 +28,8 @@ html,body{margin:0;padding:0;background:#080b0a;}
   .quote-panel,.rail{flex-basis:100% !important;}
   .content-main{padding-left:12px !important;padding-right:12px !important;}
   .sec-pad{padding:28px 22px !important;}
-  .scope-sub{flex-basis:100% !important;min-height:37vh !important;}
+  .scope-sub{flex-basis:100% !important;min-height:37vh !important;border-right:none !important;}
+  .scope-sub:first-child{border-bottom:1px solid rgba(120,160,145,0.12) !important;}
 }
 </style>
 </helmet>
@@ -333,16 +334,17 @@ class Component extends DCLogic {
     // active-context aliases — swapped before each draw call so drawTrack and the draw
     // functions can reference them by name without being refactored to accept parameters
     let ctx = null, W = 600, H = 400, cx = 300, cy = 200, R = 160;
+    let activeMouse = null;
 
-    const onMove = e => { const cv = self.radarCanvasRef.current; if (!cv) return; const pt = (e.touches && e.touches[0]) ? e.touches[0] : e; const r = cv.getBoundingClientRect(); self._mouse = { x: pt.clientX - r.left, y: pt.clientY - r.top }; };
-    const onLeave = () => { self._mouse = null; };
-    const onTouchEnd = () => { setTimeout(() => { self._mouse = null; }, 1400); };
+    const onMove = e => { const cv = e.currentTarget; if (!cv) return; const pt = (e.touches && e.touches[0]) ? e.touches[0] : e; const r = cv.getBoundingClientRect(); activeMouse = { x: pt.clientX - r.left, y: pt.clientY - r.top, canvas: cv }; };
+    const onLeave = () => { activeMouse = null; };
+    const onTouchEnd = () => { setTimeout(() => { activeMouse = null; }, 1400); };
     const bind = cv => { cv.addEventListener('pointermove', onMove); cv.addEventListener('pointerleave', onLeave); cv.addEventListener('touchstart', onMove, { passive: true }); cv.addEventListener('touchmove', onMove, { passive: true }); cv.addEventListener('touchend', onTouchEnd); };
     const unbind = cv => { cv.removeEventListener('pointermove', onMove); cv.removeEventListener('pointerleave', onLeave); cv.removeEventListener('touchstart', onMove); cv.removeEventListener('touchmove', onMove); cv.removeEventListener('touchend', onTouchEnd); };
     this._onResize = () => { rLastW = 0; gLastW = 0; };
     window.addEventListener('resize', this._onResize);
     window.addEventListener('orientationchange', this._onResize);
-    this._teardownCanvas = () => { if (rCanvas) unbind(rCanvas); };
+    this._teardownCanvas = () => { if (rCanvas) unbind(rCanvas); if (gCanvas) unbind(gCanvas); };
 
     const ensureRadar = () => {
       const cv = self.radarCanvasRef.current;
@@ -361,7 +363,7 @@ class Component extends DCLogic {
     const ensureGraph = () => {
       const cv = self.graphCanvasRef.current;
       if (!cv) return false;
-      if (cv !== gCanvas) { gCanvas = cv; gCtx = cv.getContext('2d'); gLastW = 0; }
+      if (cv !== gCanvas) { if (gCanvas) unbind(gCanvas); gCanvas = cv; gCtx = cv.getContext('2d'); bind(cv); gLastW = 0; }
       const r = cv.getBoundingClientRect();
       const w = r.width || 300, h = r.height || 400;
       if (Math.abs(w - gLastW) > 0.5 || Math.abs(h - gLastH) > 0.5) {
@@ -671,11 +673,13 @@ class Component extends DCLogic {
       const t = (now - t0) / 1000, M = self.getMotion();
       if (ensureGraph()) {
         ctx = gCtx; W = gW; H = gH; cx = gCx; cy = gCy; R = gR;
+        self._mouse = (activeMouse && activeMouse.canvas === gCanvas) ? activeMouse : null;
         ctx.fillStyle = BG; ctx.fillRect(0, 0, W, H);
         graph(t, dt, M);
       }
       if (ensureRadar()) {
         ctx = rCtx; W = rW; H = rH; cx = rCx; cy = rCy; R = rR;
+        self._mouse = (activeMouse && activeMouse.canvas === rCanvas) ? activeMouse : null;
         ctx.fillStyle = BG; ctx.fillRect(0, 0, W, H);
         radar(t, dt, M);
       }
