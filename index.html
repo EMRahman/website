@@ -46,6 +46,7 @@ html,body{margin:0;padding:0;background:#080b0a;}
 .aci-pat:first-child{border-top:none;}
 .aci-bar{flex:none;width:3px;border-radius:2px;}
 .aci-badge{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:0.1em;padding:2px 7px;border-radius:3px;vertical-align:2px;margin-right:10px;}
+.aci-cchip{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.04em;color:#d8b25a;background:rgba(240,183,63,0.10);border:1px solid rgba(240,183,63,0.30);padding:2px 7px;border-radius:3px;white-space:nowrap;}
 </style>
 </helmet>
 
@@ -389,6 +390,23 @@ html,body{margin:0;padding:0;background:#080b0a;}
         </div>
       </div>
 
+      <!-- commercial pressure -->
+      <div class="sec-pad aci-pad" style="padding:36px 44px;border-bottom:1px solid rgba(120,160,145,0.1);background:rgba(240,183,63,0.025);">
+        <div style="display:flex;align-items:center;gap:9px;margin-bottom:13px;">
+          <span style="width:8px;height:8px;border-radius:50%;background:#f0b73f;box-shadow:0 0 8px #f0b73f;flex:none;"></span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:0.16em;color:#d8b25a;">FOLLOW THE MONEY · COMMERCIAL PRESSURE</span>
+        </div>
+        <p style="margin:0 0 16px;font-size:15.5px;line-height:1.7;color:#cdd9d1;max-width:82ch;text-wrap:pretty;">Behind a striking share of these sits one upstream force that rarely makes the probable cause: the cost line. It stretches the maintenance interval, fits the cheaper part, flies the schedule the weather warned against — then lets the operator take the fall. About a third of the cases below carry it, tagged <span class="aci-cchip">commercial</span>, in five forms:</p>
+        <div style="display:flex;flex-direction:column;gap:11px;margin-bottom:16px;">
+          <div style="font-size:13.5px;line-height:1.55;color:#cdd9d1;"><span style="color:#f0b73f;font-weight:600;">Cut the maintenance</span> — stretch the inspection interval, skip the step, subcontract the check. <span style="color:#71867e;">· Alaska 261 · Air Midwest 5481 · Aeroperú 603</span></div>
+          <div style="font-size:13.5px;line-height:1.55;color:#cdd9d1;"><span style="color:#f0b73f;font-weight:600;">Fit the cheaper part</span> — an older or mismatched component, slotted in to save money. <span style="color:#71867e;">· Air Transat 236</span></div>
+          <div style="font-size:13.5px;line-height:1.55;color:#cdd9d1;"><span style="color:#f0b73f;font-weight:600;">Fly the schedule</span> — get-there-itis: the on-time number outranks the weather margin. <span style="color:#71867e;">· American 1420 · TransAsia 222</span></div>
+          <div style="font-size:13.5px;line-height:1.55;color:#cdd9d1;"><span style="color:#f0b73f;font-weight:600;">Grow past your competence</span> — expand or chase rivals faster than training and SOPs can carry. <span style="color:#71867e;">· TransAsia 235 · TransAsia 222</span></div>
+          <div style="font-size:13.5px;line-height:1.55;color:#cdd9d1;"><span style="color:#f0b73f;font-weight:600;">Sell the sizzle, bury the fix</span> — ship the feature that sells; leave the unglamorous safety change for later, or quietly. <span style="color:#71867e;">· Swissair 111 · United 811 · Turkish 981 · Propair 420</span></div>
+        </div>
+        <p style="margin:0;font-size:14px;line-height:1.66;color:#b4c6bd;max-width:82ch;text-wrap:pretty;">It is the textbook "contributing factor" — real enough to bend every decision, diffuse enough that no one signs for it. One note in the margin of these episodes just reads: <span style="color:#cdd9d1;">capitalism is a cause of safety failures.</span> Overstated, maybe — but the cost line is the hand on the scale that the report seldom weighs, and never indicts.</p>
+      </div>
+
       <!-- ledger -->
       <div class="sec-pad aci-pad" style="padding:38px 44px;">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.14em;flex-wrap:wrap;gap:8px;">
@@ -427,7 +445,7 @@ html,body{margin:0;padding:0;background:#080b0a;}
               <div class="aci-row"><span class="aci-lbl" style="color:#5bc8d6;">ROOT</span><span style="flex:1;color:#b4c6bd;">A faulty solder joint auto-feathered the other engine; the crew acted before running the identification checklist. The captain had failed an engine-out check.</span></div>
               <div class="aci-row"><span class="aci-lbl" style="color:#ef6b6b;">POWER</span><span style="flex:1;color:#c2cfc7;">Headlines blamed one dead pilot; the report named growth outrunning training, and a regulator that didn't enforce after the same airline's crash seven months earlier.</span></div>
             </div>
-            <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:1px;"><span class="aci-chip">automation authority</span><span class="aci-chip">normalised deviance</span></div>
+            <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:1px;"><span class="aci-chip">automation authority</span><span class="aci-chip">normalised deviance</span><span class="aci-cchip">commercial</span></div>
           </div>
 
           <!-- ===== alert fatigue (critical) ===== -->
@@ -473,7 +491,7 @@ html,body{margin:0;padding:0;background:#080b0a;}
               <div class="aci-row"><span class="aci-lbl" style="color:#5bc8d6;">ROOT</span><span style="flex:1;color:#b4c6bd;">No forcing check that protective covers were removed before flight; the cockpit then drowned the crew in contradictory warnings.</span></div>
               <div class="aci-row"><span class="aci-lbl" style="color:#ef6b6b;">POWER</span><span style="flex:1;color:#c2cfc7;">Only the cleaner — poorly paid, barely grasping the charge — was convicted; the missing conspicuous cover surfaced in a lawsuit, not the verdict.</span></div>
             </div>
-            <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:1px;"><span class="aci-chip">corrupt input</span><span class="aci-chip">blame gradient</span></div>
+            <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:1px;"><span class="aci-chip">corrupt input</span><span class="aci-chip">blame gradient</span><span class="aci-cchip">commercial</span></div>
           </div>
 
           <div class="aci-card">
@@ -573,7 +591,7 @@ html,body{margin:0;padding:0;background:#080b0a;}
               <div class="aci-row"><span class="aci-lbl" style="color:#5bc8d6;">ROOT</span><span style="flex:1;color:#b4c6bd;">A faulty switch drove the latches open; weak lock-sectors let a "locked" door back-drive unlocked — a fail-safe that wasn't. The weakness was already known and a reinforcement mandated, but not yet fitted.</span></div>
               <div class="aci-row"><span class="aci-lbl" style="color:#ef6b6b;">POWER</span><span style="flex:1;color:#c2cfc7;">Blamed on the airline's mechanics first; the verdict only reversed after the victims' parents pushed to raise the door from the seabed — and the wreck vindicated them.</span></div>
             </div>
-            <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:1px;"><span class="aci-chip">no fail-safe</span><span class="aci-chip">blame gradient</span></div>
+            <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:1px;"><span class="aci-chip">no fail-safe</span><span class="aci-chip">blame gradient</span><span class="aci-cchip">commercial</span></div>
           </div>
 
           <div class="aci-card">
@@ -584,7 +602,7 @@ html,body{margin:0;padding:0;background:#080b0a;}
               <div class="aci-row"><span class="aci-lbl" style="color:#5bc8d6;">ROOT</span><span style="flex:1;color:#b4c6bd;">A latch that read locked without being locked; control cables routed where a floor collapse would sever them — known and tested before the crash.</span></div>
               <div class="aci-row"><span class="aci-lbl" style="color:#ef6b6b;">POWER</span><span style="flex:1;color:#c2cfc7;">An engineer's memo warned of exactly this; the regulator took a voluntary "gentlemen's agreement" over a binding order, and operators were blamed first.</span></div>
             </div>
-            <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:1px;"><span class="aci-chip">compliant ≠ safe</span><span class="aci-chip">blame gradient</span></div>
+            <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:1px;"><span class="aci-chip">compliant ≠ safe</span><span class="aci-chip">blame gradient</span><span class="aci-cchip">commercial</span></div>
           </div>
 
           <div class="aci-card">
@@ -595,7 +613,7 @@ html,body{margin:0;padding:0;background:#080b0a;}
               <div class="aci-row"><span class="aci-lbl" style="color:#5bc8d6;">ROOT</span><span style="flex:1;color:#b4c6bd;">No brake-temperature or dragging-brake warning, poor wheel-well venting, fire reaching hydraulics and the wing — the crew flew blind to it.</span></div>
               <div class="aci-row"><span class="aci-lbl" style="color:#ef6b6b;">POWER</span><span style="flex:1;color:#c2cfc7;">A known recurring hazard on the type, left un-instrumented because no fix was mandated for a small-operator turboprop.</span></div>
             </div>
-            <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:1px;"><span class="aci-chip">compliant ≠ safe</span><span class="aci-chip">blame gradient</span></div>
+            <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:1px;"><span class="aci-chip">compliant ≠ safe</span><span class="aci-chip">blame gradient</span><span class="aci-cchip">commercial</span></div>
           </div>
 
           <!-- ===== deferred reliability (warning) ===== -->
@@ -607,7 +625,7 @@ html,body{margin:0;padding:0;background:#080b0a;}
               <div class="aci-row"><span class="aci-lbl" style="color:#5bc8d6;">ROOT</span><span style="flex:1;color:#b4c6bd;">A single non-redundant nut held the stabilizer; both barriers — lubrication and the wear check — were stretched thin.</span></div>
               <div class="aci-row"><span class="aci-lbl" style="color:#ef6b6b;">POWER</span><span style="flex:1;color:#c2cfc7;">Intervals extended four-fold with FAA sign-off; the mechanic who flagged this very screw was overruled, settled with, and resigned.</span></div>
             </div>
-            <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:1px;"><span class="aci-chip">deferred reliability</span><span class="aci-chip">blame gradient</span></div>
+            <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:1px;"><span class="aci-chip">deferred reliability</span><span class="aci-chip">blame gradient</span><span class="aci-cchip">commercial</span></div>
           </div>
 
           <div class="aci-card">
@@ -618,7 +636,7 @@ html,body{margin:0;padding:0;background:#080b0a;}
               <div class="aci-row"><span class="aci-lbl" style="color:#5bc8d6;">ROOT</span><span style="flex:1;color:#b4c6bd;">A mismatched hydraulic/fuel line forced in during an engine change chafed through; the leak drill wasn't a memory item.</span></div>
               <div class="aci-row"><span class="aci-lbl" style="color:#ef6b6b;">POWER</span><span style="flex:1;color:#c2cfc7;">The jet flew ~13 sectors with the defect under pressure to return it to service; the airline was fined CAD $250k.</span></div>
             </div>
-            <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:1px;"><span class="aci-chip">deferred reliability</span></div>
+            <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:1px;"><span class="aci-chip">deferred reliability</span><span class="aci-cchip">commercial</span></div>
           </div>
 
           <div class="aci-card">
@@ -629,7 +647,7 @@ html,body{margin:0;padding:0;background:#080b0a;}
               <div class="aci-row"><span class="aci-lbl" style="color:#5bc8d6;">ROOT</span><span style="flex:1;color:#b4c6bd;">Flammable insulation that passed an inadequate test; a bolt-on entertainment system wired so the smoke checklist wouldn't even de-power it.</span></div>
               <div class="aci-row"><span class="aci-lbl" style="color:#ef6b6b;">POWER</span><span style="flex:1;color:#c2cfc7;">Self-certified via a facility the FAA had cited; the flammable insulation took until ~2005 and ~$330M to remove fleet-wide.</span></div>
             </div>
-            <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:1px;"><span class="aci-chip">deferred reliability</span><span class="aci-chip">compliant ≠ safe</span></div>
+            <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:1px;"><span class="aci-chip">deferred reliability</span><span class="aci-chip">compliant ≠ safe</span><span class="aci-cchip">commercial</span></div>
           </div>
 
           <div class="aci-card">
@@ -640,7 +658,7 @@ html,body{margin:0;padding:0;background:#080b0a;}
               <div class="aci-row"><span class="aci-lbl" style="color:#5bc8d6;">ROOT</span><span style="flex:1;color:#b4c6bd;">A never-trained subcontract trainee did the rigging — and the same person signed it off as the independent inspector.</span></div>
               <div class="aci-row"><span class="aci-lbl" style="color:#ef6b6b;">POWER</span><span style="flex:1;color:#c2cfc7;">Outsourced down a three-link chain; the FAA's decades-stale average weights compounded it, revised only afterward.</span></div>
             </div>
-            <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:1px;"><span class="aci-chip">deferred reliability</span></div>
+            <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:1px;"><span class="aci-chip">deferred reliability</span><span class="aci-cchip">commercial</span></div>
           </div>
 
           <div class="aci-card">
@@ -674,7 +692,7 @@ html,body{margin:0;padding:0;background:#080b0a;}
               <div class="aci-row"><span class="aci-lbl" style="color:#5bc8d6;">ROOT</span><span style="flex:1;color:#b4c6bd;">Continuation bias on a 13-hour duty day; the unarmed spoilers — the load-bearing step — were skipped in the rush.</span></div>
               <div class="aci-row"><span class="aci-lbl" style="color:#ef6b6b;">POWER</span><span style="flex:1;color:#c2cfc7;">The schedule economics that raced a tired crew against a storm sat as "contributing"; the airport's illegal rigid light poles surfaced in a lawsuit.</span></div>
             </div>
-            <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:1px;"><span class="aci-chip">normalised deviance</span></div>
+            <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:1px;"><span class="aci-chip">normalised deviance</span><span class="aci-cchip">commercial</span></div>
           </div>
 
           <div class="aci-card">
@@ -685,7 +703,7 @@ html,body{margin:0;padding:0;background:#080b0a;}
               <div class="aci-row"><span class="aci-lbl" style="color:#5bc8d6;">ROOT</span><span style="flex:1;color:#b4c6bd;">Below-minimums descent was a habitual, uncorrected fleet practice; fatigue from overscheduling.</span></div>
               <div class="aci-row"><span class="aci-lbl" style="color:#ef6b6b;">POWER</span><span style="flex:1;color:#c2cfc7;">Prosecutors charged the controllers; the report named the airline's safety culture and rostering — the commercial driver stayed in the background.</span></div>
             </div>
-            <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:1px;"><span class="aci-chip">normalised deviance</span></div>
+            <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:1px;"><span class="aci-chip">normalised deviance</span><span class="aci-cchip">commercial</span></div>
           </div>
 
           <div class="aci-card">
