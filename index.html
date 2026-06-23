@@ -28,6 +28,7 @@ html,body{margin:0;padding:0;background:#080b0a;}
   .quote-panel,.rail{flex-basis:100% !important;}
   .content-main{padding-left:12px !important;padding-right:12px !important;}
   .sec-pad{padding:28px 22px !important;}
+  .scope-sub{flex-basis:100% !important;min-height:37vh !important;}
 }
 </style>
 </helmet>
@@ -82,25 +83,39 @@ html,body{margin:0;padding:0;background:#080b0a;}
         </div>
       </div>
 
-      <!-- RADAR panel -->
+      <!-- RADAR + AIRWAY MAP dual panel -->
       <div class="scope-panel" style="flex:1.7 1 320px;min-width:300px;min-height:380px;display:flex;flex-direction:column;border:1px solid rgba(120,160,145,0.14);background:rgba(10,14,12,0.7);border-radius:5px;overflow:hidden;">
-        <div style="flex:none;display:flex;align-items:center;justify-content:space-between;padding:9px 13px;border-bottom:1px solid rgba(120,160,145,0.12);font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:0.15em;color:#7fb8ad;">
-          <span>{{ scopeTitle }}</span>
-          <span style="color:#ef6b6b;display:flex;align-items:center;gap:6px;"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#ef6b6b;box-shadow:0 0 8px #ef6b6b;animation:pulsedot 1.6s ease-in-out infinite;"></span>LIVE</span>
+        <div style="flex:1;min-height:0;display:flex;flex-wrap:wrap;gap:0;">
+
+          <!-- sub-panel: RADAR -->
+          <div class="scope-sub" style="flex:1 1 50%;min-width:200px;min-height:180px;display:flex;flex-direction:column;border-right:1px solid rgba(120,160,145,0.12);">
+            <div style="flex:none;display:flex;align-items:center;justify-content:space-between;padding:7px 11px;border-bottom:1px solid rgba(120,160,145,0.10);font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:0.14em;color:#7fb8ad;">
+              <span>RADAR · SECTOR 7</span>
+              <span style="{{ statusBadgeStyle }}">{{ statusBadge }}</span>
+            </div>
+            <div style="flex:1;min-height:0;position:relative;">
+              <canvas ref="{{ radarCanvasRef }}" style="position:absolute;inset:0;width:100%;height:100%;display:block;cursor:crosshair;touch-action:pan-y;"></canvas>
+            </div>
+          </div>
+
+          <!-- sub-panel: AIRWAY MAP -->
+          <div class="scope-sub" style="flex:1 1 50%;min-width:200px;min-height:180px;display:flex;flex-direction:column;">
+            <div style="flex:none;display:flex;align-items:center;justify-content:space-between;padding:7px 11px;border-bottom:1px solid rgba(120,160,145,0.10);font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:0.14em;color:#7fb8ad;">
+              <span>AIRWAY MAP · GLOBAL</span>
+              <span style="color:#52655d;font-size:9px;">live</span>
+            </div>
+            <div style="flex:1;min-height:0;position:relative;">
+              <canvas ref="{{ graphCanvasRef }}" style="position:absolute;inset:0;width:100%;height:100%;display:block;cursor:crosshair;touch-action:pan-y;"></canvas>
+            </div>
+          </div>
+
         </div>
-        <div style="flex:1;min-height:0;position:relative;">
-          <canvas ref="{{ canvasRef }}" style="position:absolute;inset:0;width:100%;height:100%;display:block;cursor:crosshair;touch-action:pan-y;"></canvas>
-        </div>
-        <div style="flex:none;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:9px 13px;border-top:1px solid rgba(120,160,145,0.12);font-family:'JetBrains Mono',monospace;font-size:10.5px;">
+        <!-- shared legend row -->
+        <div style="flex:none;display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:9px 13px;border-top:1px solid rgba(120,160,145,0.12);font-family:'JetBrains Mono',monospace;font-size:10.5px;">
           <div style="display:flex;gap:14px;flex-wrap:wrap;">
             <span onMouseEnter="{{ hlKnown }}" onMouseLeave="{{ hlClear }}" style="display:flex;align-items:center;gap:6px;color:#9fb3aa;cursor:default;padding:2px 4px;border-radius:3px;" style-hover="background:rgba(70,226,160,0.08);"><span style="width:7px;height:7px;border-radius:50%;background:#46e2a0;box-shadow:0 0 7px #46e2a0;"></span>known knowns</span>
             <span onMouseEnter="{{ hlKU }}" onMouseLeave="{{ hlClear }}" style="display:flex;align-items:center;gap:6px;color:#9fb3aa;cursor:default;padding:2px 4px;border-radius:3px;" style-hover="background:rgba(240,183,63,0.08);"><span style="width:7px;height:7px;border-radius:50%;background:#f0b73f;box-shadow:0 0 7px #f0b73f;"></span>known unknowns</span>
             <span onMouseEnter="{{ hlUnknown }}" onMouseLeave="{{ hlClear }}" style="display:flex;align-items:center;gap:6px;color:#9fb3aa;cursor:default;padding:2px 4px;border-radius:3px;" style-hover="background:rgba(239,107,107,0.08);"><span style="width:7px;height:7px;border-radius:50%;background:#ef6b6b;box-shadow:0 0 7px #ef6b6b;"></span>unknown unknowns</span>
-          </div>
-          <div style="display:flex;align-items:center;gap:8px;color:#52655d;">
-            <span>SCOPE</span>
-            <button onClick="{{ onRadar }}" style="{{ radarBtnStyle }}">radar</button>
-            <button onClick="{{ onGraph }}" style="{{ graphBtnStyle }}">airways</button>
           </div>
         </div>
       </div>
@@ -231,9 +246,9 @@ html,body{margin:0;padding:0;background:#080b0a;}
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;backgroundMode&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;radar&quot;,&quot;depgraph&quot;],&quot;default&quot;:&quot;radar&quot;,&quot;tsType&quot;:&quot;'radar'|'depgraph'&quot;},&quot;motionLevel&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;calm&quot;,&quot;normal&quot;,&quot;lively&quot;],&quot;default&quot;:&quot;normal&quot;,&quot;tsType&quot;:&quot;'calm'|'normal'|'lively'&quot;},&quot;showLabels&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;}}">
 class Component extends DCLogic {
-  canvasRef = React.createRef();
+  radarCanvasRef = React.createRef();
+  graphCanvasRef = React.createRef();
   state = {
-    mode: null,
     clock: '--:--:--',
     gloss: null,
     glossX: null,
@@ -247,7 +262,6 @@ class Component extends DCLogic {
     }
   };
 
-  getMode() { return this.state.mode || this.props.backgroundMode || 'radar'; }
   getMotion() { const m = this.props.motionLevel || 'lively'; return m === 'calm' ? 0.55 : m === 'lively' ? 1.5 : 1; }
   // Only treat hover (mouseenter) as "open the popover" on devices that actually hover;
   // on touch the synthetic mouseenter is ignored so the tap/click toggle opens cleanly.
@@ -276,7 +290,6 @@ class Component extends DCLogic {
     this.setup();
     this._tick = setInterval(() => this.tick(), 800);
   }
-  componentDidUpdate() { if (this.getMode() !== this._activeMode) this.restart(); }
   componentWillUnmount() { this.teardown(); clearInterval(this._tick); }
 
   teardown() {
@@ -311,42 +324,51 @@ class Component extends DCLogic {
 
   setup() {
     const self = this;
-    const mode = this.getMode();
-    this._activeMode = mode;
     const BG = '#0a0e0c', GREEN = '#46e2a0', AMBER = '#f0b73f', RED = '#ef6b6b';
     const TAU = Math.PI * 2;
     const norm = a => ((a % TAU) + TAU) % TAU;
     const rnd = (a, b) => a + Math.random() * (b - a);
-    let W = 600, H = 400, cx = 300, cy = 200, R = 160, dpr = 1, ctx = null, curCanvas = null, lastW = 0, lastH = 0;
+    let rW=600, rH=400, rCx=300, rCy=200, rR=160, rDpr=1, rCtx=null, rCanvas=null, rLastW=0, rLastH=0;
+    let gW=600, gH=400, gCx=300, gCy=200, gR=160, gDpr=1, gCtx=null, gCanvas=null, gLastW=0, gLastH=0;
+    // active-context aliases — swapped before each draw call so drawTrack and the draw
+    // functions can reference them by name without being refactored to accept parameters
+    let ctx = null, W = 600, H = 400, cx = 300, cy = 200, R = 160;
 
-    const onMove = e => { const cv = self.canvasRef.current; if (!cv) return; const pt = (e.touches && e.touches[0]) ? e.touches[0] : e; const r = cv.getBoundingClientRect(); self._mouse = { x: pt.clientX - r.left, y: pt.clientY - r.top }; };
+    const onMove = e => { const cv = self.radarCanvasRef.current; if (!cv) return; const pt = (e.touches && e.touches[0]) ? e.touches[0] : e; const r = cv.getBoundingClientRect(); self._mouse = { x: pt.clientX - r.left, y: pt.clientY - r.top }; };
     const onLeave = () => { self._mouse = null; };
     const onTouchEnd = () => { setTimeout(() => { self._mouse = null; }, 1400); };
     const bind = cv => { cv.addEventListener('pointermove', onMove); cv.addEventListener('pointerleave', onLeave); cv.addEventListener('touchstart', onMove, { passive: true }); cv.addEventListener('touchmove', onMove, { passive: true }); cv.addEventListener('touchend', onTouchEnd); };
     const unbind = cv => { cv.removeEventListener('pointermove', onMove); cv.removeEventListener('pointerleave', onLeave); cv.removeEventListener('touchstart', onMove); cv.removeEventListener('touchmove', onMove); cv.removeEventListener('touchend', onTouchEnd); };
-    this._onResize = () => { lastW = 0; };
+    this._onResize = () => { rLastW = 0; gLastW = 0; };
     window.addEventListener('resize', this._onResize);
     window.addEventListener('orientationchange', this._onResize);
-    this._teardownCanvas = () => { if (curCanvas) unbind(curCanvas); };
+    this._teardownCanvas = () => { if (rCanvas) unbind(rCanvas); };
 
-    // Re-acquire the live canvas node each frame so the loop always draws to
-    // whatever is currently mounted (survives re-render / remount), and re-size on change.
-    const ensure = () => {
-      const cv = self.canvasRef.current;
+    const ensureRadar = () => {
+      const cv = self.radarCanvasRef.current;
       if (!cv) return false;
-      if (cv !== curCanvas) {
-        if (curCanvas) unbind(curCanvas);
-        curCanvas = cv; ctx = cv.getContext('2d');
-        bind(cv);
-        lastW = 0;
-      }
+      if (cv !== rCanvas) { if (rCanvas) unbind(rCanvas); rCanvas = cv; rCtx = cv.getContext('2d'); bind(cv); rLastW = 0; }
       const r = cv.getBoundingClientRect();
-      const w = r.width || 600, h = r.height || 400;
-      if (Math.abs(w - lastW) > 0.5 || Math.abs(h - lastH) > 0.5) {
-        dpr = Math.min(window.devicePixelRatio || 1, 2);
-        cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr);
-        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-        W = w; H = h; cx = w / 2; cy = h / 2; R = Math.min(w, h) * 0.44; lastW = w; lastH = h;
+      const w = r.width || 300, h = r.height || 400;
+      if (Math.abs(w - rLastW) > 0.5 || Math.abs(h - rLastH) > 0.5) {
+        rDpr = Math.min(window.devicePixelRatio || 1, 2);
+        cv.width = Math.round(w * rDpr); cv.height = Math.round(h * rDpr);
+        rCtx.setTransform(rDpr, 0, 0, rDpr, 0, 0);
+        rW = w; rH = h; rCx = w / 2; rCy = h / 2; rR = Math.min(w, h) * 0.44; rLastW = w; rLastH = h;
+      }
+      return true;
+    };
+    const ensureGraph = () => {
+      const cv = self.graphCanvasRef.current;
+      if (!cv) return false;
+      if (cv !== gCanvas) { gCanvas = cv; gCtx = cv.getContext('2d'); gLastW = 0; }
+      const r = cv.getBoundingClientRect();
+      const w = r.width || 300, h = r.height || 400;
+      if (Math.abs(w - gLastW) > 0.5 || Math.abs(h - gLastH) > 0.5) {
+        gDpr = Math.min(window.devicePixelRatio || 1, 2);
+        cv.width = Math.round(w * gDpr); cv.height = Math.round(h * gDpr);
+        gCtx.setTransform(gDpr, 0, 0, gDpr, 0, 0);
+        gW = w; gH = h; gCx = w / 2; gCy = h / 2; gR = Math.min(w, h) * 0.44; gLastW = w; gLastH = h;
       }
       return true;
     };
@@ -641,25 +663,28 @@ class Component extends DCLogic {
         ctx.globalAlpha = a; ctx.fillStyle = col; ctx.shadowColor = col; ctx.shadowBlur = isChoke ? 11 : 8; ctx.beginPath(); ctx.arc(p.x, p.y, isChoke ? 5 : 4, 0, TAU); ctx.fill(); ctx.shadowBlur = 0;
         if (showL) { const lox = n.lo ? n.lo[0] : 0, loy = n.lo ? n.lo[1] : 18; if (n.lo) { ctx.globalAlpha = a * 0.4; ctx.strokeStyle = 'rgba(180,235,210,0.6)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p.x + lox, p.y + (loy > 0 ? loy - 9 : loy + 2)); ctx.stroke(); } ctx.globalAlpha = a * 0.9; ctx.font = '10px "JetBrains Mono", monospace'; ctx.fillStyle = 'rgba(180,235,210,' + (a * 0.9) + ')'; ctx.textAlign = 'center'; ctx.fillText(n.l, p.x + lox, p.y + loy); if (isChoke) { ctx.fillStyle = col; ctx.font = '8px "JetBrains Mono", monospace'; ctx.fillText(closed > 0 ? 'CHOKEPOINT \u25b2' : 'hub', p.x, p.y - 11); } ctx.textAlign = 'left'; ctx.globalAlpha = 1; }
       });
-      self._live = { known: cK, ku: cKU, uu: closed };
     }
 
     const t0 = performance.now(); let last = t0;
     const frame = now => {
-      if (!ensure()) { self._raf = requestAnimationFrame(frame); return; }
-      const dt = Math.min(0.05, (now - last) / 1000); last = now; const t = (now - t0) / 1000, M = self.getMotion();
-      ctx.fillStyle = BG; ctx.fillRect(0, 0, W, H);
-      if (mode === 'radar') radar(t, dt, M); else graph(t, dt, M);
+      const dt = Math.min(0.05, (now - last) / 1000); last = now;
+      const t = (now - t0) / 1000, M = self.getMotion();
+      if (ensureGraph()) {
+        ctx = gCtx; W = gW; H = gH; cx = gCx; cy = gCy; R = gR;
+        ctx.fillStyle = BG; ctx.fillRect(0, 0, W, H);
+        graph(t, dt, M);
+      }
+      if (ensureRadar()) {
+        ctx = rCtx; W = rW; H = rH; cx = rCx; cy = rCy; R = rR;
+        ctx.fillStyle = BG; ctx.fillRect(0, 0, W, H);
+        radar(t, dt, M);
+      }
       self._raf = requestAnimationFrame(frame);
     };
     this._raf = requestAnimationFrame(frame);
   }
 
   renderVals() {
-    const mode = this.getMode();
-    const baseBtn = { fontFamily: "'JetBrains Mono', monospace", fontSize: '10.5px', padding: '3px 9px', borderRadius: '3px', cursor: 'pointer', background: 'transparent', transition: 'all .15s' };
-    const active = { ...baseBtn, background: 'rgba(91,200,214,0.16)', color: '#5bc8d6', border: '1px solid rgba(91,200,214,0.45)' };
-    const idle = { ...baseBtn, color: '#71867e', border: '1px solid rgba(120,160,145,0.2)' };
     const pad = n => String(Math.round(n)).padStart(2, '0');
     const c = this.state.counts;
     const toPts = (arr, max) => arr.map((v, i) => (i / (arr.length - 1) * 100).toFixed(1) + ',' + (29 - Math.min(1, v / max) * 27).toFixed(1)).join(' ');
@@ -689,15 +714,25 @@ class Component extends DCLogic {
       React.createElement('div', { style: { color: '#b4c6bd', fontSize: '11.5px', lineHeight: 1.45 } }, m.blurb)
     );
     const g = this.state.gloss;
+    const last8 = this.state.log.slice(0, 8);
+    const topAlert = last8.find(e => e.lvl === 'ALERT');
+    const topWarn  = last8.find(e => e.lvl === 'WARN');
+    const mono = "'JetBrains Mono', monospace";
     return {
-      canvasRef: this.canvasRef,
+      radarCanvasRef: this.radarCanvasRef,
+      graphCanvasRef: this.graphCanvasRef,
       year: new Date().getFullYear(),
       clock: this.state.clock,
-      scopeTitle: mode === 'depgraph' ? 'AIRWAY MAP · GLOBAL' : 'RADAR · SECTOR 7',
-      radarBtnStyle: mode === 'radar' ? active : idle,
-      graphBtnStyle: mode === 'depgraph' ? active : idle,
-      onRadar: () => this.setState({ mode: 'radar' }),
-      onGraph: () => this.setState({ mode: 'depgraph' }),
+      statusBadge: topAlert
+        ? (topAlert.msg.length > 30 ? topAlert.msg.slice(0, 29) + '…' : topAlert.msg)
+        : topWarn
+          ? (topWarn.msg.length > 30 ? topWarn.msg.slice(0, 29) + '…' : topWarn.msg)
+          : 'KK·' + pad(c.known) + ' · KU·' + pad(c.ku) + ' · UU·' + pad(c.uu),
+      statusBadgeStyle: topAlert
+        ? { fontFamily: mono, fontSize: '9.5px', fontWeight: 600, color: '#ef6b6b', animation: 'pulsedot 1.6s ease-in-out infinite' }
+        : topWarn
+          ? { fontFamily: mono, fontSize: '9.5px', fontWeight: 600, color: '#f0b73f' }
+          : { fontFamily: mono, fontSize: '9.5px', color: '#46e2a0', letterSpacing: '0.05em' },
       hlKnown: () => { this._highlight = 'known'; },
       hlKU: () => { this._highlight = 'ku'; },
       hlUnknown: () => { this._highlight = 'unknown'; },
