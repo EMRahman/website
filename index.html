@@ -30,12 +30,11 @@ html,body{margin:0;padding:0;background:#080b0a;}
   .sec-pad{padding:28px 22px !important;}
   .scope-sub{min-height:37vh !important;}
   .aci-pad{padding:30px 22px !important;}
-  .aci-twocol{grid-template-columns:1fr !important;}
+  .aci-threecol{grid-template-columns:1fr !important;}
 }
 /* ---- ACI incident-logs section ---- */
-.aci-twocol{display:grid;grid-template-columns:1fr 1fr;gap:13px;}
-.aci-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(286px,1fr));gap:13px;}
-@media (max-width:760px){.aci-grid{grid-template-columns:1fr;}}
+.aci-threecol{display:grid;grid-template-columns:1fr 1fr 1fr;gap:13px;}
+.aci-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(286px,100%),1fr));gap:13px;}
 .aci-card{border:1px solid rgba(120,160,145,0.13);background:rgba(10,14,12,0.55);border-radius:5px;padding:15px 16px;display:flex;flex-direction:column;gap:9px;transition:border-color .18s,background .18s;}
 .aci-card:hover{border-color:rgba(91,200,214,0.30);background:rgba(14,20,17,0.72);}
 .aci-wiki{font-family:'JetBrains Mono',monospace;font-size:10px;color:#52655d;text-decoration:none;flex:none;transition:color .15s;white-space:nowrap;}
@@ -254,7 +253,7 @@ html,body{margin:0;padding:0;background:#080b0a;}
         <p style="margin:0;font-size:16px;line-height:1.7;color:#b4c6bd;max-width:76ch;text-wrap:pretty;">Below: <span style="color:#cfe0d8;">32 investigations</span>, each cross-referenced against its official report and read as two layers — what was blamed, and what was true — plus the recurring failure modes that belong to <span style="color:#5bc8d6;">any sufficiently complex system</span>, not only the ones with wings.</p>
 
         <!-- two-layer legend -->
-        <div class="aci-twocol" style="margin-top:30px;grid-template-columns:1fr 1fr 1fr;">
+        <div class="aci-threecol" style="margin-top:30px;">
           <div style="border-left:2px solid #f0b73f;padding:1px 0 1px 13px;">
             <div style="font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:0.12em;color:#f0b73f;margin-bottom:5px;">PROX — what was blamed</div>
             <div style="font-size:13px;line-height:1.55;color:#9fb3aa;">The probable cause as written. Usually the last human to touch it.</div>
