@@ -28,8 +28,7 @@ html,body{margin:0;padding:0;background:#080b0a;}
   .quote-panel,.rail{flex-basis:100% !important;}
   .content-main{padding-left:12px !important;padding-right:12px !important;}
   .sec-pad{padding:28px 22px !important;}
-  .scope-sub{flex-basis:100% !important;min-height:37vh !important;border-right:none !important;}
-  .scope-sub:first-child{border-bottom:1px solid rgba(120,160,145,0.12) !important;}
+  .scope-sub{min-height:37vh !important;}
 }
 </style>
 </helmet>
@@ -86,10 +85,10 @@ html,body{margin:0;padding:0;background:#080b0a;}
 
       <!-- RADAR + AIRWAY MAP dual panel -->
       <div class="scope-panel" style="flex:1.7 1 320px;min-width:300px;min-height:380px;display:flex;flex-direction:column;border:1px solid rgba(120,160,145,0.14);background:rgba(10,14,12,0.7);border-radius:5px;overflow:hidden;">
-        <div style="flex:1;min-height:0;display:flex;flex-wrap:wrap;gap:0;">
+        <div style="flex:1;min-height:0;display:flex;flex-direction:column;gap:0;">
 
           <!-- sub-panel: RADAR -->
-          <div class="scope-sub" style="flex:1 1 50%;min-width:200px;min-height:180px;display:flex;flex-direction:column;border-right:1px solid rgba(120,160,145,0.12);">
+          <div class="scope-sub" style="flex:1 1 auto;min-height:160px;display:flex;flex-direction:column;border-bottom:1px solid rgba(120,160,145,0.12);">
             <div style="flex:none;display:flex;align-items:center;justify-content:space-between;padding:7px 11px;border-bottom:1px solid rgba(120,160,145,0.10);font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:0.14em;color:#7fb8ad;">
               <span>RADAR · SECTOR 7</span>
               <span style="{{ statusBadgeStyle }}">{{ statusBadge }}</span>
@@ -100,7 +99,7 @@ html,body{margin:0;padding:0;background:#080b0a;}
           </div>
 
           <!-- sub-panel: AIRWAY MAP -->
-          <div class="scope-sub" style="flex:1 1 50%;min-width:200px;min-height:180px;display:flex;flex-direction:column;">
+          <div class="scope-sub" style="flex:1 1 auto;min-height:160px;display:flex;flex-direction:column;">
             <div style="flex:none;display:flex;align-items:center;justify-content:space-between;padding:7px 11px;border-bottom:1px solid rgba(120,160,145,0.10);font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:0.14em;color:#7fb8ad;">
               <span>AIRWAY MAP · GLOBAL</span>
               <span style="color:#52655d;font-size:9px;">live</span>
