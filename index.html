@@ -290,15 +290,16 @@ html,body{margin:0;padding:0;background:#080b0a;}
         <div class="aci-pat">
           <div class="aci-bar" style="background:#ef6b6b;"></div>
           <div style="flex:1;min-width:0;">
-            <div style="margin-bottom:7px;"><span class="aci-badge" style="background:rgba(239,107,107,0.13);color:#ef6b6b;">CRITICAL</span><span style="font-size:16px;color:#eafff5;font-weight:500;">Monitoring &amp; alerting — four ways the channel breaks</span></div>
-            <p style="margin:0 0 9px;font-size:14px;line-height:1.6;color:#b4c6bd;">The link between the machine's state and the human's grasp of it fails in four distinct ways — only the last is alert fatigue:</p>
+            <div style="margin-bottom:7px;"><span class="aci-badge" style="background:rgba(239,107,107,0.13);color:#ef6b6b;">CRITICAL</span><span style="font-size:16px;color:#eafff5;font-weight:500;">Monitoring &amp; alerting — five ways the channel breaks</span></div>
+            <p style="margin:0 0 9px;font-size:14px;line-height:1.6;color:#b4c6bd;">The link between the machine's state and the human's grasp of it fails in five distinct ways — only the last is alert fatigue:</p>
             <div style="display:flex;flex-direction:column;gap:7px;margin-bottom:11px;">
-              <div style="font-size:13px;line-height:1.5;color:#9fb3aa;"><span style="color:#5bc8d6;font-weight:600;">Can't read it</span> — an ambiguous dial, or two instruments disagreeing with no clear way to tell which is lying. <span style="color:#71867e;">· Birgenair 301 · Aeroperú 603 · Alitalia 404</span></div>
+              <div style="font-size:13px;line-height:1.5;color:#9fb3aa;"><span style="color:#5bc8d6;font-weight:600;">Can't read it</span> — a display that reads plausibly normal while it lies, or a dial easy to misread; nothing flags the error. <span style="color:#71867e;">· Alitalia 404</span></div>
+              <div style="font-size:13px;line-height:1.5;color:#9fb3aa;"><span style="color:#5bc8d6;font-weight:600;">Mixed signals</span> — alarms that contradict each other: overspeed and stall at the same instant, three airspeeds all disagreeing. <span style="color:#71867e;">· Birgenair 301 · Aeroperú 603</span></div>
               <div style="font-size:13px;line-height:1.5;color:#9fb3aa;"><span style="color:#5bc8d6;font-weight:600;">Too much of it</span> — a cascade of alarms floods the crew past what they can absorb. <span style="color:#71867e;">· Qantas 32 · Qantas 72</span></div>
               <div style="font-size:13px;line-height:1.5;color:#9fb3aa;"><span style="color:#5bc8d6;font-weight:600;">Didn't fire</span> — the warning that should have caught the slip was silently dead, or came too late. <span style="color:#71867e;">· Delta 1141 · Ansett 703</span></div>
               <div style="font-size:13px;line-height:1.5;color:#9fb3aa;"><span style="color:#5bc8d6;font-weight:600;">Cried wolf</span> — false alarms train the crew to ignore it, or pull its breaker. <span style="color:#71867e;">· Trigana 267 · Linate 686</span></div>
             </div>
-            <p style="margin:0;font-size:13.5px;line-height:1.6;color:#9fb3aa;"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#5bc8d6;letter-spacing:0.05em;">SAME SHAPE → </span>A monitor is only as good as the operator's ability to read it, in time, and trust it. Ambiguity, overload, silent failure, and false alarms each defeat it differently — so the answer is rarely "add more alerts."</p>
+            <p style="margin:0;font-size:13.5px;line-height:1.6;color:#9fb3aa;"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#5bc8d6;letter-spacing:0.05em;">SAME SHAPE → </span>A monitor is only as good as the operator's ability to read it, in time, and trust it. Ambiguity, contradiction, overload, silent failure, and false alarms each defeat it differently — so the answer is rarely "add more alerts."</p>
           </div>
         </div>
 
@@ -496,7 +497,7 @@ html,body{margin:0;padding:0;background:#080b0a;}
               <div class="aci-row"><span class="aci-lbl" style="color:#5bc8d6;">ROOT</span><span style="flex:1;color:#b4c6bd;">No forcing check that protective covers were removed before flight; the cockpit then drowned the crew in contradictory warnings.</span></div>
               <div class="aci-row"><span class="aci-lbl" style="color:#ef6b6b;">POWER</span><span style="flex:1;color:#c2cfc7;">Only the cleaner — poorly paid, barely grasping the charge — was convicted; the missing conspicuous cover surfaced in a lawsuit, not the verdict.</span></div>
             </div>
-            <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:1px;"><span class="aci-chip">corrupt input</span><span class="aci-chip">blame gradient</span><span class="aci-cchip">commercial</span></div>
+            <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:1px;"><span class="aci-chip">corrupt input</span><span class="aci-chip">mixed signals</span><span class="aci-chip">blame gradient</span><span class="aci-cchip">commercial</span></div>
           </div>
 
           <div class="aci-card">
@@ -507,7 +508,7 @@ html,body{margin:0;padding:0;background:#080b0a;}
               <div class="aci-row"><span class="aci-lbl" style="color:#5bc8d6;">ROOT</span><span style="flex:1;color:#b4c6bd;">A wasp-nested pitot fed the autopilot a false high speed; three airspeeds disagreed and were never reconciled. No unreliable-airspeed checklist existed.</span></div>
               <div class="aci-row"><span class="aci-lbl" style="color:#ef6b6b;">POWER</span><span style="flex:1;color:#c2cfc7;">Blame fell on the dead crew; the "paper" shell-operator and weak oversight that put an uncovered jet in service drew no finding.</span></div>
             </div>
-            <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:1px;"><span class="aci-chip">corrupt input</span><span class="aci-chip">automation authority</span><span class="aci-cchip">commercial</span></div>
+            <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:1px;"><span class="aci-chip">corrupt input</span><span class="aci-chip">mixed signals</span><span class="aci-chip">automation authority</span><span class="aci-cchip">commercial</span></div>
           </div>
 
           <div class="aci-card">
