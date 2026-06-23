@@ -89,9 +89,8 @@ html,body{margin:0;padding:0;background:#080b0a;}
 
           <!-- sub-panel: RADAR -->
           <div class="scope-sub" style="flex:1 1 auto;min-height:160px;display:flex;flex-direction:column;border-bottom:1px solid rgba(120,160,145,0.12);">
-            <div style="flex:none;display:flex;align-items:center;justify-content:space-between;padding:7px 11px;border-bottom:1px solid rgba(120,160,145,0.10);font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:0.14em;color:#7fb8ad;">
+            <div style="flex:none;display:flex;align-items:center;padding:7px 11px;border-bottom:1px solid rgba(120,160,145,0.10);font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:0.14em;color:#7fb8ad;">
               <span>RADAR · SECTOR 7</span>
-              <span style="{{ statusBadgeStyle }}">{{ statusBadge }}</span>
             </div>
             <div style="flex:1;min-height:0;position:relative;">
               <canvas ref="{{ radarCanvasRef }}" style="position:absolute;inset:0;width:100%;height:100%;display:block;cursor:crosshair;touch-action:pan-y;"></canvas>
@@ -100,9 +99,8 @@ html,body{margin:0;padding:0;background:#080b0a;}
 
           <!-- sub-panel: AIRWAY MAP -->
           <div class="scope-sub" style="flex:1 1 auto;min-height:160px;display:flex;flex-direction:column;">
-            <div style="flex:none;display:flex;align-items:center;justify-content:space-between;padding:7px 11px;border-bottom:1px solid rgba(120,160,145,0.10);font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:0.14em;color:#7fb8ad;">
+            <div style="flex:none;display:flex;align-items:center;padding:7px 11px;border-bottom:1px solid rgba(120,160,145,0.10);font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:0.14em;color:#7fb8ad;">
               <span>AIRWAY MAP · GLOBAL</span>
-              <span style="{{ globalBadgeStyle }}">{{ globalBadge }}</span>
             </div>
             <div style="flex:1;min-height:0;position:relative;">
               <canvas ref="{{ graphCanvasRef }}" style="position:absolute;inset:0;width:100%;height:100%;display:block;cursor:crosshair;touch-action:pan-y;"></canvas>
@@ -727,41 +725,12 @@ class Component extends DCLogic {
     const g = this.state.gloss;
     const gid = this.state.glossGid;
     const radarLogs = this.state.log.filter(e => e.src === 'radar').slice(0, 8);
-    const topMayday = radarLogs.find(e => e.lvl === 'MAYDAY');
-    const topAlert  = radarLogs.find(e => e.lvl === 'ALERT');
-    const topPan    = radarLogs.find(e => e.lvl === 'PAN·PAN');
-    const topWarn   = radarLogs.find(e => e.lvl === 'WARN');
-    const topCrit   = topMayday || topAlert;
-    const topUrgent = topPan    || topWarn;
-    const gBadgeLvl = this._graphBadgeLvl;
-    const gBadgeMsg = this._graphBadgeMsg;
     const mono = "'JetBrains Mono', monospace";
     return {
       radarCanvasRef: this.radarCanvasRef,
       graphCanvasRef: this.graphCanvasRef,
       year: new Date().getFullYear(),
       clock: this.state.clock,
-      globalBadge: gBadgeMsg ? (gBadgeMsg.length > 30 ? gBadgeMsg.slice(0, 29) + '…' : gBadgeMsg) : 'WARN',
-      globalBadgeStyle: gBadgeLvl === 'ALERT'
-        ? { fontFamily: mono, fontSize: '9px', fontWeight: 600, color: '#ef6b6b', animation: 'pulsedot 1.6s ease-in-out infinite' }
-        : { fontFamily: mono, fontSize: '9px', color: '#52655d' },
-      statusBadge: (() => {
-        const top = topCrit || topUrgent;
-        if (top) {
-          const msg = top.msg.replace(/^(MAYDAY MAYDAY MAYDAY — |PAN PAN PAN — )/, '');
-          return msg.length > 30 ? msg.slice(0, 29) + '…' : msg;
-        }
-        return '';
-      })(),
-      statusBadgeStyle: topMayday
-        ? { fontFamily: mono, fontSize: '9.5px', fontWeight: 600, color: '#ff3333', animation: 'pulsedot 0.8s ease-in-out infinite' }
-        : topAlert
-          ? { fontFamily: mono, fontSize: '9.5px', fontWeight: 600, color: '#ef6b6b', animation: 'pulsedot 1.6s ease-in-out infinite' }
-          : topPan
-            ? { fontFamily: mono, fontSize: '9.5px', fontWeight: 600, color: '#f97316', animation: 'pulsedot 1.2s ease-in-out infinite' }
-            : topWarn
-              ? { fontFamily: mono, fontSize: '9.5px', fontWeight: 600, color: '#f0b73f' }
-              : { fontFamily: mono, fontSize: '9.5px', color: '#46e2a0', letterSpacing: '0.05em' },
       hlKnown: () => { this._highlight = 'known'; },
       hlKU: () => { this._highlight = 'ku'; },
       hlUnknown: () => { this._highlight = 'unknown'; },
