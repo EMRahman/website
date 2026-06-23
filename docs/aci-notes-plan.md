@@ -18,7 +18,7 @@ The "SE10" episodes appear to correspond to Season 11 in the standard Mayday/Wik
 ## What changes
 
 ### 1. Add nav link in topbar (line ~58)
-Add `./aci-logs` anchor alongside existing `./about`, `./projects`, `./contact` links.
+Add a nav link with `href="#aci-logs"` and display text `./aci-logs`, consistent with the existing pattern (`href="#about"` → `./about`, etc.).
 
 ### 2. New section in `<main>` (insert before `<!-- CONTACT -->`, around line 225)
 Panel title: `INCIDENT LOGS · ACI` / right label: `$ cat aci-lessons.md`
