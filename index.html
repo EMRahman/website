@@ -102,7 +102,7 @@ html,body{margin:0;padding:0;background:#080b0a;}
           <div class="scope-sub" style="flex:1 1 auto;min-height:160px;display:flex;flex-direction:column;">
             <div style="flex:none;display:flex;align-items:center;justify-content:space-between;padding:7px 11px;border-bottom:1px solid rgba(120,160,145,0.10);font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:0.14em;color:#7fb8ad;">
               <span>AIRWAY MAP · GLOBAL</span>
-              <span style="color:#52655d;font-size:9px;">live</span>
+              <span style="{{ globalBadgeStyle }}">{{ globalBadge }}</span>
             </div>
             <div style="flex:1;min-height:0;position:relative;">
               <canvas ref="{{ graphCanvasRef }}" style="position:absolute;inset:0;width:100%;height:100%;display:block;cursor:crosshair;touch-action:pan-y;"></canvas>
@@ -288,6 +288,7 @@ class Component extends DCLogic {
     this._mouse = null;
     this._live = { known: 0, ku: 0, uu: 0 };
     this._log = [];
+    this._graphAlertLvl = null;
     this.pushLog('INFO', 'observatory online — sweep nominal');
     this.setup();
     this._tick = setInterval(() => this.tick(), 800);
@@ -301,9 +302,9 @@ class Component extends DCLogic {
   }
   restart() { this.teardown(); this.setup(); }
 
-  pushLog(lvl, msg) {
+  pushLog(lvl, msg, src) {
     const t = new Date().toTimeString().slice(0, 8);
-    this._log.unshift({ t, lvl, msg });
+    this._log.unshift({ t, lvl, msg, src: src || 'radar' });
     if (this._log.length > 30) this._log.pop();
   }
 
@@ -651,8 +652,9 @@ class Component extends DCLogic {
       ctx.restore();
 
       wxLog += dt;
-      if (closed > 0 && !wxState && wxLog > 1) { wxState = true; wxLog = 0; self.pushLog('WARN', 'WX system — ' + closed + ' airway(s) closed'); self.pushLog('ALERT', nodes[CHOKE].l + ' chokepoint — rerouted traffic converging'); }
-      if (closed === 0 && wxState && wxLog > 1) { wxState = false; wxLog = 0; self.pushLog('INFO', 'WX clearing — airways restored'); }
+      if (closed > 0 && !wxState && wxLog > 1) { wxState = true; wxLog = 0; self.pushLog('WARN', 'WX system — ' + closed + ' airway(s) closed', 'graph'); self.pushLog('ALERT', nodes[CHOKE].l + ' chokepoint — rerouted traffic converging', 'graph'); }
+      if (closed === 0 && wxState && wxLog > 1) { wxState = false; wxLog = 0; self.pushLog('INFO', 'WX clearing — airways restored', 'graph'); }
+      self._graphAlertLvl = closed > 0 ? 'ALERT' : null;
 
       let cK = 0, cKU = 0;
       nodes.forEach(n => {
@@ -720,19 +722,24 @@ class Component extends DCLogic {
     );
     const g = this.state.gloss;
     const gid = this.state.glossGid;
-    const last8 = this.state.log.slice(0, 8);
-    const topMayday = last8.find(e => e.lvl === 'MAYDAY');
-    const topAlert  = last8.find(e => e.lvl === 'ALERT');
-    const topPan    = last8.find(e => e.lvl === 'PAN·PAN');
-    const topWarn   = last8.find(e => e.lvl === 'WARN');
+    const radarLogs = this.state.log.filter(e => e.src === 'radar').slice(0, 8);
+    const topMayday = radarLogs.find(e => e.lvl === 'MAYDAY');
+    const topAlert  = radarLogs.find(e => e.lvl === 'ALERT');
+    const topPan    = radarLogs.find(e => e.lvl === 'PAN·PAN');
+    const topWarn   = radarLogs.find(e => e.lvl === 'WARN');
     const topCrit   = topMayday || topAlert;
     const topUrgent = topPan    || topWarn;
+    const gLvl = this._graphAlertLvl;
     const mono = "'JetBrains Mono', monospace";
     return {
       radarCanvasRef: this.radarCanvasRef,
       graphCanvasRef: this.graphCanvasRef,
       year: new Date().getFullYear(),
       clock: this.state.clock,
+      globalBadge: gLvl === 'ALERT' ? 'ALERT' : 'live',
+      globalBadgeStyle: gLvl === 'ALERT'
+        ? { fontFamily: mono, fontSize: '9px', fontWeight: 600, color: '#ef6b6b', animation: 'pulsedot 1.6s ease-in-out infinite' }
+        : { color: '#52655d', fontSize: '9px' },
       statusBadge: (() => {
         const top = topCrit || topUrgent;
         if (top) {
