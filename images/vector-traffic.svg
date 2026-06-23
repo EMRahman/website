@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" width="320" height="200">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 140" width="320" height="140">
   <defs>
     <radialGradient id="bg" cx="50%" cy="50%" r="50%">
       <stop offset="0%" stop-color="#0d1a16"/>
@@ -21,55 +21,49 @@
   </defs>
 
   <!-- Background -->
-  <rect width="320" height="200" fill="url(#bg)"/>
+  <rect width="320" height="140" fill="url(#bg)"/>
 
   <!-- Radar rings -->
-  <circle cx="90" cy="100" r="35" fill="none" stroke="rgba(70,226,160,0.08)" stroke-width="1"/>
-  <circle cx="90" cy="100" r="60" fill="none" stroke="rgba(70,226,160,0.06)" stroke-width="1"/>
-  <circle cx="90" cy="100" r="85" fill="none" stroke="rgba(70,226,160,0.04)" stroke-width="1"/>
+  <circle cx="88" cy="70" r="28" fill="none" stroke="rgba(70,226,160,0.09)" stroke-width="1"/>
+  <circle cx="88" cy="70" r="50" fill="none" stroke="rgba(70,226,160,0.06)" stroke-width="1"/>
+  <circle cx="88" cy="70" r="72" fill="none" stroke="rgba(70,226,160,0.04)" stroke-width="1"/>
 
   <!-- Radar crosshairs -->
-  <line x1="90" y1="20" x2="90" y2="180" stroke="rgba(70,226,160,0.06)" stroke-width="1"/>
-  <line x1="10" y1="100" x2="170" y2="100" stroke="rgba(70,226,160,0.06)" stroke-width="1"/>
+  <line x1="88" y1="5" x2="88" y2="135" stroke="rgba(70,226,160,0.06)" stroke-width="1"/>
+  <line x1="8" y1="70" x2="168" y2="70" stroke="rgba(70,226,160,0.06)" stroke-width="1"/>
 
-  <!-- Divider -->
-  <line x1="185" y1="10" x2="185" y2="190" stroke="rgba(120,160,145,0.1)" stroke-width="1" stroke-dasharray="3,3"/>
+  <!-- Panel divider -->
+  <line x1="186" y1="8" x2="186" y2="132" stroke="rgba(120,160,145,0.1)" stroke-width="1" stroke-dasharray="3,3"/>
 
-  <!-- LEFT PANEL: original (ghosted) heading -->
-  <text x="18" y="22" font-family="JetBrains Mono, monospace" font-size="8" fill="#52655d" letter-spacing="0.08em">ORIGINAL HDG</text>
-  <!-- Ghost aircraft track going straight into weather -->
-  <line x1="72" y1="115" x2="195" y2="48" stroke="#52655d" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arrow-orig)"/>
+  <!-- Original (ghosted) heading label -->
+  <text x="16" y="16" font-family="JetBrains Mono, monospace" font-size="7.5" fill="#52655d" letter-spacing="0.08em">ORIGINAL HDG</text>
 
-  <!-- Weather cell (obstacle) -->
-  <ellipse cx="220" cy="38" rx="28" ry="18" fill="rgba(239,107,107,0.13)" stroke="rgba(239,107,107,0.45)" stroke-width="1" filter="url(#glow-red)"/>
-  <text x="207" y="42" font-family="JetBrains Mono, monospace" font-size="7.5" fill="#ef6b6b">WX CELL</text>
+  <!-- Ghost track: aircraft → straight into weather cell -->
+  <line x1="72" y1="82" x2="200" y2="28" stroke="#52655d" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arrow-orig)"/>
 
-  <!-- Aircraft at start position (dot + plane icon) -->
-  <circle cx="72" cy="118" r="4" fill="#46e2a0" filter="url(#glow-green)"/>
-  <!-- Simple plane shape pointing right-up -->
-  <polygon points="72,118 78,112 74,118 78,124" fill="#46e2a0" opacity="0.9"/>
+  <!-- Weather cell -->
+  <ellipse cx="222" cy="24" rx="26" ry="14" fill="rgba(239,107,107,0.13)" stroke="rgba(239,107,107,0.45)" stroke-width="1" filter="url(#glow-red)"/>
+  <text x="210" y="27" font-family="JetBrains Mono, monospace" font-size="7" fill="#ef6b6b">WX CELL</text>
 
-  <!-- ATC vector instruction arc -->
-  <path d="M 105 96 Q 130 80 152 92" fill="none" stroke="rgba(91,200,214,0.5)" stroke-width="1" stroke-dasharray="2,2"/>
+  <!-- Aircraft at start position -->
+  <circle cx="72" cy="84" r="4" fill="#46e2a0" filter="url(#glow-green)"/>
+  <polygon points="72,84 78,78 74,84 78,90" fill="#46e2a0" opacity="0.9"/>
 
-  <!-- New vectored heading (the actual routed path) -->
-  <line x1="72" y1="115" x2="160" y2="140" stroke="#46e2a0" stroke-width="1.5" marker-end="url(#arrow)"/>
-  <line x1="160" y1="140" x2="260" y2="72" stroke="#46e2a0" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrow)"/>
+  <!-- New vectored path -->
+  <line x1="72" y1="82" x2="156" y2="100" stroke="#46e2a0" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="156" y1="100" x2="258" y2="44" stroke="#46e2a0" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrow)"/>
 
   <!-- Vector label -->
-  <text x="90" y="148" font-family="JetBrains Mono, monospace" font-size="7.5" fill="#46e2a0" opacity="0.8">VECTOR 140°</text>
+  <text x="90" y="110" font-family="JetBrains Mono, monospace" font-size="7.5" fill="#46e2a0" opacity="0.85">VECTOR 140°</text>
 
-  <!-- RIGHT PANEL: ATC instruction readout -->
-  <rect x="195" y="55" width="115" height="115" rx="3" fill="rgba(16,22,20,0.6)" stroke="rgba(91,200,214,0.2)" stroke-width="1"/>
-  <text x="205" y="72" font-family="JetBrains Mono, monospace" font-size="7" fill="#5bc8d6" letter-spacing="0.08em">ATC CLEARANCE</text>
-  <line x1="200" y1="77" x2="305" y2="77" stroke="rgba(91,200,214,0.2)" stroke-width="1"/>
+  <!-- Right panel: ATC clearance -->
+  <rect x="196" y="36" width="116" height="92" rx="3" fill="rgba(16,22,20,0.6)" stroke="rgba(91,200,214,0.2)" stroke-width="1"/>
+  <text x="206" y="51" font-family="JetBrains Mono, monospace" font-size="7" fill="#5bc8d6" letter-spacing="0.08em">ATC CLEARANCE</text>
+  <line x1="200" y1="56" x2="308" y2="56" stroke="rgba(91,200,214,0.2)" stroke-width="1"/>
 
-  <text x="205" y="92" font-family="JetBrains Mono, monospace" font-size="7.5" fill="#b4c6bd">Fly heading</text>
-  <text x="205" y="104" font-family="JetBrains Mono, monospace" font-size="9" fill="#eafff5" font-weight="600">140°</text>
+  <text x="206" y="70" font-family="JetBrains Mono, monospace" font-size="7.5" fill="#b4c6bd">Fly heading</text>
+  <text x="206" y="82" font-family="JetBrains Mono, monospace" font-size="9.5" fill="#eafff5" font-weight="600">140°</text>
 
-  <text x="205" y="120" font-family="JetBrains Mono, monospace" font-size="7.5" fill="#b4c6bd">Traffic clear of</text>
-  <text x="205" y="132" font-family="JetBrains Mono, monospace" font-size="7.5" fill="#ef6b6b">WX / conflict</text>
-
-  <text x="205" y="150" font-family="JetBrains Mono, monospace" font-size="7.5" fill="#b4c6bd">Resume own</text>
-  <text x="205" y="162" font-family="JetBrains Mono, monospace" font-size="7.5" fill="#b4c6bd">nav when able</text>
+  <text x="206" y="98" font-family="JetBrains Mono, monospace" font-size="7.5" fill="#b4c6bd">Clear of WX/conflict</text>
+  <text x="206" y="118" font-family="JetBrains Mono, monospace" font-size="7" fill="#52655d">Resume own nav</text>
 </svg>
