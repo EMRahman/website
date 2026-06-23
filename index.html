@@ -290,10 +290,15 @@ html,body{margin:0;padding:0;background:#080b0a;}
         <div class="aci-pat">
           <div class="aci-bar" style="background:#ef6b6b;"></div>
           <div style="flex:1;min-width:0;">
-            <div style="margin-bottom:7px;"><span class="aci-badge" style="background:rgba(239,107,107,0.13);color:#ef6b6b;">CRITICAL</span><span style="font-size:16px;color:#eafff5;font-weight:500;">Alert fatigue — the silenced safety net</span></div>
-            <p style="margin:0 0 8px;font-size:14px;line-height:1.6;color:#b4c6bd;">Crews and controllers muted the very alarms meant to save them: a runway-incursion alert switched off, a terrain warning's breaker pulled and never reset, a takeoff horn suppressed for nuisance, eighty cascading messages in twenty seconds.</p>
-            <p style="margin:0 0 11px;font-size:13.5px;line-height:1.6;color:#9fb3aa;"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#5bc8d6;letter-spacing:0.05em;">SAME SHAPE → </span>When noise outruns signal, the monitor gets disabled, and the one event it existed to catch arrives undefended. A backstop nobody trusts is worse than none — and when it cries wolf off stale data, the fix is the data, not blame for whoever finally muted it.</p>
-            <div style="display:flex;flex-wrap:wrap;gap:6px;"><span class="aci-chip">Linate 686</span><span class="aci-chip">Trigana 267</span><span class="aci-chip">Delta 1141</span><span class="aci-chip">Qantas 32</span><span class="aci-chip">Überlingen</span><span class="aci-chip">Ansett 703</span></div>
+            <div style="margin-bottom:7px;"><span class="aci-badge" style="background:rgba(239,107,107,0.13);color:#ef6b6b;">CRITICAL</span><span style="font-size:16px;color:#eafff5;font-weight:500;">Monitoring &amp; alerting — four ways the channel breaks</span></div>
+            <p style="margin:0 0 9px;font-size:14px;line-height:1.6;color:#b4c6bd;">The link between the machine's state and the human's grasp of it fails in four distinct ways — only the last is alert fatigue:</p>
+            <div style="display:flex;flex-direction:column;gap:7px;margin-bottom:11px;">
+              <div style="font-size:13px;line-height:1.5;color:#9fb3aa;"><span style="color:#5bc8d6;font-weight:600;">Can't read it</span> — an ambiguous dial, or two instruments disagreeing with no clear way to tell which is lying. <span style="color:#71867e;">· Birgenair 301 · Aeroperú 603 · Alitalia 404</span></div>
+              <div style="font-size:13px;line-height:1.5;color:#9fb3aa;"><span style="color:#5bc8d6;font-weight:600;">Too much of it</span> — a cascade of alarms floods the crew past what they can absorb. <span style="color:#71867e;">· Qantas 32 · Qantas 72</span></div>
+              <div style="font-size:13px;line-height:1.5;color:#9fb3aa;"><span style="color:#5bc8d6;font-weight:600;">Didn't fire</span> — the warning that should have caught the slip was silently dead, or came too late. <span style="color:#71867e;">· Delta 1141 · Ansett 703</span></div>
+              <div style="font-size:13px;line-height:1.5;color:#9fb3aa;"><span style="color:#5bc8d6;font-weight:600;">Cried wolf</span> — false alarms train the crew to ignore it, or pull its breaker. <span style="color:#71867e;">· Trigana 267 · Linate 686</span></div>
+            </div>
+            <p style="margin:0;font-size:13.5px;line-height:1.6;color:#9fb3aa;"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#5bc8d6;letter-spacing:0.05em;">SAME SHAPE → </span>A monitor is only as good as the operator's ability to read it, in time, and trust it. Ambiguity, overload, silent failure, and false alarms each defeat it differently — so the answer is rarely "add more alerts."</p>
           </div>
         </div>
 
@@ -479,7 +484,7 @@ html,body{margin:0;padding:0;background:#080b0a;}
               <div class="aci-row"><span class="aci-lbl" style="color:#5bc8d6;">ROOT</span><span style="flex:1;color:#b4c6bd;">A misaligned counter-bore left the pipe wall too thin — a manufacturing nonconformity, later found fleet-wide.</span></div>
               <div class="aci-row"><span class="aci-lbl" style="color:#ef6b6b;">POWER</span><span style="flex:1;color:#c2cfc7;">Eighty alerts in seconds nearly buried the root cause; the maker's QA lapse was settled privately for ~A$95M, out of public view.</span></div>
             </div>
-            <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:1px;"><span class="aci-chip">alert fatigue</span><span class="aci-chip">deferred reliability</span></div>
+            <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:1px;"><span class="aci-chip">alert overload</span><span class="aci-chip">deferred reliability</span></div>
           </div>
 
           <!-- ===== corrupt input (warning) ===== -->
@@ -737,7 +742,7 @@ html,body{margin:0;padding:0;background:#080b0a;}
               <div class="aci-row"><span class="aci-lbl" style="color:#5bc8d6;">ROOT</span><span style="flex:1;color:#b4c6bd;">Fixation drained monitoring; the terrain warning fired ~4s out instead of ~17 — a malfunction never explained.</span></div>
               <div class="aci-row"><span class="aci-lbl" style="color:#ef6b6b;">POWER</span><span style="flex:1;color:#c2cfc7;">The captain was prosecuted and acquitted; an academic re-analysis argued the report under-weighted the systemic faults.</span></div>
             </div>
-            <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:1px;"><span class="aci-chip">fixation</span></div>
+            <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:1px;"><span class="aci-chip">fixation</span><span class="aci-chip">failed to alert</span></div>
           </div>
 
           <div class="aci-card">
@@ -748,7 +753,7 @@ html,body{margin:0;padding:0;background:#080b0a;}
               <div class="aci-row"><span class="aci-lbl" style="color:#5bc8d6;">ROOT</span><span style="flex:1;color:#b4c6bd;">A chatty, non-sterile cockpit skipped the config step; the warning horn that should have caught it was silently failed.</span></div>
               <div class="aci-row"><span class="aci-lbl" style="color:#ef6b6b;">POWER</span><span style="flex:1;color:#c2cfc7;">The report leaned on "cockpit discipline"; a fleet check then found the backstop alarm unreliable across ~1,190 aircraft.</span></div>
             </div>
-            <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:1px;"><span class="aci-chip">fixation</span><span class="aci-chip">alert fatigue</span></div>
+            <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:1px;"><span class="aci-chip">fixation</span><span class="aci-chip">failed to alert</span></div>
           </div>
 
           <!-- ===== authority gradient (baseline) ===== -->
