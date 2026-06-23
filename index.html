@@ -259,7 +259,7 @@ class Component extends DCLogic {
     const span = e.currentTarget;
     const box = span.closest('[data-gloss-box]');
     const sr = span.getBoundingClientRect();
-    const br = (box || span).getBoundingClientRect();
+    const br = (box || (typeof document !== 'undefined' && document.body) || span).getBoundingClientRect();
     const pad = 8;
     const cardW = Math.min(214, Math.max(150, br.width - pad * 2));
     let left = sr.left + sr.width / 2 - cardW / 2;
