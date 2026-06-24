@@ -3,6 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Self-host the runtime deps so the page renders even when the CDN is blocked,
+     throttled, or unreachable. support.js (loadReactUmd) skips its unpkg fetch
+     when window.React/ReactDOM already exist; if these 404 it falls back to unpkg. -->
+<script src="./vendor/react.production.min.js"></script>
+<script src="./vendor/react-dom.production.min.js"></script>
 <script src="./support.js"></script>
 </head>
 <body>
