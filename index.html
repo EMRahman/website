@@ -3,6 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Self-host the runtime deps so the page renders even when the CDN is blocked,
+     throttled, or unreachable. support.js (loadReactUmd) skips its unpkg fetch
+     when window.React/ReactDOM already exist; if these 404 it falls back to unpkg. -->
+<script src="./vendor/react.production.min.js"></script>
+<script src="./vendor/react-dom.production.min.js"></script>
 <script src="./support.js"></script>
 </head>
 <body>
@@ -29,7 +34,35 @@ html,body{margin:0;padding:0;background:#080b0a;}
   .content-main{padding-left:12px !important;padding-right:12px !important;}
   .sec-pad{padding:28px 22px !important;}
   .scope-sub{min-height:37vh !important;}
+  .aci-pad{padding:30px 22px !important;}
+  .aci-threecol{grid-template-columns:1fr !important;}
 }
+/* ---- ACI incident-logs section ---- */
+.aci-threecol{display:grid;grid-template-columns:1fr 1fr 1fr;gap:13px;}
+.aci-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(286px,100%),1fr));gap:13px;}
+.aci-card{border:1px solid rgba(120,160,145,0.13);background:rgba(10,14,12,0.55);border-radius:5px;padding:15px 16px;display:flex;flex-direction:column;gap:9px;transition:border-color .18s,background .18s;}
+.aci-card:hover{border-color:rgba(91,200,214,0.30);background:rgba(14,20,17,0.72);}
+.aci-wiki{font-family:'JetBrains Mono',monospace;font-size:10px;color:#52655d;text-decoration:none;flex:none;transition:color .15s;white-space:nowrap;}
+.aci-wiki:hover{color:#5bc8d6;}
+.aci-row{display:flex;gap:9px;font-size:12.5px;line-height:1.52;}
+.aci-lbl{display:inline-block;width:46px;flex:none;font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:0.09em;padding-top:2px;}
+.aci-chip{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.04em;color:#7e938a;background:rgba(120,160,145,0.07);border:1px solid rgba(120,160,145,0.16);padding:2px 7px;border-radius:3px;white-space:nowrap;}
+.aci-pat{display:flex;gap:14px;padding:18px 2px;border-top:1px solid rgba(120,160,145,0.1);}
+.aci-pat:first-child{border-top:none;}
+.aci-bar{flex:none;width:3px;border-radius:2px;}
+.aci-badge{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:0.1em;padding:2px 7px;border-radius:3px;vertical-align:2px;margin-right:10px;}
+.aci-cchip{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.04em;color:#d8b25a;background:rgba(240,183,63,0.10);border:1px solid rgba(240,183,63,0.30);padding:2px 7px;border-radius:3px;white-space:nowrap;}
+.aci-gl{position:relative;border-bottom:1px dotted rgba(91,200,214,0.7);cursor:help;text-decoration:none;}
+.aci-gl:hover,.aci-gl:focus-within{color:#8fe3ee;border-bottom-color:#8fe3ee;outline:none;}
+.aci-tip{position:absolute;left:50%;bottom:calc(100% + 8px);transform:translateX(-50%) translateY(3px);z-index:60;width:max-content;max-width:228px;background:#0d1311;border:1px solid rgba(91,200,214,0.38);border-radius:5px;padding:7px 10px;font-family:'IBM Plex Sans',system-ui,sans-serif;font-size:11.5px;font-weight:400;line-height:1.45;letter-spacing:normal;color:#cfe0d8;text-align:left;white-space:normal;box-shadow:0 8px 24px rgba(0,0,0,0.6);opacity:0;visibility:hidden;pointer-events:none;transition:opacity .14s ease,transform .14s ease;}
+.aci-gl:hover .aci-tip,.aci-gl:focus-within .aci-tip{opacity:1;visibility:visible;transform:translateX(-50%) translateY(0);}
+.aci-tip::after{content:"";position:absolute;top:100%;left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:#0d1311;}
+.aci-jump{color:#9fb3aa;text-decoration:none;border:1px solid rgba(120,160,145,0.18);border-radius:3px;padding:2px 7px;transition:color .15s,border-color .15s;}
+.aci-jump:hover{color:#5bc8d6;border-color:rgba(91,200,214,0.4);}
+.aci-card{scroll-margin-top:80px;}
+.aci-hl{white-space:nowrap;}
+@media (max-width:640px){.aci-tip{max-width:min(60vw,196px);font-size:11px;padding:6px 9px;line-height:1.4;}}
+@media (max-width:820px){.aci-hl{white-space:normal;}}
 </style>
 </helmet>
 
@@ -55,6 +88,7 @@ html,body{margin:0;padding:0;background:#080b0a;}
       <div style="display:flex;gap:18px;font-size:12px;">
         <a href="#about" style="color:#9fb3aa;text-decoration:none;" style-hover="color:#5bc8d6;">./about</a>
         <a href="#projects" style="color:#9fb3aa;text-decoration:none;" style-hover="color:#5bc8d6;">./projects</a>
+        <a href="#aci-logs" style="color:#9fb3aa;text-decoration:none;" style-hover="color:#5bc8d6;">./aci-logs</a>
         <a href="#contact" style="color:#9fb3aa;text-decoration:none;" style-hover="color:#5bc8d6;">./contact</a>
       </div>
     </div>
@@ -73,7 +107,8 @@ html,body{margin:0;padding:0;background:#080b0a;}
           <blockquote style="margin:0;font-size:clamp(20px,2.2vw,33px);line-height:1.34;font-weight:300;color:#eafff5;letter-spacing:-0.01em;animation:fadeup .7s ease .05s both;">
             There are known knowns. <span style="color:#46e2a0;">Things we know we know.</span> There are known unknowns — <span style="color:#f0b73f;">things we know we do not know.</span> But there are also unknown unknowns — <span style="color:#ef6b6b;">the ones we don't know we don't know.</span>
           </blockquote>
-          <div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#71867e;margin-top:20px;animation:fadeup .7s ease .12s both;">— Donald Rumsfeld, 2002</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#71867e;margin-top:20px;animation:fadeup .7s ease .12s both;">— Donald Rumsfeld · U.S. Secretary of Defense, 2002</div>
+          <div style="font-family:'IBM Plex Sans',system-ui,sans-serif;font-size:11.5px;font-style:italic;line-height:1.55;color:#6b8078;margin-top:11px;max-width:54ch;animation:fadeup .7s ease .16s both;">A borrowed frame, used here in its older engineering sense: map what is known, name what is uncertain, and keep looking for the conditions nobody has yet seen.</div>
           <div style="height:1px;background:rgba(120,160,145,0.14);margin:26px 0;"></div>
           <div style="animation:fadeup .7s ease .2s both;">
             <div style="font-size:18px;color:#eafff5;font-weight:500;">Ehsan Rahman<span style="display:inline-block;width:8px;height:17px;background:#46e2a0;margin-left:7px;vertical-align:-2px;animation:blink 1.1s steps(1) infinite;"></span></div>
@@ -220,6 +255,566 @@ html,body{margin:0;padding:0;background:#080b0a;}
         </a>
 
       </div>
+    </section>
+
+    <!-- ===================== INCIDENT LOGS · ACI ===================== -->
+    <section id="aci-logs" data-screen-label="ACI Logs" style="margin-top:48px;border:1px solid rgba(120,160,145,0.14);background:rgba(16,22,20,0.4);border-radius:5px;overflow:hidden;scroll-margin-top:20px;">
+      <div style="display:flex;align-items:center;flex-wrap:wrap;gap:4px 14px;justify-content:space-between;padding:11px 16px;border-bottom:1px solid rgba(120,160,145,0.12);font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:0.15em;color:#7fb8ad;">
+        <span>INCIDENT LOGS · ACI · <a href="https://en.wikipedia.org/wiki/List_of_Mayday_episodes" target="_blank" rel="noopener" style="color:#5f7d72;text-decoration:none;" style-hover="color:#5bc8d6;">AIR CRASH INVESTIGATION ↗</a></span><span style="color:#52655d;">$ cat post-mortem.md</span>
+      </div>
+      <div style="display:flex;align-items:baseline;gap:9px;padding:9px 16px 10px;border-bottom:1px solid rgba(120,160,145,0.1);background:rgba(91,200,214,0.022);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.02em;line-height:1.55;color:#71867e;"><span style="color:#5bc8d6;flex:none;letter-spacing:0.12em;">METHOD</span><span>Primary intake from the Air Crash Investigation series and general reading. AI used to cross-check each case against the official accident report, correcting for documentary perspectives. Cards reviewed and analysed by me; conclusions drawn from the objective record, not the screen narrative.</span></div>
+
+      <!-- intro / thesis -->
+      <div class="sec-pad aci-pad" style="padding:42px 44px;border-bottom:1px solid rgba(120,160,145,0.1);">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.04em;color:#46e2a0;margin-bottom:18px;">// The first story names the failure. The second explains the system.</div>
+        <h2 style="margin:0 0 20px;font-size:clamp(20px,2.15vw,29px);font-weight:400;line-height:1.25;color:#eafff5;letter-spacing:-0.01em;">The operator is visible; the system is usually harder to see.</h2>
+        <p style="margin:0 0 16px;font-size:16px;line-height:1.7;color:#b4c6bd;max-width:76ch;text-wrap:pretty;">A habit of mine is watching <a href="https://en.wikipedia.org/wiki/List_of_Mayday_episodes" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;border-bottom:1px dotted rgba(120,160,145,0.45);" style-hover="color:#5bc8d6;"><em>Air Crash Investigation</em></a> and then reading the accident reports behind the episodes — not for the drama, but for the systems thinking.</p>
+        <p style="margin:0 0 16px;font-size:16px;line-height:1.7;color:#b4c6bd;max-width:76ch;text-wrap:pretty;">I find myself reading them the way an engineer might read a production post-mortem: slowly, looking past the immediate failure and asking what had to be true in the wider system for that failure to become possible.</p>
+        <p style="margin:0 0 16px;font-size:16px;line-height:1.7;color:#b4c6bd;max-width:76ch;text-wrap:pretty;">The pattern is rarely simple. A pilot, controller, mechanic, dispatcher, or maintainer may appear at the sharp end of the incident. But beneath that moment there is often a quieter set of conditions: an alarm that had become too noisy to trust, a sensor feeding bad information into automation, a deferred fix, a procedure that worked in theory but not under pressure, or a test environment that never really resembled the real world.</p>
+        <p style="margin:0 0 16px;font-size:16px;line-height:1.7;color:#b4c6bd;max-width:76ch;text-wrap:pretty;">What interests me is not blame as an endpoint, but the recurring conditions — technical, organisational, and political — that make failure possible.</p>
+        <p style="margin:0 0 16px;font-size:16px;line-height:1.7;color:#b4c6bd;max-width:76ch;text-wrap:pretty;">Below are <span style="color:#cfe0d8;">32 cases</span>, cross-referenced against their official reports, and read through two lenses: the proximate explanation that made the event visible, and the deeper organisational, technical, and operational conditions that allowed it to unfold.</p>
+        <p style="margin:0;font-size:16px;line-height:1.7;color:#b4c6bd;max-width:76ch;text-wrap:pretty;">The aim is not to draw easy analogies between aviation and software, but to ask a more useful question: what failure modes keep reappearing in <span style="color:#5bc8d6;">complex systems</span>, whether or not they have wings?</p>
+
+        <!-- two-layer legend -->
+        <div class="aci-threecol" style="margin-top:30px;">
+          <div style="border-left:2px solid #f0b73f;padding:1px 0 1px 13px;">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:0.12em;color:#f0b73f;margin-bottom:5px;">PROX — what was blamed</div>
+            <div style="font-size:13px;line-height:1.55;color:#9fb3aa;">The probable cause as written. Usually the last human to touch it.</div>
+          </div>
+          <div style="border-left:2px solid #5bc8d6;padding:1px 0 1px 13px;">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:0.12em;color:#5bc8d6;margin-bottom:5px;">ROOT — what was true</div>
+            <div style="font-size:13px;line-height:1.55;color:#9fb3aa;">The latent condition beneath it — in the design, the data, or the process.</div>
+          </div>
+          <div style="border-left:2px solid #ef6b6b;padding:1px 0 1px 13px;">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:0.12em;color:#ef6b6b;margin-bottom:5px;">POWER — what was left out</div>
+            <div style="font-size:13px;line-height:1.55;color:#9fb3aa;">Where the report fell short: cost, influence, or who got to write it.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- the blame gradient (capstone insight) -->
+      <div class="sec-pad aci-pad" style="padding:34px 44px;border-bottom:1px solid rgba(120,160,145,0.1);background:rgba(239,107,107,0.035);">
+        <div style="display:flex;align-items:center;gap:9px;margin-bottom:14px;">
+          <span style="width:8px;height:8px;border-radius:50%;background:#ef6b6b;box-shadow:0 0 8px #ef6b6b;flex:none;"></span>
+          <span class="aci-hl" style="font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:0.16em;color:#ef6b6b;">THE DEEPEST PATTERN ISN'T IN THE COCKPIT</span>
+        </div>
+        <p style="margin:0 0 14px;font-size:15.5px;line-height:1.72;color:#cdd9d1;max-width:82ch;text-wrap:pretty;">Read enough of these cases and the strongest pattern is not only technical, but systemic — shaped by incentives, oversight, commercial pressure, and decisions made far upstream of the failure.</p>
+        <p style="margin:0 0 14px;font-size:15.5px;line-height:1.72;color:#cdd9d1;max-width:82ch;text-wrap:pretty;">When the fuller truth surfaces, it is often forced into view by someone without a stake in preserving the original story: a grieving parent, a dissenting investigator, a whistleblower, a lawsuit, or a public inquiry.</p>
+        <p style="margin:0;font-size:15.5px;line-height:1.72;color:#cdd9d1;max-width:82ch;text-wrap:pretty;">That is the lesson mature engineering cultures eventually learn. <span style="color:#eafff5;">A post-mortem is useful only when it can examine the conditions around the failure, not merely the person nearest to it.</span> Otherwise it becomes punishment theatre, and the latent fault stays exactly where it was.</p>
+      </div>
+
+      <!-- failure modes -->
+      <div class="sec-pad aci-pad" style="padding:38px 44px;border-bottom:1px solid rgba(120,160,145,0.1);">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:9px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.14em;">
+          <span style="color:#7fb8ad;">FAILURE MODES · transferable</span><span style="color:#52655d;">9 patterns</span>
+        </div>
+        <p style="margin:0 0 6px;font-size:13.5px;line-height:1.6;color:#71867e;max-width:74ch;">The same shapes recur across the ledger. Each is stated once for aviation, once for any complex system — the analogy is the whole point.</p>
+
+        <div class="aci-pat">
+          <div class="aci-bar" style="background:#ef6b6b;"></div>
+          <div style="flex:1;min-width:0;">
+            <div style="margin-bottom:7px;"><span class="aci-badge" style="background:rgba(239,107,107,0.13);color:#ef6b6b;">CRITICAL</span><span style="font-size:16px;color:#eafff5;font-weight:500;">Monitoring &amp; alerting — five ways the channel breaks</span></div>
+            <p style="margin:0 0 9px;font-size:14px;line-height:1.6;color:#b4c6bd;">The link between the machine's state and the human's grasp of it fails in five distinct ways — only the last is alert fatigue:</p>
+            <div style="display:flex;flex-direction:column;gap:7px;margin-bottom:11px;">
+              <div style="font-size:13px;line-height:1.5;color:#9fb3aa;"><span style="color:#5bc8d6;font-weight:600;">Can't read it</span> — a display that reads plausibly normal while it lies, or a dial easy to misread; nothing flags the error. <span style="color:#71867e;">· Alitalia 404</span></div>
+              <div style="font-size:13px;line-height:1.5;color:#9fb3aa;"><span style="color:#5bc8d6;font-weight:600;">Mixed signals</span> — alarms that contradict each other: overspeed and stall at the same instant, three airspeeds all disagreeing. <span style="color:#71867e;">· Birgenair 301 · Aeroperú 603</span></div>
+              <div style="font-size:13px;line-height:1.5;color:#9fb3aa;"><span style="color:#5bc8d6;font-weight:600;">Too much of it</span> — a cascade of alarms floods the crew past what they can absorb. <span style="color:#71867e;">· Qantas 32 · Qantas 72</span></div>
+              <div style="font-size:13px;line-height:1.5;color:#9fb3aa;"><span style="color:#5bc8d6;font-weight:600;">Didn't fire</span> — the warning that should have caught the slip was silently dead, or came too late. <span style="color:#71867e;">· Delta 1141 · Ansett 703</span></div>
+              <div style="font-size:13px;line-height:1.5;color:#9fb3aa;"><span style="color:#5bc8d6;font-weight:600;">Cried wolf</span> — false alarms train the crew to ignore it, or pull its breaker. <span style="color:#71867e;">· Trigana 267 · Linate 686</span></div>
+            </div>
+            <p style="margin:0;font-size:13.5px;line-height:1.6;color:#9fb3aa;"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#5bc8d6;letter-spacing:0.05em;">SAME SHAPE → </span>A monitor is only as good as the operator's ability to read it, in time, and trust it. Ambiguity, contradiction, overload, silent failure, and false alarms each defeat it differently — so the answer is rarely "add more alerts."</p>
+          </div>
+        </div>
+
+        <div class="aci-pat">
+          <div class="aci-bar" style="background:#ef6b6b;"></div>
+          <div style="flex:1;min-width:0;">
+            <div style="margin-bottom:7px;"><span class="aci-badge" style="background:rgba(239,107,107,0.13);color:#ef6b6b;">CRITICAL</span><span style="font-size:16px;color:#eafff5;font-weight:500;">Automation authority — who wins the disagreement</span></div>
+            <p style="margin:0 0 8px;font-size:14px;line-height:1.6;color:#b4c6bd;">When the machine and the human gave opposite orders, nothing said who wins. One jet's collision system said climb while the controller said descend; a flight computer pushed the nose down on data the pilots knew was false and could not instantly countermand.</p>
+            <p style="margin:0 0 11px;font-size:13.5px;line-height:1.6;color:#9fb3aa;"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#5bc8d6;letter-spacing:0.05em;">SAME SHAPE → </span>Shared control needs a defined precedence and a graceful override. High-authority automation must surface what it is doing and why, and stand down the moment its inputs are suspect.</p>
+            <div style="display:flex;flex-wrap:wrap;gap:6px;"><span class="aci-chip">Überlingen</span><span class="aci-chip">Qantas 72</span><span class="aci-chip">Birgenair 301</span><span class="aci-chip">Aeroperú 603</span><span class="aci-chip">TransAsia 235</span></div>
+          </div>
+        </div>
+
+        <div class="aci-pat">
+          <div class="aci-bar" style="background:#f0b73f;"></div>
+          <div style="flex:1;min-width:0;">
+            <div style="margin-bottom:7px;"><span class="aci-badge" style="background:rgba(240,183,63,0.13);color:#f0b73f;">WARNING</span><span style="font-size:16px;color:#eafff5;font-weight:500;">One corrupt input, fed straight to the cascade</span></div>
+            <p style="margin:0 0 8px;font-size:14px;line-height:1.6;color:#b4c6bd;">A blocked tube, a taped-over port, a mislabelled data channel, a wrong-by-calibration gauge — piped into the automation, which then acted with total confidence on a lie while burying the crew in contradictory alarms.</p>
+            <p style="margin:0 0 11px;font-size:13.5px;line-height:1.6;color:#9fb3aa;"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#5bc8d6;letter-spacing:0.05em;">SAME SHAPE → </span>Validate every input at the boundary; reconcile redundant readings and flag the outlier. An instrument that fails to a plausible value is more dangerous than one that fails loud.</p>
+            <div style="display:flex;flex-wrap:wrap;gap:6px;"><span class="aci-chip">Aeroperú 603</span><span class="aci-chip">Birgenair 301</span><span class="aci-chip">Qantas 72</span><span class="aci-chip">Tuninter 1153</span><span class="aci-chip">Gimli 143</span><span class="aci-chip">Alitalia 404</span></div>
+          </div>
+        </div>
+
+        <div class="aci-pat">
+          <div class="aci-bar" style="background:#f0b73f;"></div>
+          <div style="flex:1;min-width:0;">
+            <div style="margin-bottom:7px;"><span class="aci-badge" style="background:rgba(240,183,63,0.13);color:#f0b73f;">WARNING</span><span style="font-size:16px;color:#eafff5;font-weight:500;">"Compliant" is not "safe" — the lab never matched the line</span></div>
+            <p style="margin:0 0 8px;font-size:14px;line-height:1.6;color:#b4c6bd;">Engines certified against rainfall no storm ever produced; a heat exchanger "compliant with the requirements," yet choked by ice; a propeller proven flat in a lab, never against the airflow that turned it into a wall.</p>
+            <p style="margin:0 0 11px;font-size:13.5px;line-height:1.6;color:#9fb3aa;"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#5bc8d6;letter-spacing:0.05em;">SAME SHAPE → </span>A test that passes against assumptions that don't match the real operating envelope gives false assurance. Validation that never resembles production is decoration.</p>
+            <div style="display:flex;flex-wrap:wrap;gap:6px;"><span class="aci-chip">TACA 110</span><span class="aci-chip">BA 38</span><span class="aci-chip">Southern 242</span><span class="aci-chip">Delta 191</span></div>
+          </div>
+        </div>
+
+        <!-- three operations on risk -->
+        <div style="margin:24px 0 8px;padding:21px 22px;border:1px solid rgba(120,160,145,0.18);border-radius:6px;background:rgba(16,22,20,0.6);">
+          <div class="aci-hl" style="font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:0.15em;color:#7fb8ad;margin-bottom:12px;">STEP BACK · RISK DOESN'T VANISH — IT MOVES, COMPOUNDS, OR MULTIPLIES</div>
+          <p style="margin:0 0 15px;font-size:14px;line-height:1.62;color:#b4c6bd;max-width:82ch;text-wrap:pretty;">The next two failure modes — plus a third move scattered across the ledger — are one idea in three guises. Skip the work of pricing risk up front and it doesn't vanish — it moves, compounds, or is minted fresh by the feature you added. Three forms:</p>
+          <div style="display:flex;flex-direction:column;gap:12px;">
+            <div style="display:flex;gap:13px;"><span style="flex:none;width:108px;font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:0.05em;color:#f0b73f;padding-top:2px;">TRANSFER →</span><span style="flex:1;font-size:13.5px;line-height:1.56;color:#cdd9d1;">A weak design — or a part that can be mis-set or mis-calibrated — hands the risk to the people downstream: every install, inspection, and pre-flight checkout must be perfect, forever. <span style="color:#71867e;">· no fail-safe · BA 5390 · Gimli 143 · Tuninter 1153</span></span></div>
+            <div style="display:flex;gap:13px;"><span style="flex:none;width:108px;font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:0.05em;color:#f0b73f;padding-top:2px;">ACCUMULATE →</span><span style="flex:1;font-size:13.5px;line-height:1.56;color:#cdd9d1;">Deferring known work lets the risk <span style="color:#eafff5;">compound over time</span>, like interest you can't see on the books. <span style="color:#71867e;">· deferred reliability · Alaska 261</span></span></div>
+            <div style="display:flex;gap:13px;"><span style="flex:none;width:108px;font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:0.05em;color:#ef6b6b;padding-top:2px;">INTRODUCE →</span><span style="flex:1;font-size:13.5px;line-height:1.56;color:#cdd9d1;">A new feature, added to make the product <span style="color:#eafff5;">desirable</span>, brings fresh risk surface that the appeal hides — the seat-back entertainment was the draw; its wiring was the fire. <span style="color:#71867e;">· Swissair 111</span></span></div>
+          </div>
+          <p style="margin:15px 0 0;font-size:14px;line-height:1.62;color:#cdd9d1;max-width:82ch;text-wrap:pretty;">Propping up an inferior design with maintenance <span style="color:#eafff5;">feels</span> like prudence; usually it is transfer and accumulation at once, billed later to someone else. The only real exit is the feedback loop — log what maintenance keeps catching and bake it into the next design — while remembering to treat every new feature as risk surface, not just a selling point.</p>
+        </div>
+
+        <div class="aci-pat">
+          <div class="aci-bar" style="background:#f0b73f;"></div>
+          <div style="flex:1;min-width:0;">
+            <div style="margin-bottom:7px;"><span class="aci-badge" style="background:rgba(240,183,63,0.13);color:#f0b73f;">WARNING</span><span style="font-size:16px;color:#eafff5;font-weight:500;">No fail-safe — a design that mortgages safety to a routine task</span></div>
+            <p style="margin:0 0 8px;font-size:14px;line-height:1.6;color:#b4c6bd;">A windscreen bolted on from outside, so only the fasteners hold it against cabin pressure; a cargo-door latch that reads "locked" without being locked, its weakness known yet left unfixed for years; a single jackscrew nut with no backup. The design carried no margin — so one ordinary slip downstream was enough.</p>
+            <p style="margin:0 0 11px;font-size:13.5px;line-height:1.6;color:#9fb3aa;"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#5bc8d6;letter-spacing:0.05em;">SAME SHAPE → </span>A design with no fail-safe silently demands that every install and inspection downstream be perfect forever. Build the margin in — redundancy, a guard that rejects the wrong part or state, a way to fail safe — rather than mortgaging safety to flawless execution.</p>
+            <div style="display:flex;flex-wrap:wrap;gap:6px;"><span class="aci-chip">BA 5390</span><span class="aci-chip">United 811</span><span class="aci-chip">Turkish 981</span><span class="aci-chip">Alaska 261</span><span class="aci-chip">Propair 420</span></div>
+          </div>
+        </div>
+
+        <div class="aci-pat">
+          <div class="aci-bar" style="background:#f0b73f;"></div>
+          <div style="flex:1;min-width:0;">
+            <div style="margin-bottom:7px;"><span class="aci-badge" style="background:rgba(240,183,63,0.13);color:#f0b73f;">WARNING</span><span style="font-size:16px;color:#eafff5;font-weight:500;">Deferred reliability is a loan — it compounds</span></div>
+            <p style="margin:0 0 8px;font-size:14px;line-height:1.6;color:#b4c6bd;">An inspection interval stretched four-fold; a flammable material kept in the fleet because retrofit was costly; a mismatched part forced in to make a schedule; one lone, unverified hand on a safety-critical task.</p>
+            <p style="margin:0 0 11px;font-size:13.5px;line-height:1.6;color:#9fb3aa;"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#5bc8d6;letter-spacing:0.05em;">SAME SHAPE → </span>Maintenance debt accrues silently and off the balance sheet. The interest comes due all at once, at the worst possible moment, and rarely on the watch of whoever deferred it.</p>
+            <div style="display:flex;flex-wrap:wrap;gap:6px;"><span class="aci-chip">Alaska 261</span><span class="aci-chip">Air Transat 236</span><span class="aci-chip">Swissair 111</span><span class="aci-chip">Air Midwest 5481</span><span class="aci-chip">Continental 2574</span></div>
+          </div>
+        </div>
+
+        <div class="aci-pat">
+          <div class="aci-bar" style="background:#f0b73f;"></div>
+          <div style="flex:1;min-width:0;">
+            <div style="margin-bottom:7px;"><span class="aci-badge" style="background:rgba(240,183,63,0.13);color:#f0b73f;">WARNING</span><span style="font-size:16px;color:#eafff5;font-weight:500;">Normalised deviance and continuation bias</span></div>
+            <p style="margin:0 0 8px;font-size:14px;line-height:1.6;color:#b4c6bd;">Descending below minimums without the runway in sight; pressing an approach into a storm; landing past the crosswind limit — risks run so often they stopped feeling like risks, until a low-margin day made the bill payable.</p>
+            <p style="margin:0 0 11px;font-size:13.5px;line-height:1.6;color:#9fb3aa;"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#5bc8d6;letter-spacing:0.05em;">SAME SHAPE → </span>When a shortcut keeps working it quietly becomes the procedure. "Press on" feels rational as the margins erode — the deviation is invisible right up until it is the headline.</p>
+            <div style="display:flex;flex-wrap:wrap;gap:6px;"><span class="aci-chip">American 1420</span><span class="aci-chip">TransAsia 222</span><span class="aci-chip">Crossair 3597</span><span class="aci-chip">Delta 1141</span></div>
+          </div>
+        </div>
+
+        <div class="aci-pat">
+          <div class="aci-bar" style="background:#46e2a0;"></div>
+          <div style="flex:1;min-width:0;">
+            <div style="margin-bottom:7px;"><span class="aci-badge" style="background:rgba(70,226,160,0.13);color:#46e2a0;">BASELINE</span><span style="font-size:16px;color:#eafff5;font-weight:500;">Fixation — the whole team watching the wrong dial</span></div>
+            <p style="margin:0 0 8px;font-size:14px;line-height:1.6;color:#b4c6bd;">An entire crew absorbed by a burnt-out indicator bulb, or a hung landing gear, while — unwatched — the aircraft flew gently into the ground. The step that got skipped was the load-bearing one.</p>
+            <p style="margin:0 0 11px;font-size:13.5px;line-height:1.6;color:#9fb3aa;"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#5bc8d6;letter-spacing:0.05em;">SAME SHAPE → </span>When every operator converges on the same low-stakes anomaly, nobody guards the primary objective. Keep at least one set of eyes on the thing that actually kills you.</p>
+            <div style="display:flex;flex-wrap:wrap;gap:6px;"><span class="aci-chip">Eastern 401</span><span class="aci-chip">Ansett 703</span><span class="aci-chip">Delta 1141</span></div>
+          </div>
+        </div>
+
+        <div class="aci-pat">
+          <div class="aci-bar" style="background:#46e2a0;"></div>
+          <div style="flex:1;min-width:0;">
+            <div style="margin-bottom:7px;"><span class="aci-badge" style="background:rgba(70,226,160,0.13);color:#46e2a0;">BASELINE</span><span style="font-size:16px;color:#eafff5;font-weight:500;">The authority gradient and the unspoken word</span></div>
+            <p style="margin:0 0 8px;font-size:14px;line-height:1.6;color:#b4c6bd;">The first officer was right, and was overruled — eighteen times. A crew said "we need priority" but never the word "emergency," so no one acted. Severity that hangs on rank, or on one magic word, fails.</p>
+            <p style="margin:0 0 11px;font-size:13.5px;line-height:1.6;color:#9fb3aa;"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#5bc8d6;letter-spacing:0.05em;">SAME SHAPE → </span>Escalation must carry unambiguous severity that overrides social friction, and the junior with the correct read needs a sanctioned path to override. Politeness is not a control system.</p>
+            <div style="display:flex;flex-wrap:wrap;gap:6px;"><span class="aci-chip">Avianca 052</span><span class="aci-chip">First Air 6560</span><span class="aci-chip">Alitalia 404</span><span class="aci-chip">Crossair 3597</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- commercial pressure -->
+      <div class="sec-pad aci-pad" style="padding:36px 44px;border-bottom:1px solid rgba(120,160,145,0.1);background:rgba(240,183,63,0.025);">
+        <div style="display:flex;align-items:center;gap:9px;margin-bottom:13px;">
+          <span style="width:8px;height:8px;border-radius:50%;background:#f0b73f;box-shadow:0 0 8px #f0b73f;flex:none;"></span>
+          <span class="aci-hl" style="font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:0.16em;color:#d8b25a;">FOLLOW THE MONEY · COMMERCIAL PRESSURE</span>
+        </div>
+        <p style="margin:0 0 16px;font-size:15.5px;line-height:1.7;color:#cdd9d1;max-width:82ch;text-wrap:pretty;">Behind a striking share of these sits one upstream force that rarely makes the probable cause: the cost line. It stretches the maintenance interval, fits the cheaper part, flies the schedule the weather warned against — then lets the operator take the fall. Nearly half of the cases below carry it, tagged <span class="aci-cchip">commercial</span>, in five forms:</p>
+        <div style="display:flex;flex-direction:column;gap:11px;margin-bottom:16px;">
+          <div style="font-size:13.5px;line-height:1.55;color:#cdd9d1;"><span style="color:#f0b73f;font-weight:600;">Cut the maintenance</span> — stretch the inspection interval, skip the independent check, thin the night shift, run a low-cost flag-of-convenience operator. <span style="color:#71867e;">· Alaska 261 · Air Midwest 5481 · Aeroperú 603 · Birgenair 301 · BA 5390 · Continental 2574</span></div>
+          <div style="font-size:13.5px;line-height:1.55;color:#cdd9d1;"><span style="color:#f0b73f;font-weight:600;">Fit the cheaper part</span> — an older or mismatched component, slotted in to save money. <span style="color:#71867e;">· Air Transat 236</span></div>
+          <div style="font-size:13.5px;line-height:1.55;color:#cdd9d1;"><span style="color:#f0b73f;font-weight:600;">Fly the schedule</span> — get-there-itis: the on-time number outranks the weather margin. <span style="color:#71867e;">· American 1420 · TransAsia 222</span></div>
+          <div style="font-size:13.5px;line-height:1.55;color:#cdd9d1;"><span style="color:#f0b73f;font-weight:600;">Grow past your competence</span> — expand or chase rivals faster than training and <span class="aci-gl">SOPs<span class="aci-tip">Standard Operating Procedures</span></span> can carry; keep a marginal pilot flying because you're short. <span style="color:#71867e;">· TransAsia 235 · TransAsia 222 · Crossair 3597</span></div>
+          <div style="font-size:13.5px;line-height:1.55;color:#cdd9d1;"><span style="color:#f0b73f;font-weight:600;">Sell the sizzle, bury the fix</span> — ship the feature that sells; leave the unglamorous safety change for later, or quietly. <span style="color:#71867e;">· Swissair 111 · United 811 · Turkish 981 · Propair 420</span></div>
+        </div>
+        <p style="margin:0;font-size:14px;line-height:1.66;color:#b4c6bd;max-width:82ch;text-wrap:pretty;">It is the textbook "contributing factor" — real enough to bend every decision, diffuse enough that no one signs for it. But it is tempting to file capitalism itself as the cause, and that is too easy. Commercial aviation runs on risk the airline and the passenger both agree to carry — the only real question is how much, and at what price. Safety advances when the technology to raise the bar — better testing, the R&D behind a new approach — finally falls cheap enough to adopt. Until then a business under cost pressure survives by carrying the risk a little longer, and a regulator, lobbied on what the fix would cost, sometimes lets it. The cost line isn't the villain of these stories so much as the boundary condition the report rarely names: the price at which <span style="color:#cdd9d1;">"safe enough"</span> got set.</p>
+        <div style="margin:18px 0 0;padding:18px 20px;border:1px solid rgba(240,183,63,0.22);border-radius:6px;background:rgba(240,183,63,0.045);">
+          <div class="aci-hl" style="font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:0.15em;color:#d8b25a;margin-bottom:9px;">GET-THERE-ITIS · THE JUDGMENT NO SCHEDULE CAN MAKE FOR YOU</div>
+          <p style="margin:0;font-size:14px;line-height:1.66;color:#cdd9d1;max-width:82ch;text-wrap:pretty;">Aviation already has a name for the strongest of these pulls: <span style="color:#f0b73f;">get-there-itis</span> — the destination quietly outranking the margins. Its antidote isn't another procedure; it is the airmanship to stop the revenue and take the cost <span style="color:#eafff5;">before the cost takes you</span>. Knowing when to break off, divert, or refuse the approach is among the hardest and least teachable skills there is — closer to an art than a science, and in the end a question of judgment about what risk is worth carrying, and for whom. The best operators are defined less by what they can push through than by what they choose not to.</p>
+        </div>
+      </div>
+
+      <!-- ledger -->
+      <div class="sec-pad aci-pad" style="padding:38px 44px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.14em;flex-wrap:wrap;gap:8px;">
+          <span style="color:#7fb8ad;">THE LEDGER · ~/incidents</span><span style="color:#52655d;">32 cases · most-transferable first</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin:-2px 0 18px;font-family:'JetBrains Mono',monospace;font-size:10px;color:#71867e;"><span style="color:#7fb8ad;letter-spacing:0.1em;">START HERE · 5 MOST TRANSFERABLE →</span><a href="#case-uberlingen" class="aci-jump">Überlingen</a><a href="#case-qantas72" class="aci-jump">Qantas 72</a><a href="#case-aeroperu" class="aci-jump">Aeroperú 603</a><a href="#case-alaska261" class="aci-jump">Alaska 261</a><a href="#case-swissair" class="aci-jump">Swissair 111</a></div>
+        <div class="aci-grid">
+
+          <!-- ===== automation authority (critical) ===== -->
+          <div class="aci-card" id="case-uberlingen">
+            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;"><div style="display:flex;align-items:center;gap:8px;min-width:0;"><span style="width:7px;height:7px;border-radius:50%;background:#ef6b6b;box-shadow:0 0 7px #ef6b6b;flex:none;"></span><span style="font-size:14.5px;color:#eafff5;font-weight:500;">Überlingen</span></div><a class="aci-wiki" href="https://en.wikipedia.org/wiki/%C3%9Cberlingen_mid-air_collision" target="_blank" rel="noopener">2002 ↗</a></div>
+            <div style="font-size:11.5px;color:#71867e;line-height:1.4;">Mid-air collision over Lake Constance · 71 dead, 52 children</div>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <div class="aci-row"><span class="aci-lbl" style="color:#f0b73f;">PROX</span><span style="flex:1;color:#9fb3aa;">Controller failed to separate the two jets in time.</span></div>
+              <div class="aci-row"><span class="aci-lbl" style="color:#5bc8d6;">ROOT</span><span style="flex:1;color:#b4c6bd;"><span class="aci-gl">TCAS<span class="aci-tip">Traffic Collision Avoidance System</span></span> said climb, <span class="aci-gl">ATC<span class="aci-tip">Air Traffic Control</span></span> said descend — no rule for who wins; one controller on two desks, conflict-alert and phone lines down for maintenance.</span></div>
+              <div class="aci-row"><span class="aci-lbl" style="color:#ef6b6b;">POWER</span><span style="flex:1;color:#c2cfc7;">The gap was no surprise — a near-identical Japan near-miss had flagged <span class="aci-gl">TCAS<span class="aci-tip">Traffic Collision Avoidance System</span></span>-vs-<span class="aci-gl">ATC<span class="aci-tip">Air Traffic Control</span></span> a year earlier, and <span class="aci-gl">ICAO<span class="aci-tip">International Civil Aviation Organization</span></span> made "follow the RA" mandatory only after this. Yet the lone controller, working two desks after a staffing cut, was charged and later murdered; managers were convicted five years on, lightly.</span></div>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:1px;"><span class="aci-chip">automation authority</span><span class="aci-chip">blame gradient</span></div>
+          </div>
+
+          <div class="aci-card" id="case-qantas72">
+            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;"><div style="display:flex;align-items:center;gap:8px;min-width:0;"><span style="width:7px;height:7px;border-radius:50%;background:#ef6b6b;box-shadow:0 0 7px #ef6b6b;flex:none;"></span><span style="font-size:14.5px;color:#eafff5;font-weight:500;">Qantas 72</span></div><a class="aci-wiki" href="https://en.wikipedia.org/wiki/Qantas_Flight_72" target="_blank" rel="noopener">2008 ↗</a></div>
+            <div style="font-size:11.5px;color:#71867e;line-height:1.4;">A330 uncommanded pitch-downs · 0 dead, ~110 injured</div>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <div class="aci-row"><span class="aci-lbl" style="color:#f0b73f;">PROX</span><span style="flex:1;color:#9fb3aa;">None on the crew — the flight computers commanded the dive.</span></div>
+              <div class="aci-row"><span class="aci-lbl" style="color:#5bc8d6;">ROOT</span><span style="flex:1;color:#b4c6bd;">One air-data unit spat bad angle-of-attack spikes; a rare timing case defeated the spike filter. The trigger was never proven.</span></div>
+              <div class="aci-row"><span class="aci-lbl" style="color:#ef6b6b;">POWER</span><span style="flex:1;color:#c2cfc7;">Blame settled neatly on two components; that automation overrode pilots on data they knew was false stayed in the captain's later book, not the foreground.</span></div>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:1px;"><span class="aci-chip">automation authority</span><span class="aci-chip">corrupt input</span></div>
+          </div>
+
+          <div class="aci-card">
+            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;"><div style="display:flex;align-items:center;gap:8px;min-width:0;"><span style="width:7px;height:7px;border-radius:50%;background:#ef6b6b;box-shadow:0 0 7px #ef6b6b;flex:none;"></span><span style="font-size:14.5px;color:#eafff5;font-weight:500;">TransAsia 235</span></div><a class="aci-wiki" href="https://en.wikipedia.org/wiki/TransAsia_Airways_Flight_235" target="_blank" rel="noopener">2015 ↗</a></div>
+            <div style="font-size:11.5px;color:#71867e;line-height:1.4;">ATR 72 stalled into a Taipei river · 43 dead</div>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <div class="aci-row"><span class="aci-lbl" style="color:#f0b73f;">PROX</span><span style="flex:1;color:#9fb3aa;">The crew shut down the one good engine.</span></div>
+              <div class="aci-row"><span class="aci-lbl" style="color:#5bc8d6;">ROOT</span><span style="flex:1;color:#b4c6bd;">A faulty solder joint auto-feathered the other engine; the crew acted before running the identification checklist. The captain had failed an engine-out check.</span></div>
+              <div class="aci-row"><span class="aci-lbl" style="color:#ef6b6b;">POWER</span><span style="flex:1;color:#c2cfc7;">Headlines blamed one dead pilot; the report named growth outrunning training, and a regulator that didn't enforce after the same airline's crash seven months earlier.</span></div>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:1px;"><span class="aci-chip">automation authority</span><span class="aci-chip">normalised deviance</span><span class="aci-cchip">commercial</span></div>
+          </div>
+
+          <!-- ===== alert fatigue (critical) ===== -->
+          <div class="aci-card">
+            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;"><div style="display:flex;align-items:center;gap:8px;min-width:0;"><span style="width:7px;height:7px;border-radius:50%;background:#ef6b6b;box-shadow:0 0 7px #ef6b6b;flex:none;"></span><span style="font-size:14.5px;color:#eafff5;font-weight:500;">Linate · SAS 686</span></div><a class="aci-wiki" href="https://en.wikipedia.org/wiki/Linate_Airport_disaster" target="_blank" rel="noopener">2001 ↗</a></div>
+            <div style="font-size:11.5px;color:#71867e;line-height:1.4;">Runway collision in fog · 118 dead, Italy's worst</div>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <div class="aci-row"><span class="aci-lbl" style="color:#f0b73f;">PROX</span><span style="flex:1;color:#9fb3aa;">A business jet taxied onto the active runway in fog.</span></div>
+              <div class="aci-row"><span class="aci-lbl" style="color:#5bc8d6;">ROOT</span><span style="flex:1;color:#b4c6bd;">Ground radar decommissioned, incursion alarm disabled for nuisance, <span class="aci-gl">ICAO<span class="aci-tip">International Civil Aviation Organization</span></span>-violating markings — every barrier removed for convenience.</span></div>
+              <div class="aci-row"><span class="aci-lbl" style="color:#ef6b6b;">POWER</span><span style="flex:1;color:#c2cfc7;">A controller was convicted first; the airport and <span class="aci-gl">ANSP<span class="aci-tip">Air Navigation Service Provider</span></span>'s years of deferred safety spending surfaced only on appeal.</span></div>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:1px;"><span class="aci-chip">alert fatigue</span><span class="aci-chip">blame gradient</span></div>
+          </div>
+
+          <div class="aci-card">
+            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;"><div style="display:flex;align-items:center;gap:8px;min-width:0;"><span style="width:7px;height:7px;border-radius:50%;background:#ef6b6b;box-shadow:0 0 7px #ef6b6b;flex:none;"></span><span style="font-size:14.5px;color:#eafff5;font-weight:500;">Trigana 267</span></div><a class="aci-wiki" href="https://en.wikipedia.org/wiki/Trigana_Air_Flight_267" target="_blank" rel="noopener">2015 ↗</a></div>
+            <div style="font-size:11.5px;color:#71867e;line-height:1.4;">ATR 42 flew into the Papua highlands · 54 dead</div>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <div class="aci-row"><span class="aci-lbl" style="color:#f0b73f;">PROX</span><span style="flex:1;color:#9fb3aa;">Crew flew below terrain clearance with the terrain warning disabled.</span></div>
+              <div class="aci-row"><span class="aci-lbl" style="color:#5bc8d6;">ROOT</span><span style="flex:1;color:#b4c6bd;">Its terrain warning (<span class="aci-gl">EGPWS<span class="aci-tip">Enhanced Ground Proximity Warning System — terrain-database aware</span></span>) kept crying wolf on routine approaches — most likely because its database was too coarse and out of date for the topography around this remote strip to place the airport correctly (and perhaps not even GPS-linked). The captain habitually pulled its breaker to cope, and this time never reset it.</span></div>
+              <div class="aci-row"><span class="aci-lbl" style="color:#ef6b6b;">POWER</span><span style="flex:1;color:#c2cfc7;">Reads as a reckless pilot muting a safety net — but a warning that cries wolf off stale data teaches crews to distrust it. The false-alarm burden, forced by a terrain map he couldn't fix, gets far less weight than his fatal habit.</span></div>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:1px;"><span class="aci-chip">alert fatigue</span><span class="aci-chip">blame gradient</span></div>
+          </div>
+
+          <div class="aci-card">
+            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;"><div style="display:flex;align-items:center;gap:8px;min-width:0;"><span style="width:7px;height:7px;border-radius:50%;background:#ef6b6b;box-shadow:0 0 7px #ef6b6b;flex:none;"></span><span style="font-size:14.5px;color:#eafff5;font-weight:500;">Qantas 32</span></div><a class="aci-wiki" href="https://en.wikipedia.org/wiki/Qantas_Flight_32" target="_blank" rel="noopener">2010 ↗</a></div>
+            <div style="font-size:11.5px;color:#71867e;line-height:1.4;">A380 uncontained engine failure · 0 dead, 469 aboard</div>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <div class="aci-row"><span class="aci-lbl" style="color:#f0b73f;">PROX</span><span style="flex:1;color:#9fb3aa;">None on the crew — an out-of-spec oil pipe cracked and burst the turbine disc.</span></div>
+              <div class="aci-row"><span class="aci-lbl" style="color:#5bc8d6;">ROOT</span><span style="flex:1;color:#b4c6bd;">A misaligned counter-bore left the pipe wall too thin — a manufacturing nonconformity, later found fleet-wide.</span></div>
+              <div class="aci-row"><span class="aci-lbl" style="color:#ef6b6b;">POWER</span><span style="flex:1;color:#c2cfc7;">Eighty alerts in seconds nearly buried the root cause — the crew worked the storm of warnings by hand and put a crippled A380 down with no one hurt — while the maker's <span class="aci-gl">QA<span class="aci-tip">Quality Assurance</span></span> lapse was settled privately for ~A$95M, out of public view.</span></div>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:1px;"><span class="aci-chip">alert overload</span><span class="aci-chip">deferred reliability</span></div>
+          </div>
+
+          <!-- ===== corrupt input (warning) ===== -->
+          <div class="aci-card" id="case-aeroperu">
+            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;"><div style="display:flex;align-items:center;gap:8px;min-width:0;"><span style="width:7px;height:7px;border-radius:50%;background:#f0b73f;box-shadow:0 0 7px #f0b73f;flex:none;"></span><span style="font-size:14.5px;color:#eafff5;font-weight:500;">Aeroperú 603</span></div><a class="aci-wiki" href="https://en.wikipedia.org/wiki/Aeroperu_Flight_603" target="_blank" rel="noopener">1996 ↗</a></div>
+            <div style="font-size:11.5px;color:#71867e;line-height:1.4;">757 fed false data, into the Pacific at night · 70 dead</div>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <div class="aci-row"><span class="aci-lbl" style="color:#f0b73f;">PROX</span><span style="flex:1;color:#9fb3aa;">Cleaning tape left over the static ports blocked the air-data system.</span></div>
+              <div class="aci-row"><span class="aci-lbl" style="color:#5bc8d6;">ROOT</span><span style="flex:1;color:#b4c6bd;">No forcing check that protective covers were removed before flight; the cockpit then drowned the crew in contradictory warnings — and even <span class="aci-gl">ATC<span class="aci-tip">Air Traffic Control</span></span> couldn't help, since the transponder fed the controller the same false altitude from the same taped ports.</span></div>
+              <div class="aci-row"><span class="aci-lbl" style="color:#ef6b6b;">POWER</span><span style="flex:1;color:#c2cfc7;">Only the cleaner — poorly paid, without the language or legal resources to contest the charge — was convicted; the missing conspicuous cover surfaced in a lawsuit, not the verdict.</span></div>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:1px;"><span class="aci-chip">corrupt input</span><span class="aci-chip">mixed signals</span><span class="aci-chip">blame gradient</span><span class="aci-cchip">commercial</span></div>
+          </div>
+
+          <div class="aci-card">
+            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;"><div style="display:flex;align-items:center;gap:8px;min-width:0;"><span style="width:7px;height:7px;border-radius:50%;background:#f0b73f;box-shadow:0 0 7px #f0b73f;flex:none;"></span><span style="font-size:14.5px;color:#eafff5;font-weight:500;">Birgenair 301</span></div><a class="aci-wiki" href="https://en.wikipedia.org/wiki/Birgenair_Flight_301" target="_blank" rel="noopener">1996 ↗</a></div>
+            <div style="font-size:11.5px;color:#71867e;line-height:1.4;">757 stalled shortly after takeoff · 189 dead</div>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <div class="aci-row"><span class="aci-lbl" style="color:#f0b73f;">PROX</span><span style="flex:1;color:#9fb3aa;">The crew didn't recognise the stall warning or recover.</span></div>
+              <div class="aci-row"><span class="aci-lbl" style="color:#5bc8d6;">ROOT</span><span style="flex:1;color:#b4c6bd;">A wasp-nested pitot fed the autopilot a false high speed; three airspeeds disagreed and were never reconciled. The captain flagged his own dead airspeed during the takeoff roll yet pressed on instead of aborting. No unreliable-airspeed checklist existed.</span></div>
+              <div class="aci-row"><span class="aci-lbl" style="color:#ef6b6b;">POWER</span><span style="flex:1;color:#c2cfc7;">Blame fell on the dead crew; the "paper" shell-operator and weak oversight that put an uncovered jet in service drew no finding.</span></div>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:1px;"><span class="aci-chip">corrupt input</span><span class="aci-chip">mixed signals</span><span class="aci-chip">automation authority</span><span class="aci-chip">get-there-itis</span><span class="aci-cchip">commercial</span></div>
+          </div>
+
+          <div class="aci-card">
+            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;"><div style="display:flex;align-items:center;gap:8px;min-width:0;"><span style="width:7px;height:7px;border-radius:50%;background:#f0b73f;box-shadow:0 0 7px #f0b73f;flex:none;"></span><span style="font-size:14.5px;color:#eafff5;font-weight:500;">Gimli Glider · 143</span></div><a class="aci-wiki" href="https://en.wikipedia.org/wiki/Gimli_Glider" target="_blank" rel="noopener">1983 ↗</a></div>
+            <div style="font-size:11.5px;color:#71867e;line-height:1.4;">767 ran out of fuel, glided to Gimli · 0 dead</div>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <div class="aci-row"><span class="aci-lbl" style="color:#f0b73f;">PROX</span><span style="flex:1;color:#9fb3aa;">Crew loaded half the fuel — a pounds-to-kilograms slip.</span></div>
+              <div class="aci-row"><span class="aci-lbl" style="color:#5bc8d6;">ROOT</span><span style="flex:1;color:#b4c6bd;">Blank fuel gauges dispatched under a workaround; no automated fuel check; the cross-check role deleted with the flight engineer.</span></div>
+              <div class="aci-row"><span class="aci-lbl" style="color:#ef6b6b;">POWER</span><span style="flex:1;color:#c2cfc7;">The airline demoted the crew first; an external inquiry reversed it onto corporate procedures. The crew later won an airmanship award.</span></div>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:1px;"><span class="aci-chip">corrupt input</span><span class="aci-chip">blame gradient</span></div>
+          </div>
+
+          <div class="aci-card">
+            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;"><div style="display:flex;align-items:center;gap:8px;min-width:0;"><span style="width:7px;height:7px;border-radius:50%;background:#f0b73f;box-shadow:0 0 7px #f0b73f;flex:none;"></span><span style="font-size:14.5px;color:#eafff5;font-weight:500;">Tuninter 1153</span></div><a class="aci-wiki" href="https://en.wikipedia.org/wiki/Tuninter_Flight_1153" target="_blank" rel="noopener">2005 ↗</a></div>
+            <div style="font-size:11.5px;color:#71867e;line-height:1.4;">ATR 72 ditched off Sicily · 16 dead, 23 survived</div>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <div class="aci-row"><span class="aci-lbl" style="color:#f0b73f;">PROX</span><span style="flex:1;color:#9fb3aa;">Fuel exhaustion the crew didn't catch.</span></div>
+              <div class="aci-row"><span class="aci-lbl" style="color:#5bc8d6;">ROOT</span><span style="flex:1;color:#b4c6bd;">An ATR 42 fuel gauge — physically identical, wrongly calibrated — fitted to a 72, over-reading by ~1,800 kg. No interlock, no second signature.</span></div>
+              <div class="aci-row"><span class="aci-lbl" style="color:#ef6b6b;">POWER</span><span style="flex:1;color:#c2cfc7;">The crew were jailed for manslaughter despite a ditching investigators praised for saving 23. The interchangeable-but-incompatible part was the enabler.</span></div>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:1px;"><span class="aci-chip">corrupt input</span><span class="aci-chip">blame gradient</span></div>
+          </div>
+
+          <div class="aci-card">
+            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;"><div style="display:flex;align-items:center;gap:8px;min-width:0;"><span style="width:7px;height:7px;border-radius:50%;background:#f0b73f;box-shadow:0 0 7px #f0b73f;flex:none;"></span><span style="font-size:14.5px;color:#eafff5;font-weight:500;">Alitalia 404</span></div><a class="aci-wiki" href="https://en.wikipedia.org/wiki/Alitalia_Flight_404" target="_blank" rel="noopener">1990 ↗</a></div>
+            <div style="font-size:11.5px;color:#71867e;line-height:1.4;">DC-9 <span class="aci-gl">CFIT<span class="aci-tip">Controlled Flight Into Terrain — an airworthy aircraft flown into the ground</span></span> on a Zurich ridge at night · 46 dead</div>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <div class="aci-row"><span class="aci-lbl" style="color:#f0b73f;">PROX</span><span style="flex:1;color:#9fb3aa;">Crew descended below the glidepath into terrain.</span></div>
+              <div class="aci-row"><span class="aci-lbl" style="color:#5bc8d6;">ROOT</span><span style="flex:1;color:#b4c6bd;">A nav receiver failed silently — a steady, plausible "on path" with no warning flag; the two receivers disagreed and weren't reconciled. The same false signal also blinded the <span class="aci-gl">GPWS<span class="aci-tip">Ground Proximity Warning System — warns of terrain ahead/below</span></span>'s "below glideslope" alert — the one mode that should have caught it. It never sounded; the only warning the whole way down was a radio-altimeter chirp at 200 feet, about a second before impact.</span></div>
+              <div class="aci-row"><span class="aci-lbl" style="color:#ef6b6b;">POWER</span><span style="flex:1;color:#c2cfc7;">The maker had warned every operator of this exact failure mode years earlier; Alitalia never passed it to line crews.</span></div>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:1px;"><span class="aci-chip">corrupt input</span><span class="aci-chip">authority gradient</span></div>
+          </div>
+
+          <!-- ===== compliant != safe (warning) ===== -->
+          <div class="aci-card">
+            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;"><div style="display:flex;align-items:center;gap:8px;min-width:0;"><span style="width:7px;height:7px;border-radius:50%;background:#f0b73f;box-shadow:0 0 7px #f0b73f;flex:none;"></span><span style="font-size:14.5px;color:#eafff5;font-weight:500;">TACA 110</span></div><a class="aci-wiki" href="https://en.wikipedia.org/wiki/TACA_Flight_110" target="_blank" rel="noopener">1988 ↗</a></div>
+            <div style="font-size:11.5px;color:#71867e;line-height:1.4;">737 lost both engines in hail, dead-stick on a levee · 0 dead</div>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <div class="aci-row"><span class="aci-lbl" style="color:#f0b73f;">PROX</span><span style="flex:1;color:#9fb3aa;">Hail and water flamed out both engines.</span></div>
+              <div class="aci-row"><span class="aci-lbl" style="color:#5bc8d6;">ROOT</span><span style="flex:1;color:#b4c6bd;">Engines certified to a rainfall standard no real storm matched; hail entered the core far more readily than rain.</span></div>
+              <div class="aci-row"><span class="aci-lbl" style="color:#ef6b6b;">POWER</span><span style="flex:1;color:#c2cfc7;">A good post-mortem: investigators faulted their own certification standard and credited the crew — who dead-sticked a powerless 737 onto a canal levee without injury, an untestable scenario met with rare airmanship.</span></div>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:1px;"><span class="aci-chip">compliant ≠ safe</span><span class="aci-chip">unknown unknown</span></div>
+          </div>
+
+          <div class="aci-card">
+            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;"><div style="display:flex;align-items:center;gap:8px;min-width:0;"><span style="width:7px;height:7px;border-radius:50%;background:#f0b73f;box-shadow:0 0 7px #f0b73f;flex:none;"></span><span style="font-size:14.5px;color:#eafff5;font-weight:500;">BA 38</span></div><a class="aci-wiki" href="https://en.wikipedia.org/wiki/British_Airways_Flight_38" target="_blank" rel="noopener">2008 ↗</a></div>
+            <div style="font-size:11.5px;color:#71867e;line-height:1.4;">777 fuel-iced and fell short of Heathrow · 0 dead</div>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <div class="aci-row"><span class="aci-lbl" style="color:#f0b73f;">PROX</span><span style="flex:1;color:#9fb3aa;">Ice restricted fuel to both engines on final approach.</span></div>
+              <div class="aci-row"><span class="aci-lbl" style="color:#5bc8d6;">ROOT</span><span style="flex:1;color:#b4c6bd;">Soft ice built up over a long cold cruise and released at the heat exchanger — "compliant with the requirements," yet vulnerable.</span></div>
+              <div class="aci-row"><span class="aci-lbl" style="color:#ef6b6b;">POWER</span><span style="flex:1;color:#c2cfc7;">The other good post-mortem — candid, no scapegoat, indicting the certification standard and crediting the crew, who stretched a glide from a double-engine rollback to the runway's edge and got everyone out alive — a never-before-seen failure met in seconds.</span></div>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:1px;"><span class="aci-chip">compliant ≠ safe</span><span class="aci-chip">unknown unknown</span></div>
+          </div>
+
+          <div class="aci-card">
+            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;"><div style="display:flex;align-items:center;gap:8px;min-width:0;"><span style="width:7px;height:7px;border-radius:50%;background:#f0b73f;box-shadow:0 0 7px #f0b73f;flex:none;"></span><span style="font-size:14.5px;color:#eafff5;font-weight:500;">Southern 242</span></div><a class="aci-wiki" href="https://en.wikipedia.org/wiki/Southern_Airways_Flight_242" target="_blank" rel="noopener">1977 ↗</a></div>
+            <div style="font-size:11.5px;color:#71867e;line-height:1.4;">DC-9 lost both engines in a hailstorm, landed on a highway · 72 dead</div>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <div class="aci-row"><span class="aci-lbl" style="color:#f0b73f;">PROX</span><span style="flex:1;color:#9fb3aa;">Massive water and hail ingestion wrecked both compressors.</span></div>
+              <div class="aci-row"><span class="aci-lbl" style="color:#5bc8d6;">ROOT</span><span style="flex:1;color:#b4c6bd;">Engines never certified for that water rate; the radar attenuated, hiding the worst cell behind nearer rain.</span></div>
+              <div class="aci-row"><span class="aci-lbl" style="color:#ef6b6b;">POWER</span><span style="flex:1;color:#c2cfc7;">A dissenting board member blamed the crew for penetrating; the majority named the certification and weather-data gaps. The decision to press into the storm line carried a get-there-itis element, even as the attenuating radar hid how violent the worst cell was.</span></div>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:1px;"><span class="aci-chip">compliant ≠ safe</span><span class="aci-chip">get-there-itis</span></div>
+          </div>
+
+          <div class="aci-card">
+            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;"><div style="display:flex;align-items:center;gap:8px;min-width:0;"><span style="width:7px;height:7px;border-radius:50%;background:#f0b73f;box-shadow:0 0 7px #f0b73f;flex:none;"></span><span style="font-size:14.5px;color:#eafff5;font-weight:500;">Delta 191</span></div><a class="aci-wiki" href="https://en.wikipedia.org/wiki/Delta_Air_Lines_Flight_191" target="_blank" rel="noopener">1985 ↗</a></div>
+            <div style="font-size:11.5px;color:#71867e;line-height:1.4;">L-1011 hit a microburst on approach to Dallas · 137 dead</div>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <div class="aci-row"><span class="aci-lbl" style="color:#f0b73f;">PROX</span><span style="flex:1;color:#9fb3aa;">Crew flew the approach into a cell with visible lightning.</span></div>
+              <div class="aci-row"><span class="aci-lbl" style="color:#5bc8d6;">ROOT</span><span style="flex:1;color:#b4c6bd;">Microburst science was barely understood; 1985 radar saw rain, not wind — the hazard was invisible to measure.</span></div>
+              <div class="aci-row"><span class="aci-lbl" style="color:#ef6b6b;">POWER</span><span style="flex:1;color:#c2cfc7;">The system, not just the crew, was blind; windshear radar and ground sensors took a decade and a fleet's cost to mandate. The microburst itself was unmeasurable in 1985, yet pressing the approach beneath a cell with visible lightning still carried a get-there-itis element.</span></div>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:1px;"><span class="aci-chip">compliant ≠ safe</span><span class="aci-chip">get-there-itis</span></div>
+          </div>
+
+          <div class="aci-card">
+            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;"><div style="display:flex;align-items:center;gap:8px;min-width:0;"><span style="width:7px;height:7px;border-radius:50%;background:#f0b73f;box-shadow:0 0 7px #f0b73f;flex:none;"></span><span style="font-size:14.5px;color:#eafff5;font-weight:500;">United 811</span></div><a class="aci-wiki" href="https://en.wikipedia.org/wiki/United_Airlines_Flight_811" target="_blank" rel="noopener">1989 ↗</a></div>
+            <div style="font-size:11.5px;color:#71867e;line-height:1.4;">747 cargo door blew out over the Pacific · 9 dead, 327 survived</div>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <div class="aci-row"><span class="aci-lbl" style="color:#f0b73f;">PROX</span><span style="flex:1;color:#9fb3aa;">The first report blamed the airline's door maintenance.</span></div>
+              <div class="aci-row"><span class="aci-lbl" style="color:#5bc8d6;">ROOT</span><span style="flex:1;color:#b4c6bd;">A faulty switch drove the latches open; weak lock-sectors let a "locked" door back-drive unlocked — a fail-safe that wasn't, and known weak since the 1970s.</span></div>
+              <div class="aci-row"><span class="aci-lbl" style="color:#ef6b6b;">POWER</span><span style="flex:1;color:#c2cfc7;">The cheap (~$2,000/door) reinforcement sat under a low-priority <span class="aci-gl">FAA<span class="aci-tip">US Federal Aviation Administration</span></span> directive with up to a two-year window the airlines had requested — so this jet flew unmodified, until nine deaths cut the deadline to 30 days. Blamed on the mechanics first; the verdict reversed only when the victims' parents made them raise the door from the seabed.</span></div>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:1px;"><span class="aci-chip">no fail-safe</span><span class="aci-chip">blame gradient</span><span class="aci-cchip">commercial</span></div>
+          </div>
+
+          <div class="aci-card">
+            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;"><div style="display:flex;align-items:center;gap:8px;min-width:0;"><span style="width:7px;height:7px;border-radius:50%;background:#f0b73f;box-shadow:0 0 7px #f0b73f;flex:none;"></span><span style="font-size:14.5px;color:#eafff5;font-weight:500;">Turkish 981</span></div><a class="aci-wiki" href="https://en.wikipedia.org/wiki/Turkish_Airlines_Flight_981" target="_blank" rel="noopener">1974 ↗</a></div>
+            <div style="font-size:11.5px;color:#71867e;line-height:1.4;">DC-10 cargo door, crash at Ermenonville · 346 dead</div>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <div class="aci-row"><span class="aci-lbl" style="color:#f0b73f;">PROX</span><span style="flex:1;color:#9fb3aa;">A baggage handler "closed" a door that wasn't locked.</span></div>
+              <div class="aci-row"><span class="aci-lbl" style="color:#5bc8d6;">ROOT</span><span style="flex:1;color:#b4c6bd;">A latch that read locked without being locked; control cables routed where a floor collapse would sever them — known and tested before the crash.</span></div>
+              <div class="aci-row"><span class="aci-lbl" style="color:#ef6b6b;">POWER</span><span style="flex:1;color:#c2cfc7;">An engineer's memo warned of exactly this; the regulator took a voluntary "gentlemen's agreement" over a binding order, and operators were blamed first.</span></div>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:1px;"><span class="aci-chip">compliant ≠ safe</span><span class="aci-chip">blame gradient</span><span class="aci-cchip">commercial</span></div>
+          </div>
+
+          <div class="aci-card">
+            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;"><div style="display:flex;align-items:center;gap:8px;min-width:0;"><span style="width:7px;height:7px;border-radius:50%;background:#f0b73f;box-shadow:0 0 7px #f0b73f;flex:none;"></span><span style="font-size:14.5px;color:#eafff5;font-weight:500;">Propair 420</span></div><a class="aci-wiki" href="https://en.wikipedia.org/wiki/Propair_Flight_420" target="_blank" rel="noopener">1998 ↗</a></div>
+            <div style="font-size:11.5px;color:#71867e;line-height:1.4;">Metro II brake fire and wing failure · 11 dead</div>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <div class="aci-row"><span class="aci-lbl" style="color:#f0b73f;">PROX</span><span style="flex:1;color:#9fb3aa;">A dragging brake overheated and set the wheel bay alight.</span></div>
+              <div class="aci-row"><span class="aci-lbl" style="color:#5bc8d6;">ROOT</span><span style="flex:1;color:#b4c6bd;">No brake-temperature or dragging-brake warning, poor wheel-well venting, fire reaching hydraulics and the wing. The crew flew blind — and read the fire-warning light going dark as "fire's out," when the fire had merely burned through its own circuit. With hindsight the aircraft's reluctance to track straight after takeoff was a cue to land at once; in the moment, with nothing pointing at the brakes, the cause was far from obvious.</span></div>
+              <div class="aci-row"><span class="aci-lbl" style="color:#ef6b6b;">POWER</span><span style="flex:1;color:#c2cfc7;">A known recurring hazard — dozens of earlier brake-overheat events — but the warning lived in a 1993 maker's newsletter, never the manual, and no fix was mandated for a small-operator turboprop.</span></div>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:1px;"><span class="aci-chip">compliant ≠ safe</span><span class="aci-chip">get-there-itis</span><span class="aci-chip">blame gradient</span><span class="aci-cchip">commercial</span></div>
+          </div>
+
+          <!-- ===== deferred reliability (warning) ===== -->
+          <div class="aci-card" id="case-alaska261">
+            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;"><div style="display:flex;align-items:center;gap:8px;min-width:0;"><span style="width:7px;height:7px;border-radius:50%;background:#f0b73f;box-shadow:0 0 7px #f0b73f;flex:none;"></span><span style="font-size:14.5px;color:#eafff5;font-weight:500;">Alaska 261</span></div><a class="aci-wiki" href="https://en.wikipedia.org/wiki/Alaska_Airlines_Flight_261" target="_blank" rel="noopener">2000 ↗</a></div>
+            <div style="font-size:11.5px;color:#71867e;line-height:1.4;">MD-83 jackscrew failure, into the Pacific · 88 dead</div>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <div class="aci-row"><span class="aci-lbl" style="color:#f0b73f;">PROX</span><span style="flex:1;color:#9fb3aa;">Insufficient grease let the jackscrew threads wear away.</span></div>
+              <div class="aci-row"><span class="aci-lbl" style="color:#5bc8d6;">ROOT</span><span style="flex:1;color:#b4c6bd;">A single non-redundant nut held the stabilizer; both barriers — lubrication and the wear check — were stretched thin.</span></div>
+              <div class="aci-row"><span class="aci-lbl" style="color:#ef6b6b;">POWER</span><span style="flex:1;color:#c2cfc7;">The <span class="aci-gl">NTSB<span class="aci-tip">US National Transportation Safety Board</span></span> report pulled no punches — it faulted the regulator's oversight as squarely as the airline — but the conditions ran deep: maintenance intervals extended four-fold with <span class="aci-gl">FAA<span class="aci-tip">US Federal Aviation Administration</span></span> sign-off, and the mechanic who flagged this very screw was overruled, settled with, and resigned.</span></div>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:1px;"><span class="aci-chip">deferred reliability</span><span class="aci-chip">blame gradient</span><span class="aci-cchip">commercial</span></div>
+          </div>
+
+          <div class="aci-card">
+            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;"><div style="display:flex;align-items:center;gap:8px;min-width:0;"><span style="width:7px;height:7px;border-radius:50%;background:#f0b73f;box-shadow:0 0 7px #f0b73f;flex:none;"></span><span style="font-size:14.5px;color:#eafff5;font-weight:500;">Air Transat 236</span></div><a class="aci-wiki" href="https://en.wikipedia.org/wiki/Air_Transat_Flight_236" target="_blank" rel="noopener">2001 ↗</a></div>
+            <div style="font-size:11.5px;color:#71867e;line-height:1.4;">A330 fuel leak, longest jet glide, to the Azores · 0 dead</div>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <div class="aci-row"><span class="aci-lbl" style="color:#f0b73f;">PROX</span><span style="flex:1;color:#9fb3aa;">Crew opened the cross-feed, draining good fuel into the leak.</span></div>
+              <div class="aci-row"><span class="aci-lbl" style="color:#5bc8d6;">ROOT</span><span style="flex:1;color:#b4c6bd;">A mismatched hydraulic/fuel line forced in during an engine change chafed through. With no automatic leak alert, the crew read the loss as a routine imbalance and ran the cross-feed drill — feeding good fuel into the leak; Airbus later added a fuel-balance check.</span></div>
+              <div class="aci-row"><span class="aci-lbl" style="color:#ef6b6b;">POWER</span><span style="flex:1;color:#c2cfc7;">The jet flew ~13 sectors with the defect under pressure to return it to service; the airline was fined CAD $250k.</span></div>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:1px;"><span class="aci-chip">deferred reliability</span><span class="aci-cchip">commercial</span></div>
+          </div>
+
+          <div class="aci-card" id="case-swissair">
+            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;"><div style="display:flex;align-items:center;gap:8px;min-width:0;"><span style="width:7px;height:7px;border-radius:50%;background:#f0b73f;box-shadow:0 0 7px #f0b73f;flex:none;"></span><span style="font-size:14.5px;color:#eafff5;font-weight:500;">Swissair 111</span></div><a class="aci-wiki" href="https://en.wikipedia.org/wiki/Swissair_Flight_111" target="_blank" rel="noopener">1998 ↗</a></div>
+            <div style="font-size:11.5px;color:#71867e;line-height:1.4;">MD-11 in-flight fire, into the Atlantic · 229 dead</div>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <div class="aci-row"><span class="aci-lbl" style="color:#f0b73f;">PROX</span><span style="flex:1;color:#9fb3aa;">An electrical arc above the ceiling started an undetected fire.</span></div>
+              <div class="aci-row"><span class="aci-lbl" style="color:#5bc8d6;">ROOT</span><span style="flex:1;color:#b4c6bd;">Flammable insulation that passed an inadequate test; a bolt-on entertainment system — fitted to make the premium cabin a more desirable product — wired so the smoke checklist wouldn't even de-power it.</span></div>
+              <div class="aci-row"><span class="aci-lbl" style="color:#ef6b6b;">POWER</span><span style="flex:1;color:#c2cfc7;">The <span class="aci-gl">TSB<span class="aci-tip">Transportation Safety Board of Canada</span></span>'s years-long investigation was a model of the craft and drove sweeping wiring- and insulation-flammability rules — but the root sat in plain sight: self-certified via a facility the <span class="aci-gl">FAA<span class="aci-tip">US Federal Aviation Administration</span></span> had cited, and the flammable insulation took until ~2005 and ~$330M to remove fleet-wide.</span></div>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:1px;"><span class="aci-chip">deferred reliability</span><span class="aci-chip">compliant ≠ safe</span><span class="aci-cchip">commercial</span></div>
+          </div>
+
+          <div class="aci-card">
+            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;"><div style="display:flex;align-items:center;gap:8px;min-width:0;"><span style="width:7px;height:7px;border-radius:50%;background:#f0b73f;box-shadow:0 0 7px #f0b73f;flex:none;"></span><span style="font-size:14.5px;color:#eafff5;font-weight:500;">Air Midwest 5481</span></div><a class="aci-wiki" href="https://en.wikipedia.org/wiki/Air_Midwest_Flight_5481" target="_blank" rel="noopener">2003 ↗</a></div>
+            <div style="font-size:11.5px;color:#71867e;line-height:1.4;">Beech 1900D lost pitch control on takeoff · 21 dead</div>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <div class="aci-row"><span class="aci-lbl" style="color:#f0b73f;">PROX</span><span style="flex:1;color:#9fb3aa;">Elevator rigged to half its nose-down travel; aircraft loaded aft.</span></div>
+              <div class="aci-row"><span class="aci-lbl" style="color:#5bc8d6;">ROOT</span><span style="flex:1;color:#b4c6bd;">A never-trained subcontract trainee did the rigging — and the same person signed it off as the independent inspector.</span></div>
+              <div class="aci-row"><span class="aci-lbl" style="color:#ef6b6b;">POWER</span><span style="flex:1;color:#c2cfc7;">Outsourced down a three-link chain; the <span class="aci-gl">FAA<span class="aci-tip">US Federal Aviation Administration</span></span>'s decades-stale average weights compounded it, revised only afterward.</span></div>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:1px;"><span class="aci-chip">deferred reliability</span><span class="aci-cchip">commercial</span></div>
+          </div>
+
+          <div class="aci-card">
+            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;"><div style="display:flex;align-items:center;gap:8px;min-width:0;"><span style="width:7px;height:7px;border-radius:50%;background:#f0b73f;box-shadow:0 0 7px #f0b73f;flex:none;"></span><span style="font-size:14.5px;color:#eafff5;font-weight:500;">BA 5390</span></div><a class="aci-wiki" href="https://en.wikipedia.org/wiki/British_Airways_Flight_5390" target="_blank" rel="noopener">1990 ↗</a></div>
+            <div style="font-size:11.5px;color:#71867e;line-height:1.4;">Windscreen blew out; captain half-ejected, survived · 0 dead</div>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <div class="aci-row"><span class="aci-lbl" style="color:#f0b73f;">PROX</span><span style="flex:1;color:#9fb3aa;">The windscreen was fitted with 84 wrong, undersized bolts.</span></div>
+              <div class="aci-row"><span class="aci-lbl" style="color:#5bc8d6;">ROOT</span><span style="flex:1;color:#b4c6bd;">It was a non-plug pane bolted on from outside, so cabin pressure pushed against the bolts alone — a suboptimal, no-fail-safe design, arguably tolerable on older types that flew lower and slower but ill-suited to a pressurised jet, and one that made a routine glass swap safety-critical. A lone night-shift manager had matched the new bolts by eye to the old (also wrong) ones, not the parts catalogue.</span></div>
+              <div class="aci-row"><span class="aci-lbl" style="color:#ef6b6b;">POWER</span><span style="flex:1;color:#c2cfc7;">The engineer admitted the deeper cause — overworked, expediting alone on a night shift — and it reached the first draft. BA's lawyers invoked natural justice: he'd given the account without the formal procedure, so using it was unfair. By an investigator's account it was cut — "we had to remove that from the report" — and the published emphasis moved to process.</span></div>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:1px;"><span class="aci-chip">no fail-safe</span><span class="aci-chip">suboptimal design</span><span class="aci-chip">blame gradient</span><span class="aci-cchip">commercial</span></div>
+          </div>
+
+          <div class="aci-card">
+            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;"><div style="display:flex;align-items:center;gap:8px;min-width:0;"><span style="width:7px;height:7px;border-radius:50%;background:#f0b73f;box-shadow:0 0 7px #f0b73f;flex:none;"></span><span style="font-size:14.5px;color:#eafff5;font-weight:500;">Continental 2574</span></div><a class="aci-wiki" href="https://en.wikipedia.org/wiki/Continental_Express_Flight_2574" target="_blank" rel="noopener">1991 ↗</a></div>
+            <div style="font-size:11.5px;color:#71867e;line-height:1.4;">EMB-120 broke up in flight near Eagle Lake · 14 dead</div>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <div class="aci-row"><span class="aci-lbl" style="color:#f0b73f;">PROX</span><span style="flex:1;color:#9fb3aa;">Screws left out of the stabilizer's leading edge after a shift change.</span></div>
+              <div class="aci-row"><span class="aci-lbl" style="color:#5bc8d6;">ROOT</span><span style="flex:1;color:#b4c6bd;">A half-finished task handed over with no written turnover and no captured inspection sign-off — unglamorous work squeezed through a night-shift change under turnaround pressure.</span></div>
+              <div class="aci-row"><span class="aci-lbl" style="color:#ef6b6b;">POWER</span><span style="flex:1;color:#c2cfc7;">A landmark organisational report — yet a dissenting member argued it still scapegoated mechanics and should have named management as the primary cause.</span></div>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:1px;"><span class="aci-chip">deferred reliability</span><span class="aci-chip">blame gradient</span><span class="aci-cchip">commercial</span></div>
+          </div>
+
+          <!-- ===== normalised deviance (warning) ===== -->
+          <div class="aci-card">
+            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;"><div style="display:flex;align-items:center;gap:8px;min-width:0;"><span style="width:7px;height:7px;border-radius:50%;background:#f0b73f;box-shadow:0 0 7px #f0b73f;flex:none;"></span><span style="font-size:14.5px;color:#eafff5;font-weight:500;">American 1420</span></div><a class="aci-wiki" href="https://en.wikipedia.org/wiki/American_Airlines_Flight_1420" target="_blank" rel="noopener">1999 ↗</a></div>
+            <div style="font-size:11.5px;color:#71867e;line-height:1.4;">MD-82 overran in a thunderstorm at Little Rock · 11 dead</div>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <div class="aci-row"><span class="aci-lbl" style="color:#f0b73f;">PROX</span><span style="flex:1;color:#9fb3aa;">Crew pressed a storm approach and didn't arm the spoilers.</span></div>
+              <div class="aci-row"><span class="aci-lbl" style="color:#5bc8d6;">ROOT</span><span style="flex:1;color:#b4c6bd;">Continuation bias on a 13-hour duty day; the unarmed spoilers — the load-bearing step — were skipped in the rush.</span></div>
+              <div class="aci-row"><span class="aci-lbl" style="color:#ef6b6b;">POWER</span><span style="flex:1;color:#c2cfc7;">American tried to pin it on the controller — naming him in lawsuits, arguing he should have turned them from the storm — but the <span class="aci-gl">NTSB<span class="aci-tip">US National Transportation Safety Board</span></span> blamed the crew, and the surviving co-pilot testified the controller did his job. The schedule that raced a tired crew at a closing storm sat only as "contributing."</span></div>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:1px;"><span class="aci-chip">normalised deviance</span><span class="aci-chip">get-there-itis</span><span class="aci-chip">blame gradient</span><span class="aci-cchip">commercial</span></div>
+          </div>
+
+          <div class="aci-card">
+            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;"><div style="display:flex;align-items:center;gap:8px;min-width:0;"><span style="width:7px;height:7px;border-radius:50%;background:#f0b73f;box-shadow:0 0 7px #f0b73f;flex:none;"></span><span style="font-size:14.5px;color:#eafff5;font-weight:500;">TransAsia 222</span></div><a class="aci-wiki" href="https://en.wikipedia.org/wiki/TransAsia_Airways_Flight_222" target="_blank" rel="noopener">2014 ↗</a></div>
+            <div style="font-size:11.5px;color:#71867e;line-height:1.4;">ATR 72 <span class="aci-gl">CFIT<span class="aci-tip">Controlled Flight Into Terrain — an airworthy aircraft flown into the ground</span></span> on a typhoon-edge approach · 48 dead</div>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <div class="aci-row"><span class="aci-lbl" style="color:#f0b73f;">PROX</span><span style="flex:1;color:#9fb3aa;">The captain descended below minimums without the runway in sight.</span></div>
+              <div class="aci-row"><span class="aci-lbl" style="color:#5bc8d6;">ROOT</span><span style="flex:1;color:#b4c6bd;">Below-minimums descent was a habitual, uncorrected fleet practice; fatigue from overscheduling.</span></div>
+              <div class="aci-row"><span class="aci-lbl" style="color:#ef6b6b;">POWER</span><span style="flex:1;color:#c2cfc7;">Prosecutors charged the controllers; the report named the airline's safety culture and rostering — the commercial driver stayed in the background.</span></div>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:1px;"><span class="aci-chip">normalised deviance</span><span class="aci-chip">get-there-itis</span><span class="aci-cchip">commercial</span></div>
+          </div>
+
+          <div class="aci-card">
+            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;"><div style="display:flex;align-items:center;gap:8px;min-width:0;"><span style="width:7px;height:7px;border-radius:50%;background:#f0b73f;box-shadow:0 0 7px #f0b73f;flex:none;"></span><span style="font-size:14.5px;color:#eafff5;font-weight:500;">Crossair 3597</span></div><a class="aci-wiki" href="https://en.wikipedia.org/wiki/Crossair_Flight_3597" target="_blank" rel="noopener">2001 ↗</a></div>
+            <div style="font-size:11.5px;color:#71867e;line-height:1.4;">Avro RJ100 into hills short of Zurich at night · 24 dead</div>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <div class="aci-row"><span class="aci-lbl" style="color:#f0b73f;">PROX</span><span style="flex:1;color:#9fb3aa;">The captain flew below minimums without visual contact; the <span class="aci-gl">FO<span class="aci-tip">First Officer — the co-pilot</span></span> didn't stop it.</span></div>
+              <div class="aci-row"><span class="aci-lbl" style="color:#5bc8d6;">ROOT</span><span style="flex:1;color:#b4c6bd;">A captain known to be weak on non-precision approaches; a noise-abatement rule, set to placate residential complaints around the airport, pushed night arrivals onto the harder one.</span></div>
+              <div class="aci-row"><span class="aci-lbl" style="color:#ef6b6b;">POWER</span><span style="flex:1;color:#c2cfc7;">The airline kept a flagged pilot flying under hiring pressure; the report's weight stayed on crew error.</span></div>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:1px;"><span class="aci-chip">normalised deviance</span><span class="aci-chip">authority gradient</span><span class="aci-cchip">commercial</span></div>
+          </div>
+
+          <!-- ===== fixation (baseline) ===== -->
+          <div class="aci-card">
+            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;"><div style="display:flex;align-items:center;gap:8px;min-width:0;"><span style="width:7px;height:7px;border-radius:50%;background:#46e2a0;box-shadow:0 0 7px #46e2a0;flex:none;"></span><span style="font-size:14.5px;color:#eafff5;font-weight:500;">Eastern 401</span></div><a class="aci-wiki" href="https://en.wikipedia.org/wiki/Eastern_Air_Lines_Flight_401" target="_blank" rel="noopener">1972 ↗</a></div>
+            <div style="font-size:11.5px;color:#71867e;line-height:1.4;">L-1011 into the Everglades · 101 dead</div>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <div class="aci-row"><span class="aci-lbl" style="color:#f0b73f;">PROX</span><span style="flex:1;color:#9fb3aa;">The whole crew fixated on a burnt-out gear indicator bulb.</span></div>
+              <div class="aci-row"><span class="aci-lbl" style="color:#5bc8d6;">ROOT</span><span style="flex:1;color:#b4c6bd;">No one flew the aircraft; a nudged autopilot let a slow descent go unwatched; one weak altitude chime sounded at an empty seat.</span></div>
+              <div class="aci-row"><span class="aci-lbl" style="color:#ef6b6b;">POWER</span><span style="flex:1;color:#c2cfc7;">The canonical case for crew-resource management — which the industry then took ~18 years to actually mandate. Hoping a whole crew simply won't look away at once is not a strategy; high performance needs a systematic guard, not good intentions — and the foresight shouldn't have had to wait for the wreck.</span></div>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:1px;"><span class="aci-chip">fixation</span></div>
+          </div>
+
+          <div class="aci-card">
+            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;"><div style="display:flex;align-items:center;gap:8px;min-width:0;"><span style="width:7px;height:7px;border-radius:50%;background:#46e2a0;box-shadow:0 0 7px #46e2a0;flex:none;"></span><span style="font-size:14.5px;color:#eafff5;font-weight:500;">Ansett NZ 703</span></div><a class="aci-wiki" href="https://en.wikipedia.org/wiki/Ansett_New_Zealand_Flight_703" target="_blank" rel="noopener">1995 ↗</a></div>
+            <div style="font-size:11.5px;color:#71867e;line-height:1.4;">Dash 8 <span class="aci-gl">CFIT<span class="aci-tip">Controlled Flight Into Terrain — an airworthy aircraft flown into the ground</span></span> near Palmerston North · 4 dead</div>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <div class="aci-row"><span class="aci-lbl" style="color:#f0b73f;">PROX</span><span style="flex:1;color:#9fb3aa;">Both pilots absorbed in a hung-gear drill while the approach drifted down.</span></div>
+              <div class="aci-row"><span class="aci-lbl" style="color:#5bc8d6;">ROOT</span><span style="flex:1;color:#b4c6bd;">Fixation drained monitoring; the terrain warning fired ~4s out instead of ~17 — a malfunction never explained.</span></div>
+              <div class="aci-row"><span class="aci-lbl" style="color:#ef6b6b;">POWER</span><span style="flex:1;color:#c2cfc7;">The captain was prosecuted and acquitted; an academic re-analysis argued the report under-weighted the systemic faults.</span></div>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:1px;"><span class="aci-chip">fixation</span><span class="aci-chip">failed to alert</span></div>
+          </div>
+
+          <div class="aci-card">
+            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;"><div style="display:flex;align-items:center;gap:8px;min-width:0;"><span style="width:7px;height:7px;border-radius:50%;background:#46e2a0;box-shadow:0 0 7px #46e2a0;flex:none;"></span><span style="font-size:14.5px;color:#eafff5;font-weight:500;">Delta 1141</span></div><a class="aci-wiki" href="https://en.wikipedia.org/wiki/Delta_Air_Lines_Flight_1141" target="_blank" rel="noopener">1988 ↗</a></div>
+            <div style="font-size:11.5px;color:#71867e;line-height:1.4;">727 failed to fly off after takeoff · 14 dead</div>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <div class="aci-row"><span class="aci-lbl" style="color:#f0b73f;">PROX</span><span style="flex:1;color:#9fb3aa;">Crew took off with the flaps and slats not set.</span></div>
+              <div class="aci-row"><span class="aci-lbl" style="color:#5bc8d6;">ROOT</span><span style="flex:1;color:#b4c6bd;">A chatty, non-sterile cockpit skipped the config step with no challenge-response check to force it; the warning horn that should have caught it was silently failed.</span></div>
+              <div class="aci-row"><span class="aci-lbl" style="color:#ef6b6b;">POWER</span><span style="flex:1;color:#c2cfc7;">The report leaned on "cockpit discipline"; a fleet check then found the backstop alarm unreliable across ~1,190 aircraft.</span></div>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:1px;"><span class="aci-chip">fixation</span><span class="aci-chip">failed to alert</span></div>
+          </div>
+
+          <!-- ===== authority gradient (baseline) ===== -->
+          <div class="aci-card">
+            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;"><div style="display:flex;align-items:center;gap:8px;min-width:0;"><span style="width:7px;height:7px;border-radius:50%;background:#46e2a0;box-shadow:0 0 7px #46e2a0;flex:none;"></span><span style="font-size:14.5px;color:#eafff5;font-weight:500;">Avianca 052</span></div><a class="aci-wiki" href="https://en.wikipedia.org/wiki/Avianca_Flight_052" target="_blank" rel="noopener">1990 ↗</a></div>
+            <div style="font-size:11.5px;color:#71867e;line-height:1.4;">707 ran out of fuel over Long Island · 73 dead</div>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <div class="aci-row"><span class="aci-lbl" style="color:#f0b73f;">PROX</span><span style="flex:1;color:#9fb3aa;">Crew didn't declare a fuel emergency to <span class="aci-gl">ATC<span class="aci-tip">Air Traffic Control</span></span>.</span></div>
+              <div class="aci-row"><span class="aci-lbl" style="color:#5bc8d6;">ROOT</span><span style="flex:1;color:#b4c6bd;">They said "priority" and "running out of fuel" — never the word "emergency" that triggers action. No standard low-fuel phraseology.</span></div>
+              <div class="aci-row"><span class="aci-lbl" style="color:#ef6b6b;">POWER</span><span style="flex:1;color:#c2cfc7;">A safety net that hinged on one magic word and a non-native crew's assertiveness; controllers weren't obliged to probe the ambiguity. A simple fuel-state protocol — <span class="aci-gl">Pan-Pan<span class="aci-tip">Urgency call — serious, one level below a Mayday</span></span> at one threshold, <span class="aci-gl">Mayday<span class="aci-tip">Distress call — grave and imminent danger</span></span> at the next — would have replaced the need to be assertive with a rule that fires on its own.</span></div>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:1px;"><span class="aci-chip">authority gradient</span></div>
+          </div>
+
+          <div class="aci-card">
+            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;"><div style="display:flex;align-items:center;gap:8px;min-width:0;"><span style="width:7px;height:7px;border-radius:50%;background:#46e2a0;box-shadow:0 0 7px #46e2a0;flex:none;"></span><span style="font-size:14.5px;color:#eafff5;font-weight:500;">First Air 6560</span></div><a class="aci-wiki" href="https://en.wikipedia.org/wiki/First_Air_Flight_6560" target="_blank" rel="noopener">2011 ↗</a></div>
+            <div style="font-size:11.5px;color:#71867e;line-height:1.4;">737 <span class="aci-gl">CFIT<span class="aci-tip">Controlled Flight Into Terrain — an airworthy aircraft flown into the ground</span></span> at Resolute Bay · 12 dead, 3 survived</div>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <div class="aci-row"><span class="aci-lbl" style="color:#f0b73f;">PROX</span><span style="flex:1;color:#9fb3aa;">The captain continued an unstable, off-track approach into a hill.</span></div>
+              <div class="aci-row"><span class="aci-lbl" style="color:#5bc8d6;">ROOT</span><span style="flex:1;color:#b4c6bd;">A silently drifting compass while the GPS showed the truth; the first officer read it right and called it ~18 times — the captain waved the discrepancy off as an <span class="aci-gl">ILS<span class="aci-tip">Instrument Landing System — radio guidance down to the runway</span></span> or instrument glitch instead of breaking off.</span></div>
+              <div class="aci-row"><span class="aci-lbl" style="color:#ef6b6b;">POWER</span><span style="flex:1;color:#c2cfc7;">No procedure let the <span class="aci-gl">FO<span class="aci-tip">First Officer — the co-pilot</span></span> take control; half-day <span class="aci-gl">CRM<span class="aci-tip">Crew Resource Management — cockpit teamwork discipline</span></span> training left the correct dissent with no path to action.</span></div>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:1px;"><span class="aci-chip">authority gradient</span></div>
+          </div>
+
+        </div>
+        <div style="margin-top:26px;padding-top:16px;border-top:1px solid rgba(120,160,145,0.1);font-family:'JetBrains Mono',monospace;font-size:10.5px;line-height:1.75;color:#52655d;">
+          <span style="color:#71867e;">sources →</span> <span class="aci-gl">NTSB<span class="aci-tip">US National Transportation Safety Board</span></span> · <span class="aci-gl">AAIB<span class="aci-tip">UK Air Accidents Investigation Branch</span></span> · <span class="aci-gl">BFU<span class="aci-tip">Germany's Federal Bureau of Aircraft Accident Investigation</span></span> · <span class="aci-gl">TSB<span class="aci-tip">Transportation Safety Board of Canada</span></span> · <span class="aci-gl">ATSB<span class="aci-tip">Australian Transport Safety Bureau</span></span> · <span class="aci-gl">ANSV<span class="aci-tip">Italy's aviation safety investigation agency</span></span> · <span class="aci-gl">TAIC<span class="aci-tip">New Zealand Transport Accident Investigation Commission</span></span> · <span class="aci-gl">GPIAA<span class="aci-tip">Portugal's aviation accident investigation authority</span></span> · <span class="aci-gl">DGAC<span class="aci-tip">Directorate General of Civil Aviation</span></span> — each ↗ opens the public record.<br>
+          read from the series <a href="https://en.wikipedia.org/wiki/List_of_Mayday_episodes" target="_blank" rel="noopener" style="color:#71867e;text-decoration:none;border-bottom:1px dotted rgba(120,160,145,0.4);" style-hover="color:#5bc8d6;">Air Crash Investigation</a>; every root cause re-checked against the official report. none of this is really about aeroplanes.
+        </div>
+      </div>
+
     </section>
 
     <!-- CONTACT -->
