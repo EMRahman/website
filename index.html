@@ -893,6 +893,7 @@ class Component extends DCLogic {
   teardown() {
     cancelAnimationFrame(this._raf);
     if (this._onResize) { window.removeEventListener('resize', this._onResize); window.removeEventListener('orientationchange', this._onResize); }
+    if (this._reduceMq && this._onReduceChange) { this._reduceMq.removeEventListener ? this._reduceMq.removeEventListener('change', this._onReduceChange) : this._reduceMq.removeListener(this._onReduceChange); }
     if (this._teardownCanvas) this._teardownCanvas();
   }
   restart() { this.teardown(); this.setup(); }
@@ -942,6 +943,12 @@ class Component extends DCLogic {
     window.addEventListener('resize', this._onResize);
     window.addEventListener('orientationchange', this._onResize);
     this._teardownCanvas = () => { if (rCanvas) unbind(rCanvas); if (gCanvas) unbind(gCanvas); };
+    // prefers-reduced-motion: park the radar sweep (no rotation) for a static scope
+    const reduceMq = (typeof window !== 'undefined' && window.matchMedia) ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
+    self._reduced = !!(reduceMq && reduceMq.matches);
+    this._reduceMq = reduceMq;
+    this._onReduceChange = e => { self._reduced = e.matches; };
+    if (reduceMq) { reduceMq.addEventListener ? reduceMq.addEventListener('change', this._onReduceChange) : reduceMq.addListener(this._onReduceChange); }
 
     const ensureRadar = () => {
       const cv = self.radarCanvasRef.current;
@@ -1033,7 +1040,7 @@ class Component extends DCLogic {
     const worldProj = WORLD.map(poly => poly.map(c => geo(c[0], c[1])));
     const oceansProj = OCEANS.map(o => { const g = geo(o[0], o[1]); return { nx: g.nx, ny: g.ny, txt: o[2] }; });
 
-    const freshOf = (nx, ny, sweep) => { const ang = norm(Math.atan2(ny, nx)); return 1 - norm(sweep - ang) / TAU; };
+    const freshOf = (nx, ny, sweep) => { if (self._reduced) return 0.7; const ang = norm(Math.atan2(ny, nx)); return 1 - norm(sweep - ang) / TAU; };
     const drawTrack = (px, py, head, col, a, c1, c2, l1, l2, showL) => {
       ctx.globalAlpha = a * 0.55; ctx.strokeStyle = col; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(px + Math.cos(head) * 16, py + Math.sin(head) * 16); ctx.stroke();
       ctx.globalAlpha = a; ctx.fillStyle = col; ctx.shadowColor = col; ctx.shadowBlur = 8; ctx.save(); ctx.translate(px, py); ctx.rotate(head); ctx.beginPath(); ctx.moveTo(5, 0); ctx.lineTo(-3, 3.2); ctx.lineTo(-3, -3.2); ctx.closePath(); ctx.fill(); ctx.restore(); ctx.shadowBlur = 0;
@@ -1043,12 +1050,26 @@ class Component extends DCLogic {
 
     // ---------- radar draw ----------
     function radar(t, dt, M) {
-      const sweep = norm(t * (TAU / 6) * M);
+      // Sweep runs at a fixed 6s/revolution (= 10 rpm, matching the header) independent of
+      // the motion-level prop; prefers-reduced-motion parks it so the scope stays static.
+      const reduced = self._reduced;
+      const sweep = reduced ? norm(-Math.PI / 2) : norm(t * (TAU / 6));
       ctx.lineWidth = 1;
       for (let i = 1; i <= 4; i++) { ctx.beginPath(); ctx.arc(cx, cy, R * i / 4, 0, TAU); ctx.strokeStyle = 'rgba(70,226,160,0.09)'; ctx.stroke(); }
       ctx.strokeStyle = 'rgba(70,226,160,0.18)'; ctx.beginPath(); ctx.arc(cx, cy, R, 0, TAU); ctx.stroke();
       ctx.strokeStyle = 'rgba(70,226,160,0.06)'; ctx.beginPath(); ctx.moveTo(cx - R, cy); ctx.lineTo(cx + R, cy); ctx.moveTo(cx, cy - R); ctx.lineTo(cx, cy + R); ctx.stroke();
       for (let a = 0; a < 360; a += 15) { const rad = a * Math.PI / 180, r0 = R * (a % 90 === 0 ? 0.92 : 0.97); ctx.strokeStyle = 'rgba(70,226,160,0.16)'; ctx.beginPath(); ctx.moveTo(cx + Math.cos(rad) * r0, cy + Math.sin(rad) * r0); ctx.lineTo(cx + Math.cos(rad) * R, cy + Math.sin(rad) * R); ctx.stroke(); }
+      // rotating sweep: a faint phosphor beam trailing a low-contrast afterglow. Drawn under the
+      // contacts so it reads as background — freshOf() is what brightens each contact on pass-over.
+      // Under prefers-reduced-motion the beam is parked: a single static bearing line, no rotation.
+      if (reduced) {
+        ctx.strokeStyle = 'rgba(70,226,160,0.09)'; ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + Math.cos(sweep) * R, cy + Math.sin(sweep) * R); ctx.stroke();
+      } else {
+        const trail = Math.PI * 0.55, slices = 36;
+        for (let i = 0; i < slices; i++) { const a1 = sweep - trail * i / slices, a0 = sweep - trail * (i + 1) / slices; ctx.beginPath(); ctx.moveTo(cx, cy); ctx.arc(cx, cy, R, a0, a1); ctx.closePath(); ctx.fillStyle = 'rgba(70,226,160,' + (0.10 * (1 - i / slices)) + ')'; ctx.fill(); }
+        ctx.save(); ctx.strokeStyle = 'rgba(120,240,190,0.18)'; ctx.lineWidth = 1.4; ctx.shadowColor = 'rgba(70,226,160,0.5)'; ctx.shadowBlur = 6; ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + Math.cos(sweep) * R, cy + Math.sin(sweep) * R); ctx.stroke(); ctx.restore();
+      }
       ctx.fillStyle = GREEN; ctx.beginPath(); ctx.arc(cx, cy, 2, 0, TAU); ctx.fill();
 
       const hl = self._highlight, showL = self.props.showLabels !== false;
