@@ -893,6 +893,7 @@ class Component extends DCLogic {
   teardown() {
     cancelAnimationFrame(this._raf);
     if (this._onResize) { window.removeEventListener('resize', this._onResize); window.removeEventListener('orientationchange', this._onResize); }
+    if (this._reduceMq && this._onReduceChange) { this._reduceMq.removeEventListener ? this._reduceMq.removeEventListener('change', this._onReduceChange) : this._reduceMq.removeListener(this._onReduceChange); }
     if (this._teardownCanvas) this._teardownCanvas();
   }
   restart() { this.teardown(); this.setup(); }
@@ -942,6 +943,12 @@ class Component extends DCLogic {
     window.addEventListener('resize', this._onResize);
     window.addEventListener('orientationchange', this._onResize);
     this._teardownCanvas = () => { if (rCanvas) unbind(rCanvas); if (gCanvas) unbind(gCanvas); };
+    // prefers-reduced-motion: park the radar sweep (no rotation) for a static scope
+    const reduceMq = (typeof window !== 'undefined' && window.matchMedia) ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
+    self._reduced = !!(reduceMq && reduceMq.matches);
+    this._reduceMq = reduceMq;
+    this._onReduceChange = e => { self._reduced = e.matches; };
+    if (reduceMq) { reduceMq.addEventListener ? reduceMq.addEventListener('change', this._onReduceChange) : reduceMq.addListener(this._onReduceChange); }
 
     const ensureRadar = () => {
       const cv = self.radarCanvasRef.current;
@@ -1033,7 +1040,7 @@ class Component extends DCLogic {
     const worldProj = WORLD.map(poly => poly.map(c => geo(c[0], c[1])));
     const oceansProj = OCEANS.map(o => { const g = geo(o[0], o[1]); return { nx: g.nx, ny: g.ny, txt: o[2] }; });
 
-    const freshOf = (nx, ny, sweep) => { const ang = norm(Math.atan2(ny, nx)); return 1 - norm(sweep - ang) / TAU; };
+    const freshOf = (nx, ny, sweep) => { if (self._reduced) return 0.7; const ang = norm(Math.atan2(ny, nx)); return 1 - norm(sweep - ang) / TAU; };
     const drawTrack = (px, py, head, col, a, c1, c2, l1, l2, showL) => {
       ctx.globalAlpha = a * 0.55; ctx.strokeStyle = col; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(px + Math.cos(head) * 16, py + Math.sin(head) * 16); ctx.stroke();
       ctx.globalAlpha = a; ctx.fillStyle = col; ctx.shadowColor = col; ctx.shadowBlur = 8; ctx.save(); ctx.translate(px, py); ctx.rotate(head); ctx.beginPath(); ctx.moveTo(5, 0); ctx.lineTo(-3, 3.2); ctx.lineTo(-3, -3.2); ctx.closePath(); ctx.fill(); ctx.restore(); ctx.shadowBlur = 0;
@@ -1041,14 +1048,31 @@ class Component extends DCLogic {
       ctx.globalAlpha = 1;
     };
 
+    // reduced-motion parks the sweep at 12 o'clock: -90° normalized to canvas-up, computed once.
+    const PARKED_SWEEP = norm(-Math.PI / 2);
+
     // ---------- radar draw ----------
     function radar(t, dt, M) {
-      const sweep = norm(t * (TAU / 6) * M);
+      // Sweep runs at a fixed 6s/revolution (= 10 rpm, matching the header) independent of
+      // the motion-level prop; prefers-reduced-motion parks it so the scope stays static.
+      const reduced = self._reduced;
+      const sweep = reduced ? PARKED_SWEEP : norm(t * (TAU / 6));
       ctx.lineWidth = 1;
       for (let i = 1; i <= 4; i++) { ctx.beginPath(); ctx.arc(cx, cy, R * i / 4, 0, TAU); ctx.strokeStyle = 'rgba(70,226,160,0.09)'; ctx.stroke(); }
       ctx.strokeStyle = 'rgba(70,226,160,0.18)'; ctx.beginPath(); ctx.arc(cx, cy, R, 0, TAU); ctx.stroke();
       ctx.strokeStyle = 'rgba(70,226,160,0.06)'; ctx.beginPath(); ctx.moveTo(cx - R, cy); ctx.lineTo(cx + R, cy); ctx.moveTo(cx, cy - R); ctx.lineTo(cx, cy + R); ctx.stroke();
       for (let a = 0; a < 360; a += 15) { const rad = a * Math.PI / 180, r0 = R * (a % 90 === 0 ? 0.92 : 0.97); ctx.strokeStyle = 'rgba(70,226,160,0.16)'; ctx.beginPath(); ctx.moveTo(cx + Math.cos(rad) * r0, cy + Math.sin(rad) * r0); ctx.lineTo(cx + Math.cos(rad) * R, cy + Math.sin(rad) * R); ctx.stroke(); }
+      // rotating sweep: a faint phosphor beam trailing a low-contrast afterglow. Drawn under the
+      // contacts so it reads as background — freshOf() is what brightens each contact on pass-over.
+      // Under prefers-reduced-motion the beam is parked: a single static bearing line, no rotation.
+      if (reduced) {
+        ctx.strokeStyle = 'rgba(70,226,160,0.09)'; ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + Math.cos(sweep) * R, cy + Math.sin(sweep) * R); ctx.stroke();
+      } else {
+        const trail = Math.PI * 0.55, slices = 36;
+        for (let i = 0; i < slices; i++) { const a1 = sweep - trail * i / slices, a0 = sweep - trail * (i + 1) / slices; ctx.beginPath(); ctx.moveTo(cx, cy); ctx.arc(cx, cy, R, a0, a1); ctx.closePath(); ctx.fillStyle = 'rgba(70,226,160,' + (0.10 * (1 - i / slices)) + ')'; ctx.fill(); }
+        ctx.save(); ctx.strokeStyle = 'rgba(120,240,190,0.18)'; ctx.lineWidth = 1.4; ctx.shadowColor = 'rgba(70,226,160,0.5)'; ctx.shadowBlur = 6; ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + Math.cos(sweep) * R, cy + Math.sin(sweep) * R); ctx.stroke(); ctx.restore();
+      }
       ctx.fillStyle = GREEN; ctx.beginPath(); ctx.arc(cx, cy, 2, 0, TAU); ctx.fill();
 
       const hl = self._highlight, showL = self.props.showLabels !== false;
@@ -1152,7 +1176,7 @@ class Component extends DCLogic {
       if (kuTimer > 3.5 && Math.random() < 0.5) { kuTimer = 0; const k = kus[Math.floor(rnd(0, kus.length))]; self.pushLog('WARN', 'primary return brg ' + brg(k.nx, k.ny) + ' — no squawk'); }
 
       // unknown-unknowns
-      if (t - lastGhost > ghostGap && ghosts.length < 1) { lastGhost = t; ghostGap = rnd(3.5, 7) / M; const ang = rnd(0, TAU), rad = rnd(0.28, 0.95); const g = { nx: Math.cos(ang) * rad, ny: Math.sin(ang) * rad, born: t, life: rnd(6, 11), promoted: false, logged: false }; ghosts.push(g); }
+      if (t - lastGhost > ghostGap && ghosts.length < 1) { lastGhost = t; ghostGap = rnd(3.5, 7) / M; const ang = rnd(0, TAU), rad = rnd(0.28, 0.95); const g = { nx: Math.cos(ang) * rad, ny: Math.sin(ang) * rad, born: t, life: rnd(6, 11), promoted: false, logged: false, rolled: false }; ghosts.push(g); }
       ghosts = ghosts.filter(g => { if (t - g.born >= g.life) { if (!g.promoted) self.pushLog('LOST', 'primary contact lost — unresolved'); return false; } return true; });
       ghosts.forEach(g => {
         const age = t - g.born, env = Math.min(1, age / 1.2) * Math.min(1, (g.life - age) / 1.5), f = freshOf(g.nx, g.ny, sweep);
@@ -1160,13 +1184,19 @@ class Component extends DCLogic {
         let near = 0; if (self._mouse) near = Math.hypot(self._mouse.x - px, self._mouse.y - py) < 42 ? 1 : 0;
         cUU++;
         let col = RED, a = env * (0.1 + 0.85 * f * f); if (near) a = Math.max(a, env * 0.85);
-        if (f > 0.92 && !g.logged) { g.logged = true; self.pushLog('ALERT', 'unidentified return brg ' + brg(g.nx, g.ny) + ' · ' + (Math.hypot(g.nx, g.ny) * 12).toFixed(1) + ' nm'); }
-        if (f > 0.9 && !g.promoted && Math.random() < 0.012) { g.promoted = true; self.pushLog('RECL', 'correlated → known traffic'); }
+        // Under reduced motion the sweep is parked and freshOf() is steady, so detection can't ride
+        // pass-over freshness. Fall back to age-based triggers — with a single reclassification roll
+        // (the parked sweep gives an unbounded window, so a per-frame roll would compound to ~certain)
+        // — keeping the unknown-unknown ALERT/RECL events the radar log and badge rely on reachable.
+        if ((reduced ? age > 0.8 : f > 0.92) && !g.logged) { g.logged = true; self.pushLog('ALERT', 'unidentified return brg ' + brg(g.nx, g.ny) + ' · ' + (Math.hypot(g.nx, g.ny) * 12).toFixed(1) + ' nm'); }
+        if (reduced) {
+          if (g.logged && !g.promoted && !g.rolled && age > 2) { g.rolled = true; if (Math.random() < 0.4) { g.promoted = true; self.pushLog('RECL', 'correlated → known traffic'); } }
+        } else if (f > 0.9 && !g.promoted && Math.random() < 0.012) { g.promoted = true; self.pushLog('RECL', 'correlated → known traffic'); }
         if (g.promoted) { col = AMBER; a = Math.max(a, env * 0.5); }
         if (hl && hl !== 'unknown' && !g.promoted) a *= 0.18;
         if (hl === 'unknown') a = Math.max(a, env * 0.55 * (0.3 + 0.7 * f));
         ctx.globalAlpha = a; ctx.fillStyle = col; ctx.shadowColor = col; ctx.shadowBlur = 11; ctx.beginPath(); ctx.arc(px, py, 2.6, 0, TAU); ctx.fill(); ctx.shadowBlur = 0;
-        if (f > 0.8 || near) { ctx.globalAlpha = a * 0.7; ctx.strokeStyle = col; ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(px, py, 7 + (1 - f) * 5, 0, TAU); ctx.stroke(); if (showL) { ctx.globalAlpha = a; ctx.font = '9px "JetBrains Mono", monospace'; ctx.fillStyle = col; ctx.fillText(g.promoted ? '? CONTACT' : '?', px + 10, py + 3); } }
+        if (f > 0.8 || near || (reduced && g.logged)) { ctx.globalAlpha = a * 0.7; ctx.strokeStyle = col; ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(px, py, 7 + (1 - f) * 5, 0, TAU); ctx.stroke(); if (showL) { ctx.globalAlpha = a; ctx.font = '9px "JetBrains Mono", monospace'; ctx.fillStyle = col; ctx.fillText(g.promoted ? '? CONTACT' : '?', px + 10, py + 3); } }
         ctx.globalAlpha = 1;
       });
 
