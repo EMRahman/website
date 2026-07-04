@@ -29,12 +29,19 @@ Scope: `index.html` (template + inline DC logic), `support.js` (generated dc-run
 ### P0 — resilience & discoverability
 - [ ] Un-hide content on boot failure: give the `hideRawTemplate()` style element an id (`support.js:1429`)
       and remove it in the `.catch` at `support.js:1509` so a failed React load degrades to readable raw
-      HTML instead of a blank page. Verify by blocking `vendor/` + unpkg in devtools and reloading.
+      HTML instead of a blank page. Note the `.catch` only sees synchronous failures — when the document is
+      still loading, boot runs later inside the `DOMContentLoaded` listener (`support.js:1506`) and a throw
+      there never reaches the promise chain, so also wrap the `api.__dcBoot()` calls in try/catch (or add a
+      one-shot `window.onerror` during init) that removes the same style element.
+      Verify by blocking `vendor/` + unpkg in devtools and reloading.
 - [ ] Add `<title>` and `<meta name="description">` to the real `<head>` (`index.html`, after line 5).
 - [ ] Add a favicon (the SVG in `#__bundler_thumbnail`, `index.html:69`, is a ready-made mark — inline it
       as a `data:` icon) and `og:title` / `og:description` / `og:image` tags.
-- [ ] Scope the deploy copy in `.cpanel.yml:5` to `index.html support.js images/ vendor/` only; confirm
-      `https://ehsanrahman.com/docs/aci-notes-plan.md` stops resolving after the next deploy.
+- [ ] Scope the deploy copy in `.cpanel.yml:5` to `index.html support.js images/ vendor/` only. Narrowing
+      `cp` inputs does not remove files already copied to `public_html` (cp never prunes), so also do a
+      one-time cleanup of `docs/`, `README.md`, `LICENSE` from the docroot — or switch the task to
+      `rsync -r --delete` scoped to those four paths; only then confirm
+      `https://ehsanrahman.com/docs/aci-notes-plan.md` stops resolving.
 
 ### P1 — performance
 - [ ] Pause the animation when the hero is off-screen: set `this._heroVisible` via an
