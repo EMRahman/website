@@ -952,13 +952,13 @@ class Component extends DCLogic {
 
     const onMove = e => { const cv = e.currentTarget; if (!cv) return; const pt = (e.touches && e.touches[0]) ? e.touches[0] : e; const r = cv.getBoundingClientRect(); activeMouse = { x: pt.clientX - r.left, y: pt.clientY - r.top, canvas: cv }; };
     const onLeave = () => { activeMouse = null; };
-    const onTouchEnd = () => { touchTimer = setTimeout(() => { activeMouse = null; }, 1400); };
+    const onTouchEnd = () => { clearTimeout(touchTimer); touchTimer = setTimeout(() => { activeMouse = null; }, 1400); };
     const bind = cv => { cv.addEventListener('pointermove', onMove); cv.addEventListener('pointerleave', onLeave); cv.addEventListener('touchstart', onMove, { passive: true }); cv.addEventListener('touchmove', onMove, { passive: true }); cv.addEventListener('touchend', onTouchEnd); };
     const unbind = cv => { cv.removeEventListener('pointermove', onMove); cv.removeEventListener('pointerleave', onLeave); cv.removeEventListener('touchstart', onMove); cv.removeEventListener('touchmove', onMove); cv.removeEventListener('touchend', onTouchEnd); };
     this._onResize = () => { rLastW = 0; gLastW = 0; };
     window.addEventListener('resize', this._onResize);
     window.addEventListener('orientationchange', this._onResize);
-    this._teardownCanvas = () => { clearTimeout(touchTimer); if (rCanvas) unbind(rCanvas); if (gCanvas) unbind(gCanvas); };
+    this._teardownCanvas = () => { clearTimeout(touchTimer); document.removeEventListener('visibilitychange', onVis); if (rCanvas) unbind(rCanvas); if (gCanvas) unbind(gCanvas); };
     // prefers-reduced-motion: park the radar sweep (no rotation) for a static scope
     const reduceMq = (typeof window !== 'undefined' && window.matchMedia) ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
     self._reduced = !!(reduceMq && reduceMq.matches);
@@ -1318,7 +1318,7 @@ class Component extends DCLogic {
     const t0 = performance.now(); let last = t0;
     const frame = now => {
       const dt = Math.min(0.05, (now - last) / 1000); last = now;
-      if (document.hidden || self._heroVisible === false) { self._raf = requestAnimationFrame(frame); return; }
+      if (document.hidden || self._heroVisible === false) { self._raf = null; return; }
       const t = (now - t0) / 1000, M = self.getMotion();
       if (ensureGraph()) {
         ctx = gCtx; W = gW; H = gH; cx = gCx; cy = gCy; R = gR;
@@ -1334,12 +1334,25 @@ class Component extends DCLogic {
       }
       self._raf = requestAnimationFrame(frame);
     };
-    // Pause the canvas RAF + 800ms tick re-render when the hero scrolls out of view (saves CPU/battery).
+    // Pause the canvas RAF + 800ms tick re-render when the hero scrolls out of view or the tab is
+    // hidden. Fully stop the loop (frame sets _raf=null) rather than firing no-op frames, and resume
+    // it when the hero returns to view or the tab becomes active again.
+    const resume = () => {
+      if (!self._raf && !document.hidden && self._heroVisible) {
+        last = performance.now();
+        self._raf = requestAnimationFrame(frame);
+      }
+    };
+    const onVis = () => { if (!document.hidden) resume(); };
+    document.addEventListener('visibilitychange', onVis);
     self._heroVisible = true;
     if (typeof IntersectionObserver !== 'undefined') {
       const heroEl = document.querySelector('.hero-shell');
       if (heroEl) {
-        self._heroObserver = new IntersectionObserver(entries => { self._heroVisible = entries[0].isIntersecting; });
+        self._heroObserver = new IntersectionObserver(entries => {
+          self._heroVisible = entries[0].isIntersecting;
+          if (self._heroVisible) resume();
+        });
         self._heroObserver.observe(heroEl);
       }
     }
