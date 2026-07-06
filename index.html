@@ -3,6 +3,21 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ehsan Rahman — Site Reliability Engineer</title>
+<meta name="description" content="Ehsan Rahman — Site Reliability Engineer focused on system monitoring and dependency mapping. I watch infrastructure the way a controller works a sector.">
+<link rel="canonical" href="https://ehsanrahman.com/">
+<link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iIzBhMGUwYyIvPjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDUwLDUwKSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNDZlMmEwIiBzdHJva2Utd2lkdGg9IjEiPjxjaXJjbGUgcj0iOCIgb3BhY2l0eT0iMC40Ii8+PGNpcmNsZSByPSIxNSIgb3BhY2l0eT0iMC4zIi8+PGNpcmNsZSByPSIyMSIgb3BhY2l0eT0iMC41Ii8+PGxpbmUgeDE9IjAiIHkxPSIwIiB4Mj0iMCIgeTI9Ii0yMSIgc3Ryb2tlPSIjOWFmZmNkIiBzdHJva2Utd2lkdGg9IjEuNCIvPjwvZz48Y2lyY2xlIGN4PSI2MiIgY3k9IjQwIiByPSIxLjgiIGZpbGw9IiM0NmUyYTAiLz48Y2lyY2xlIGN4PSI0MCIgY3k9IjU4IiByPSIxLjgiIGZpbGw9IiNmMGI3M2YiLz48Y2lyY2xlIGN4PSI1OCIgY3k9IjYyIiByPSIxLjYiIGZpbGw9IiNlZjZiNmIiLz48L3N2Zz4=">
+<meta name="theme-color" content="#080b0a">
+<!-- Open Graph / Twitter (og:image intentionally omitted — no dedicated social card exists) -->
+<meta property="og:title" content="Ehsan Rahman — Site Reliability Engineer">
+<meta property="og:description" content="System monitoring and dependency mapping. I watch infrastructure the way a controller works a sector.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://ehsanrahman.com/">
+<meta name="twitter:card" content="summary">
+<!-- Google Fonts hoisted out of the in-template <helmet> so they load without waiting on the JS boot. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <!-- Self-host the runtime deps so the page renders even when the CDN is blocked,
      throttled, or unreachable. support.js (loadReactUmd) skips its unpkg fetch
      when window.React/ReactDOM already exist; if these 404 it falls back to unpkg. -->
@@ -13,9 +28,7 @@
 <body>
 <x-dc>
 <helmet>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<!-- Google Fonts moved to the real <head> so they load before the JS boot (see above). -->
 <style>
 *{box-sizing:border-box;}
 html,body{margin:0;padding:0;background:#080b0a;}
@@ -111,7 +124,7 @@ html,body{margin:0;padding:0;background:#080b0a;}
           <div style="font-family:'IBM Plex Sans',system-ui,sans-serif;font-size:11.5px;font-style:italic;line-height:1.55;color:#6b8078;margin-top:11px;max-width:54ch;animation:fadeup .7s ease .16s both;">A borrowed frame, used here in its older engineering sense: map what is known, name what is uncertain, and keep looking for the conditions nobody has yet seen.</div>
           <div style="height:1px;background:rgba(120,160,145,0.14);margin:26px 0;"></div>
           <div style="animation:fadeup .7s ease .2s both;">
-            <div style="font-size:18px;color:#eafff5;font-weight:500;">Ehsan Rahman<span style="display:inline-block;width:8px;height:17px;background:#46e2a0;margin-left:7px;vertical-align:-2px;animation:blink 1.1s steps(1) infinite;"></span></div>
+            <h1 style="font-size:18px;color:#eafff5;font-weight:500;margin:0;">Ehsan Rahman<span style="display:inline-block;width:8px;height:17px;background:#46e2a0;margin-left:7px;vertical-align:-2px;animation:blink 1.1s steps(1) infinite;"></span></h1>
             <div style="font-family:'JetBrains Mono',monospace;font-size:12.5px;color:#7fb8ad;margin-top:6px;">Site Reliability Engineer · system monitoring &amp; dependency mapping</div>
             <div data-gloss-box="1" style="font-size:13px;color:#9fb3aa;margin-top:13px;line-height:1.6;max-width:46ch;">I monitor infrastructure the way a controller works a <span tabIndex="0" style="position:relative;color:#5bc8d6;border-bottom:1px dashed #5bc8d666;cursor:help;transition:color .15s;outline:none;" style-hover="color:#8fe3ee;" onMouseEnter="{{ glossShowSector }}" onMouseLeave="{{ glossHide }}" onClick="{{ glossToggleSector }}" onBlur="{{ glossHide }}" data-gloss-gid="s0">sector{{ popS0 }}</span>: separating traffic, chasing <span tabIndex="0" style="position:relative;color:#f0b73f;border-bottom:1px dashed #f0b73f66;cursor:help;transition:color .15s;outline:none;" style-hover="color:#ffd271;" onMouseEnter="{{ glossShowSquawk }}" onMouseLeave="{{ glossHide }}" onClick="{{ glossToggleSquawk }}" onBlur="{{ glossHide }}" data-gloss-gid="sq0">squawks{{ popSq0 }}</span>, and routing around <span tabIndex="0" style="position:relative;color:#ef6b6b;border-bottom:1px dashed #ef6b6b66;cursor:help;transition:color .15s;outline:none;" style-hover="color:#ff9a9a;" onMouseEnter="{{ glossShowWeather }}" onMouseLeave="{{ glossHide }}" onClick="{{ glossToggleWeather }}" onBlur="{{ glossHide }}" data-gloss-gid="w0">weather cells{{ popW0 }}</span>.</div>
           </div>
@@ -128,7 +141,7 @@ html,body{margin:0;padding:0;background:#080b0a;}
               <span>RADAR · SECTOR 7</span>
             </div>
             <div style="flex:1;min-height:0;position:relative;">
-              <canvas ref="{{ radarCanvasRef }}" style="position:absolute;inset:0;width:100%;height:100%;display:block;cursor:crosshair;touch-action:pan-y;"></canvas>
+              <canvas ref="{{ radarCanvasRef }}" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%;display:block;cursor:crosshair;touch-action:pan-y;"></canvas>
             </div>
           </div>
 
@@ -138,7 +151,7 @@ html,body{margin:0;padding:0;background:#080b0a;}
               <span>AIRWAY MAP · GLOBAL</span>
             </div>
             <div style="flex:1;min-height:0;position:relative;">
-              <canvas ref="{{ graphCanvasRef }}" style="position:absolute;inset:0;width:100%;height:100%;display:block;cursor:crosshair;touch-action:pan-y;"></canvas>
+              <canvas ref="{{ graphCanvasRef }}" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%;display:block;cursor:crosshair;touch-action:pan-y;"></canvas>
             </div>
           </div>
 
@@ -826,7 +839,7 @@ html,body{margin:0;padding:0;background:#080b0a;}
         <a href="https://x.com/_EhsanR" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:9px;text-decoration:none;font-family:'JetBrains Mono',monospace;font-size:14px;color:#cfe0d8;border:1px solid rgba(120,160,145,0.2);padding:11px 18px;border-radius:4px;transition:all .18s;" style-hover="border-color:rgba(91,200,214,0.5);color:#5bc8d6;"><span style="color:#5bc8d6;">@</span>_EhsanR <span style="color:#52655d;">↗ x.com</span></a>
         <a href="https://www.linkedin.com/in/ehsan-rahman-6a36486/" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:9px;text-decoration:none;font-family:'JetBrains Mono',monospace;font-size:14px;color:#cfe0d8;border:1px solid rgba(120,160,145,0.2);padding:11px 18px;border-radius:4px;transition:all .18s;" style-hover="border-color:rgba(91,200,214,0.5);color:#5bc8d6;">linkedin <span style="color:#52655d;">↗</span></a>
         <a href="https://github.com/EMRahman" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:9px;text-decoration:none;font-family:'JetBrains Mono',monospace;font-size:14px;color:#cfe0d8;border:1px solid rgba(120,160,145,0.2);padding:11px 18px;border-radius:4px;transition:all .18s;" style-hover="border-color:rgba(91,200,214,0.5);color:#5bc8d6;">github <span style="color:#52655d;">↗</span></a>
-        <a href="mailto:mail@ehsanrahman.com" style="display:flex;align-items:center;gap:9px;text-decoration:none;font-family:'JetBrains Mono',monospace;font-size:14px;color:#cfe0d8;border:1px solid rgba(120,160,145,0.2);padding:11px 18px;border-radius:4px;transition:all .18s;" style-hover="border-color:rgba(91,200,214,0.5);color:#5bc8d6;">email <span style="color:#52655d;">↗</span></a>
+        <a href="mailto:mail&#64;ehsanrahman&#46;com" style="display:flex;align-items:center;gap:9px;text-decoration:none;font-family:'JetBrains Mono',monospace;font-size:14px;color:#cfe0d8;border:1px solid rgba(120,160,145,0.2);padding:11px 18px;border-radius:4px;transition:all .18s;" style-hover="border-color:rgba(91,200,214,0.5);color:#5bc8d6;">email <span style="color:#52655d;">↗</span></a>
       </div>
     </section>
 
@@ -895,6 +908,7 @@ class Component extends DCLogic {
     if (this._onResize) { window.removeEventListener('resize', this._onResize); window.removeEventListener('orientationchange', this._onResize); }
     if (this._reduceMq && this._onReduceChange) { this._reduceMq.removeEventListener ? this._reduceMq.removeEventListener('change', this._onReduceChange) : this._reduceMq.removeListener(this._onReduceChange); }
     if (this._teardownCanvas) this._teardownCanvas();
+    if (this._heroObserver) { this._heroObserver.disconnect(); this._heroObserver = null; }
   }
   restart() { this.teardown(); this.setup(); }
 
@@ -905,6 +919,7 @@ class Component extends DCLogic {
   }
 
   tick() {
+    if (document.hidden || this._heroVisible === false) return;
     const clock = new Date().toTimeString().slice(0, 8);
     const L = this._live;
     const push = (arr, v) => { const a = arr.slice(1); a.push(Math.max(0, v)); return a; };
@@ -933,16 +948,17 @@ class Component extends DCLogic {
     // functions can reference them by name without being refactored to accept parameters
     let ctx = null, W = 600, H = 400, cx = 300, cy = 200, R = 160;
     let activeMouse = null;
+    let touchTimer = null;
 
     const onMove = e => { const cv = e.currentTarget; if (!cv) return; const pt = (e.touches && e.touches[0]) ? e.touches[0] : e; const r = cv.getBoundingClientRect(); activeMouse = { x: pt.clientX - r.left, y: pt.clientY - r.top, canvas: cv }; };
     const onLeave = () => { activeMouse = null; };
-    const onTouchEnd = () => { setTimeout(() => { activeMouse = null; }, 1400); };
+    const onTouchEnd = () => { clearTimeout(touchTimer); touchTimer = setTimeout(() => { activeMouse = null; }, 1400); };
     const bind = cv => { cv.addEventListener('pointermove', onMove); cv.addEventListener('pointerleave', onLeave); cv.addEventListener('touchstart', onMove, { passive: true }); cv.addEventListener('touchmove', onMove, { passive: true }); cv.addEventListener('touchend', onTouchEnd); };
     const unbind = cv => { cv.removeEventListener('pointermove', onMove); cv.removeEventListener('pointerleave', onLeave); cv.removeEventListener('touchstart', onMove); cv.removeEventListener('touchmove', onMove); cv.removeEventListener('touchend', onTouchEnd); };
     this._onResize = () => { rLastW = 0; gLastW = 0; };
     window.addEventListener('resize', this._onResize);
     window.addEventListener('orientationchange', this._onResize);
-    this._teardownCanvas = () => { if (rCanvas) unbind(rCanvas); if (gCanvas) unbind(gCanvas); };
+    this._teardownCanvas = () => { clearTimeout(touchTimer); document.removeEventListener('visibilitychange', onVis); if (rCanvas) unbind(rCanvas); if (gCanvas) unbind(gCanvas); };
     // prefers-reduced-motion: park the radar sweep (no rotation) for a static scope
     const reduceMq = (typeof window !== 'undefined' && window.matchMedia) ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
     self._reduced = !!(reduceMq && reduceMq.matches);
@@ -1137,7 +1153,7 @@ class Component extends DCLogic {
 
       // --- one aircraft burning down its fuel reserve → running out of resource ---
       {
-        const ph = Math.min(t / sat.cycle, 1), v = 100 * (1 - ph);
+        const ph = (t % sat.cycle) / sat.cycle, v = 100 * (1 - ph);
         if (v > 0) {
           const px = cx + sat.nx * R, py = cy + sat.ny * R, f = freshOf(sat.nx, sat.ny, sweep);
           const col = v < 8 ? RED : v < 20 ? AMBER : GREEN;
@@ -1154,6 +1170,8 @@ class Component extends DCLogic {
             ctx.fillText('fuel ' + Math.round(v) + '%' + (v < 20 ? ' \u25bc' : ''), gx + gw + 5, gy + 4);
             ctx.globalAlpha = 1;
           }
+          // Re-arm the per-cycle alerts once QFA12 has "refuelled" at the top of each loop.
+          if (v > 20) { sat.loggedW = false; sat.loggedA = false; }
           if (v < 15 && !sat.loggedW) { sat.loggedW = true; self.pushLog('PAN·PAN', 'PAN PAN PAN — ' + sat.name + ' minimum fuel ' + Math.round(v) + '%'); }
           if (v < 5 && !sat.loggedA) { sat.loggedA = true; self.pushLog('MAYDAY', 'MAYDAY MAYDAY MAYDAY — ' + sat.name + ' fuel critical'); }
         }
@@ -1300,6 +1318,7 @@ class Component extends DCLogic {
     const t0 = performance.now(); let last = t0;
     const frame = now => {
       const dt = Math.min(0.05, (now - last) / 1000); last = now;
+      if (document.hidden || self._heroVisible === false) { self._raf = null; return; }
       const t = (now - t0) / 1000, M = self.getMotion();
       if (ensureGraph()) {
         ctx = gCtx; W = gW; H = gH; cx = gCx; cy = gCy; R = gR;
@@ -1315,6 +1334,28 @@ class Component extends DCLogic {
       }
       self._raf = requestAnimationFrame(frame);
     };
+    // Pause the canvas RAF + 800ms tick re-render when the hero scrolls out of view or the tab is
+    // hidden. Fully stop the loop (frame sets _raf=null) rather than firing no-op frames, and resume
+    // it when the hero returns to view or the tab becomes active again.
+    const resume = () => {
+      if (!self._raf && !document.hidden && self._heroVisible) {
+        last = performance.now();
+        self._raf = requestAnimationFrame(frame);
+      }
+    };
+    const onVis = () => { if (!document.hidden) resume(); };
+    document.addEventListener('visibilitychange', onVis);
+    self._heroVisible = true;
+    if (typeof IntersectionObserver !== 'undefined') {
+      const heroEl = document.querySelector('.hero-shell');
+      if (heroEl) {
+        self._heroObserver = new IntersectionObserver(entries => {
+          self._heroVisible = entries[0].isIntersecting;
+          if (self._heroVisible) resume();
+        });
+        self._heroObserver.observe(heroEl);
+      }
+    }
     this._raf = requestAnimationFrame(frame);
   }
 
