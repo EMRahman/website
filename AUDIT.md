@@ -24,33 +24,38 @@ Scope: `index.html` (template + inline DC logic), `support.js` (generated dc-run
    `docs/aci-notes-plan.md`, `README.md`, `LICENSE` to the live site and never deletes removed files —
    draft notes become public URLs and stale files linger forever.
 
+> **Status (2026-07-06, branch `implement-audit-checklist`):** P0, P1 (perf gate + fonts), and all
+> P3 items implemented and verified in headless Chrome (normal render + vendor-blocked fallback +
+> off-screen animation pause). `og:image` omitted (no social card). P2 architecture items remain
+> deferred — they need the missing `dc-runtime` source.
+
 ## Checklist (execute top-down)
 
 ### P0 — resilience & discoverability
-- [ ] Un-hide content on boot failure: give the `hideRawTemplate()` style element an id (`support.js:1429`)
+- [x] Un-hide content on boot failure: give the `hideRawTemplate()` style element an id (`support.js:1429`)
       and remove it in the `.catch` at `support.js:1509` so a failed React load degrades to readable raw
       HTML instead of a blank page. Note the `.catch` only sees synchronous failures — when the document is
       still loading, boot runs later inside the `DOMContentLoaded` listener (`support.js:1506`) and a throw
       there never reaches the promise chain, so also wrap the `api.__dcBoot()` calls in try/catch (or add a
       one-shot `window.onerror` during init) that removes the same style element.
       Verify by blocking `vendor/` + unpkg in devtools and reloading.
-- [ ] Add `<title>` and `<meta name="description">` to the real `<head>` (`index.html`, after line 5).
-- [ ] Add a favicon (the SVG in `#__bundler_thumbnail`, `index.html:69`, is a ready-made mark — inline it
+- [x] Add `<title>` and `<meta name="description">` to the real `<head>` (`index.html`, after line 5).
+- [x] Add a favicon (the SVG in `#__bundler_thumbnail`, `index.html:69`, is a ready-made mark — inline it
       as a `data:` icon) and `og:title` / `og:description` / `og:image` tags.
-- [ ] Scope the deploy copy in `.cpanel.yml:5` to `index.html support.js images/ vendor/` only. Narrowing
+- [x] Scope the deploy copy in `.cpanel.yml:5` to `index.html support.js images/ vendor/` only. Narrowing
       `cp` inputs does not remove files already copied to `public_html` (cp never prunes), so also do a
       one-time cleanup of `docs/`, `README.md`, `LICENSE` from the docroot — or switch the task to
       `rsync -r --delete` scoped to those four paths; only then confirm
       `https://ehsanrahman.com/docs/aci-notes-plan.md` stops resolving.
 
 ### P1 — performance
-- [ ] Pause the animation when the hero is off-screen: set `this._heroVisible` via an
+- [x] Pause the animation when the hero is off-screen: set `this._heroVisible` via an
       `IntersectionObserver` on `.hero-shell` in `componentDidMount` (`index.html:879`), early-return from
       `tick()` (`index.html:907`) when `document.hidden || !this._heroVisible`, and skip the draw body in
       `frame` (`index.html:1301`) the same way (still re-arm `requestAnimationFrame` and refresh `last`).
       Disconnect the observer in `componentWillUnmount` (`index.html:891`).
       Verify: scroll to the ACI section, check CPU in the performance monitor drops to ~0.
-- [ ] Move the Google Fonts `<link rel="preconnect">`/stylesheet from the in-template `<helmet>`
+- [x] Move the Google Fonts `<link rel="preconnect">`/stylesheet from the in-template `<helmet>`
       (`index.html:16-18`) into the real `<head>` so font loading isn't gated on the JS boot (fonts
       currently start downloading only after React mounts → late FOUT).
 - [ ] Note for later: every `setState` (clock tick, gloss hover at `index.html:865-877`) rebuilds the full
@@ -68,14 +73,17 @@ Scope: `index.html` (template + inline DC logic), `support.js` (generated dc-run
       forces `'unsafe-eval'` and blocks meaningful CSP hardening. Low urgency for a static personal site.
 
 ### P3 — minor / cosmetic
-- [ ] `onTouchEnd`'s 1.4 s `setTimeout` (`index.html:939`) isn't cleared in `teardown()` — harmless on a
+- [x] `onTouchEnd`'s 1.4 s `setTimeout` (`index.html:939`) isn't cleared in `teardown()` — harmless on a
       page that never unmounts, one-line fix while in the area.
-- [ ] The converging-pair vignette re-logs `MAYDAY` every 16 s cycle (`index.html:991,1134`) and QFA12's
+- [x] The converging-pair vignette re-logs `MAYDAY` every 16 s cycle (`index.html:991,1134`) and QFA12's
+      **[resolved]** QFA12 now loops its fuel cycle (`ph = (t % cycle)/cycle`) so it no longer vanishes
+      at 80 s / drops KNOWN by one; per-cycle alerts re-arm. The converging-pair MAYDAY re-log was
+      confirmed correct recurring theatre (re-arms once per convergence) and left as-is.
       fuel narrative ends permanently after 80 s (`index.html:993,1140`), silently dropping the KNOWN
       count by one — confirm both are intentional theatre; if not, reset the cycle.
-- [ ] Add `aria-hidden="true"` to the two decorative canvases (`index.html:131,141`) and consider a real
+- [x] Add `aria-hidden="true"` to the two decorative canvases (`index.html:131,141`) and consider a real
       `<h1>` (the page currently opens at `<h2>`; the hero name at `index.html:114` is a `div`).
-- [ ] `mailto:mail@ehsanrahman.com` is plain text in the HTML (`index.html:829`) — fine if you accept
+- [x] `mailto:mail@ehsanrahman.com` is plain text in the HTML (`index.html:829`) — fine if you accept
       scraper spam; obfuscate only if it becomes a problem.
 
 ## Verification after any fix

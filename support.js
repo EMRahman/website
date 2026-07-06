@@ -1,4 +1,6 @@
-// GENERATED from dc-runtime/src/*.ts — do not edit. Rebuild with `cd dc-runtime && bun run build`.
+// Originally GENERATED from dc-runtime/src/*.ts, but that source is NOT vendored in this repo,
+// so this file is currently HAND-MAINTAINED. Edit here directly — there is no `bun run build` step
+// available. If the dc-runtime source is ever recovered, port any hand-edits back into it.
 "use strict";
 (() => {
   var __defProp = Object.defineProperty;
@@ -1427,6 +1429,7 @@
   var REACT_DOM_SRI = "sha384-gTGxhz21lVGYNMcdJOyq01Edg0jhn/c22nsx0kyqP0TxaV5WVdsSH1fSDUf5YJj1";
   function hideRawTemplate() {
     const s = document.createElement("style");
+    s.id = "dc-hide-raw";
     s.textContent = "x-dc{display:none!important}";
     document.head.appendChild(s);
   }
@@ -1502,12 +1505,23 @@
       StreamableLogic: runtime.StreamableLogic
     };
     Object.assign(window, api);
-    if (document.readyState !== "loading") api.__dcBoot();
-    else document.addEventListener("DOMContentLoaded", () => api.__dcBoot());
+    // Un-hide the raw template if boot throws. The DOMContentLoaded path runs outside the
+    // loadReactUmd() promise chain, so its throws never reach the .catch below — guard both here.
+    const safeBoot = () => {
+      try { api.__dcBoot(); }
+      catch (err) {
+        console.error("[dc] boot failed:", err);
+        document.getElementById("dc-hide-raw")?.remove();
+      }
+    };
+    if (document.readyState !== "loading") safeBoot();
+    else document.addEventListener("DOMContentLoaded", safeBoot);
   }
   hideRawTemplate();
   loadReactUmd().then(init).catch((err) => {
+    // React failed to load (vendor 404 + unpkg blocked). Un-hide so the page degrades to
+    // readable raw HTML instead of a permanently blank screen.
     console.error("[dc] failed to load React or boot:", err);
-    throw err;
+    document.getElementById("dc-hide-raw")?.remove();
   });
 })();
