@@ -59,7 +59,7 @@ html,body{margin:0;padding:0;background:#080b0a;}
 .aci-wiki:hover{color:#5bc8d6;}
 .aci-row{display:flex;gap:9px;font-size:12.5px;line-height:1.52;}
 .aci-lbl{display:inline-block;width:46px;flex:none;font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:0.09em;padding-top:2px;}
-.aci-chip{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.04em;color:#7e938a;background:rgba(120,160,145,0.07);border:1px solid rgba(120,160,145,0.16);padding:2px 7px;border-radius:3px;white-space:nowrap;}
+.aci-chip{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.04em;color:#7e938a;background:rgba(120,160,145,0.07);border:1px solid rgba(120,160,145,0.16);padding:2px 7px;border-radius:3px;white-space:nowrap;text-decoration:none;}
 .aci-pat{display:flex;gap:14px;padding:18px 2px;border-top:1px solid rgba(120,160,145,0.1);}
 .aci-pat:first-child{border-top:none;}
 .aci-bar{flex:none;width:3px;border-radius:2px;}
@@ -114,6 +114,9 @@ details[open]>summary .aci-chevron{transform:rotate(225deg);margin-bottom:-1px;b
 .aci-mode-body p{margin:0 0 10px;font-size:14px;line-height:1.62;color:#b4c6bd;}
 .aci-mode-body p:last-child{margin-bottom:0;}
 .aci-evidence{display:flex;flex-wrap:wrap;gap:6px;margin-top:11px;}
+.aci-evidence a.aci-chip{transition:color .15s,border-color .15s,background .15s;}
+.aci-evidence a.aci-chip:hover{color:#5bc8d6;border-color:rgba(91,200,214,.4);background:rgba(91,200,214,.055);}
+.aci-evidence a.aci-chip:focus-visible{outline:2px solid #5bc8d6;outline-offset:2px;}
 .aci-risk-note{margin:14px 0 0;padding:13px 15px;border:1px solid rgba(240,183,63,.18);border-radius:4px;background:rgba(240,183,63,.035);}
 .aci-risk-note strong{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.06em;color:#f0b73f;}
 .aci-feature-compact{padding:27px 44px;border-bottom:1px solid rgba(120,160,145,.1);}
@@ -439,7 +442,7 @@ details[open]>summary .aci-chevron{transform:rotate(225deg);margin-bottom:-1px;b
             <div class="aci-mode-body">
               <p>The link between the machine's state and the human's grasp of it breaks five ways: <span style="color:#5bc8d6;">can't read it</span> (a plausible lie); <span style="color:#5bc8d6;">mixed signals</span> (contradictory readings); <span style="color:#5bc8d6;">too much of it</span> (an alert cascade); <span style="color:#5bc8d6;">didn't fire</span> (a silent or late warning); and <span style="color:#5bc8d6;">cried wolf</span> (repeated false alarms). Only the last is alert fatigue.</p>
               <p><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#5bc8d6;">SAME SHAPE →</span> Ambiguity, contradiction, overload, silent failure, and false alarms defeat monitoring differently. “Add more alerts” is rarely the answer.</p>
-              <div class="aci-evidence"><span class="aci-chip">Alitalia 404</span><span class="aci-chip">Birgenair 301</span><span class="aci-chip">Aeroperú 603</span><span class="aci-chip">Qantas 32</span><span class="aci-chip">Qantas 72</span><span class="aci-chip">Delta 1141</span><span class="aci-chip">Ansett 703</span><span class="aci-chip">Trigana 267</span><span class="aci-chip">Linate 686</span></div>
+              <div class="aci-evidence"><a class="aci-chip" href="#case-alitalia404">Alitalia 404</a><a class="aci-chip" href="#case-birgenair301">Birgenair 301</a><a class="aci-chip" href="#case-aeroperu">Aeroperú 603</a><a class="aci-chip" href="#case-qantas32">Qantas 32</a><a class="aci-chip" href="#case-qantas72">Qantas 72</a><a class="aci-chip" href="#case-delta1141">Delta 1141</a><a class="aci-chip" href="#case-ansettnz703">Ansett 703</a><a class="aci-chip" href="#case-trigana267">Trigana 267</a><a class="aci-chip" href="#case-linate686">Linate 686</a></div>
             </div>
           </details>
           <details class="aci-mode" data-aci-exclusive="failure-modes">
@@ -447,7 +450,7 @@ details[open]>summary .aci-chevron{transform:rotate(225deg);margin-bottom:-1px;b
             <div class="aci-mode-body">
               <p>When machine and human gave opposite orders, nothing said who won. In one case collision avoidance said climb while the controller said descend; in another, a flight computer pushed the nose down on data the pilots knew was false and could not instantly countermand.</p>
               <p><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#5bc8d6;">SAME SHAPE →</span> High-authority automation must surface what it is doing and why, then stand down the moment its inputs are suspect.</p>
-              <div class="aci-evidence"><span class="aci-chip">Überlingen</span><span class="aci-chip">Qantas 72</span><span class="aci-chip">Birgenair 301</span><span class="aci-chip">Aeroperú 603</span><span class="aci-chip">TransAsia 235</span></div>
+              <div class="aci-evidence"><a class="aci-chip" href="#case-uberlingen">Überlingen</a><a class="aci-chip" href="#case-qantas72">Qantas 72</a><a class="aci-chip" href="#case-birgenair301">Birgenair 301</a><a class="aci-chip" href="#case-aeroperu">Aeroperú 603</a><a class="aci-chip" href="#case-transasia235">TransAsia 235</a></div>
             </div>
           </details>
           <details class="aci-mode" data-aci-exclusive="failure-modes">
@@ -455,7 +458,7 @@ details[open]>summary .aci-chevron{transform:rotate(225deg);margin-bottom:-1px;b
             <div class="aci-mode-body">
               <p>A blocked tube, taped port, mislabelled data channel, or wrongly calibrated gauge fed automation that acted confidently on a lie while contradictory alarms buried the crew.</p>
               <p><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#5bc8d6;">SAME SHAPE →</span> Reconcile redundant readings and flag the outlier. A value that looks valid must not inherit unlimited authority merely because it parsed.</p>
-              <div class="aci-evidence"><span class="aci-chip">Aeroperú 603</span><span class="aci-chip">Birgenair 301</span><span class="aci-chip">Qantas 72</span><span class="aci-chip">Tuninter 1153</span><span class="aci-chip">Gimli 143</span><span class="aci-chip">Alitalia 404</span></div>
+              <div class="aci-evidence"><a class="aci-chip" href="#case-aeroperu">Aeroperú 603</a><a class="aci-chip" href="#case-birgenair301">Birgenair 301</a><a class="aci-chip" href="#case-qantas72">Qantas 72</a><a class="aci-chip" href="#case-tuninter1153">Tuninter 1153</a><a class="aci-chip" href="#case-gimli143">Gimli 143</a><a class="aci-chip" href="#case-alitalia404">Alitalia 404</a></div>
             </div>
           </details>
           <details class="aci-mode" data-aci-exclusive="failure-modes">
@@ -463,7 +466,7 @@ details[open]>summary .aci-chevron{transform:rotate(225deg);margin-bottom:-1px;b
             <div class="aci-mode-body">
               <p>Engines were certified against rainfall no real storm produced; a heat exchanger was “compliant with the requirements” yet choked by ice; a propeller was proven flat in a lab, never against the airflow that turned it into a wall.</p>
               <p><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#5bc8d6;">SAME SHAPE →</span> Passing assumptions that exclude the real operating envelope is decoration, not validation.</p>
-              <div class="aci-evidence"><span class="aci-chip">TACA 110</span><span class="aci-chip">BA 38</span><span class="aci-chip">Southern 242</span><span class="aci-chip">Delta 191</span></div>
+              <div class="aci-evidence"><a class="aci-chip" href="#case-taca110">TACA 110</a><a class="aci-chip" href="#case-ba38">BA 38</a><a class="aci-chip" href="#case-southern242">Southern 242</a><a class="aci-chip" href="#case-delta191">Delta 191</a></div>
             </div>
           </details>
           <details class="aci-mode" data-aci-exclusive="failure-modes">
@@ -472,7 +475,7 @@ details[open]>summary .aci-chevron{transform:rotate(225deg);margin-bottom:-1px;b
               <p>A windscreen bolted on from outside, a cargo latch that read “locked” without being locked, and a single jackscrew nut with no backup left no margin. One ordinary slip downstream was enough.</p>
               <p><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#5bc8d6;">SAME SHAPE →</span> Use redundancy, reject incompatible parts or states, and make the default failure safe.</p>
               <div class="aci-risk-note"><strong>RISK TRANSFERS →</strong> A weak design hands risk to every installer, inspector, and operator downstream, who must now be perfect forever.</div>
-              <div class="aci-evidence"><span class="aci-chip">BA 5390</span><span class="aci-chip">United 811</span><span class="aci-chip">Turkish 981</span><span class="aci-chip">Alaska 261</span><span class="aci-chip">Propair 420</span></div>
+              <div class="aci-evidence"><a class="aci-chip" href="#case-ba5390">BA 5390</a><a class="aci-chip" href="#case-united811">United 811</a><a class="aci-chip" href="#case-turkish981">Turkish 981</a><a class="aci-chip" href="#case-alaska261">Alaska 261</a><a class="aci-chip" href="#case-propair420">Propair 420</a></div>
             </div>
           </details>
           <details class="aci-mode" data-aci-exclusive="failure-modes">
@@ -482,7 +485,7 @@ details[open]>summary .aci-chevron{transform:rotate(225deg);margin-bottom:-1px;b
               <div class="aci-risk-note"><strong>RISK ACCUMULATES →</strong> Deferring known work compounds exposure over time.</div>
               <div class="aci-risk-note"><strong>RISK MULTIPLIES →</strong> A feature added to make a product desirable brings new surface area the appeal can hide: premium entertainment was the draw; its wiring was the fire. Treat every feature as risk surface, not only a selling point.</div>
               <p style="margin-top:12px;">The exit is a feedback loop: record what maintenance repeatedly catches and bake that learning into the next design.</p>
-              <div class="aci-evidence"><span class="aci-chip">Alaska 261</span><span class="aci-chip">Air Transat 236</span><span class="aci-chip">Swissair 111</span><span class="aci-chip">Air Midwest 5481</span><span class="aci-chip">Continental 2574</span></div>
+              <div class="aci-evidence"><a class="aci-chip" href="#case-alaska261">Alaska 261</a><a class="aci-chip" href="#case-airtransat236">Air Transat 236</a><a class="aci-chip" href="#case-swissair">Swissair 111</a><a class="aci-chip" href="#case-airmidwest5481">Air Midwest 5481</a><a class="aci-chip" href="#case-continental2574">Continental 2574</a></div>
             </div>
           </details>
           <details class="aci-mode" data-aci-exclusive="failure-modes">
@@ -490,7 +493,7 @@ details[open]>summary .aci-chevron{transform:rotate(225deg);margin-bottom:-1px;b
             <div class="aci-mode-body">
               <p>Crews descended below minimums, pressed approaches into storms, and landed past crosswind limits often enough that the risk stopped feeling like risk until a low-margin day made the bill payable.</p>
               <p><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#5bc8d6;">SAME SHAPE →</span> Continuation bias makes “press on” feel rational while the margin erodes. The deviation stays invisible until it becomes the headline.</p>
-              <div class="aci-evidence"><span class="aci-chip">American 1420</span><span class="aci-chip">TransAsia 222</span><span class="aci-chip">Crossair 3597</span><span class="aci-chip">Delta 1141</span></div>
+              <div class="aci-evidence"><a class="aci-chip" href="#case-american1420">American 1420</a><a class="aci-chip" href="#case-transasia222">TransAsia 222</a><a class="aci-chip" href="#case-crossair3597">Crossair 3597</a><a class="aci-chip" href="#case-delta1141">Delta 1141</a></div>
             </div>
           </details>
           <details class="aci-mode" data-aci-exclusive="failure-modes">
@@ -498,7 +501,7 @@ details[open]>summary .aci-chevron{transform:rotate(225deg);margin-bottom:-1px;b
             <div class="aci-mode-body">
               <p>Whole crews watched a burnt-out indicator bulb or a hung landing gear while the aircraft, unwatched, descended into the ground. The skipped step was the load-bearing one.</p>
               <p><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#5bc8d6;">SAME SHAPE →</span> When everyone converges on the same low-stakes anomaly, nobody guards the primary objective.</p>
-              <div class="aci-evidence"><span class="aci-chip">Eastern 401</span><span class="aci-chip">Ansett 703</span><span class="aci-chip">Delta 1141</span></div>
+              <div class="aci-evidence"><a class="aci-chip" href="#case-eastern401">Eastern 401</a><a class="aci-chip" href="#case-ansettnz703">Ansett 703</a><a class="aci-chip" href="#case-delta1141">Delta 1141</a></div>
             </div>
           </details>
           <details class="aci-mode" data-aci-exclusive="failure-modes">
@@ -506,7 +509,7 @@ details[open]>summary .aci-chevron{transform:rotate(225deg);margin-bottom:-1px;b
             <div class="aci-mode-body">
               <p>A first officer was right and overruled eighteen times. Another crew said “we need priority” but not the magic word “emergency,” so no one acted. Severity that hangs on rank or one phrase fails.</p>
               <p><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#5bc8d6;">SAME SHAPE →</span> Escalation needs unambiguous severity, and the junior with the correct read needs a sanctioned route to override. Politeness is not a control system.</p>
-              <div class="aci-evidence"><span class="aci-chip">Avianca 052</span><span class="aci-chip">First Air 6560</span><span class="aci-chip">Alitalia 404</span><span class="aci-chip">Crossair 3597</span></div>
+              <div class="aci-evidence"><a class="aci-chip" href="#case-avianca052">Avianca 052</a><a class="aci-chip" href="#case-firstair6560">First Air 6560</a><a class="aci-chip" href="#case-alitalia404">Alitalia 404</a><a class="aci-chip" href="#case-crossair3597">Crossair 3597</a></div>
             </div>
           </details>
         </div>
