@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Boeing 737 MAX — When Known Anti-Patterns Coupled | Ehsan Rahman</title>
+<meta name="description" content="A reliability and risk analysis of how commercial constraints, delegated control, sensor dependency, certification gaps, and assumed pilot mitigation coupled in the Boeing 737 MAX.">
+<link rel="canonical" href="https://ehsanrahman.com/articles/boeing-737-max/">
+<link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgeG1sbnM9Imh0dHA6Ly93d3Mub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iIzBhMGUwYyIvPjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDUwLDUwKSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNDZlMmEwIiBzdHJva2Utd2lkdGg9IjEiPjxjaXJjbGUgcj0iOCIgb3BhY2l0eT0iMC40Ii8+PGNpcmNsZSByPSIxNSIgb3BhY2l0eT0iMC4zIi8+PGNpcmNsZSByPSIyMSIgb3BhY2l0eT0iMC41Ii8+PGxpbmUgeDE9IjAiIHkxPSIwIiB4Mj0iMCIgeTI9Ii0yMSIgc3Ryb2tlPSIjOWFmZmNkIiBzdHJva2Utd2lkdGg9IjEuNCIvPjwvZz48Y2lyY2xlIGN4PSI2MiIgY3k9IjQwIiByPSIxLjgiIGZpbGw9IiM0NmUyYTAiLz48Y2lyY2xlIGN4PSI0MCIgY3k9IjU4IiByPSIxLjgiIGZpbGw9IiNmMGI3M2YiLz48Y2lyY2xlIGN4PSI1OCIgY3k9IjYyIiByPSIxLjYiIGZpbGw9IiNlZjZiNmIiLz48L3N2Zz4=">
+<meta name="theme-color" content="#080b0a">
+<meta property="og:title" content="Boeing 737 MAX — When Known Anti-Patterns Coupled">
+<meta property="og:description" content="A reliability and risk analysis of delegated control, hidden dependencies, commercial constraints, and failed mitigation.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://ehsanrahman.com/articles/boeing-737-max/">
+<meta name="twitter:card" content="summary">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:#080b0a;color:#cfe0d8;font-family:'IBM Plex Sans',system-ui,sans-serif;background-image:radial-gradient(rgba(120,160,145,.045) 1px,transparent 1px);background-size:26px 26px}
+a{color:inherit}
+::selection{background:rgba(70,226,160,.28);color:#eafff5}
+::-webkit-scrollbar{width:9px;height:9px}
+::-webkit-scrollbar-thumb{background:rgba(120,160,145,.22);border-radius:6px}
+::-webkit-scrollbar-track{background:transparent}
+.shell{width:min(1040px,calc(100% - 28px));margin:14px auto 48px}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;padding:11px 16px;border:1px solid rgba(120,160,145,.14);background:rgba(20,28,25,.72);border-radius:5px;font-family:'JetBrains Mono',monospace;font-size:11px}
+.brand{display:flex;align-items:center;gap:11px;color:#5bc8d6;letter-spacing:.13em;font-weight:600}
+.status-dot{width:8px;height:8px;border-radius:50%;background:#46e2a0;box-shadow:0 0 8px #46e2a0}
+.back{color:#9fb3aa;text-decoration:none}
+.back:hover{color:#5bc8d6}
+.article{margin-top:13px;border:1px solid rgba(120,160,145,.14);border-radius:5px;background:linear-gradient(180deg,rgba(91,200,214,.045),rgba(10,14,12,.72) 22%);overflow:hidden}
+.article-inner{padding:48px clamp(22px,5vw,62px)}
+.head{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:22px}
+.kicker{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.16em;color:#5bc8d6}
+h1{max-width:820px;margin:9px 0 10px;font-size:clamp(30px,5vw,52px);font-weight:300;line-height:1.1;color:#eafff5;letter-spacing:-.025em}
+.meta{font-family:'JetBrains Mono',monospace;font-size:10px;line-height:1.75;color:#71867e}
+.chips{display:flex;flex-wrap:wrap;gap:5px;max-width:350px}
+.chip,.commercial-chip{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.04em;padding:2px 7px;border-radius:3px;white-space:nowrap}
+.chip{color:#7e938a;background:rgba(120,160,145,.07);border:1px solid rgba(120,160,145,.16)}
+.commercial-chip{color:#d8b25a;background:rgba(240,183,63,.1);border:1px solid rgba(240,183,63,.3)}
+.why{padding:18px 20px;border:1px solid rgba(91,200,214,.2);border-radius:5px;background:rgba(91,200,214,.035);max-width:76ch}
+.why p{margin:8px 0 0;font-size:14.5px;line-height:1.68;color:#cdd9d1}
+.thesis{margin:25px 0 0;padding:21px 23px;border-left:3px solid #5bc8d6;background:rgba(91,200,214,.055);font-size:clamp(18px,2.2vw,23px);font-weight:300;line-height:1.55;color:#eafff5;max-width:76ch}
+.lede{margin:17px 0 0;font-size:15.5px;line-height:1.72;color:#b4c6bd;max-width:76ch}
+.causal{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:7px;margin:24px 0 5px}
+.causal-step{position:relative;min-height:96px;padding:12px 11px;border:1px solid rgba(120,160,145,.17);border-radius:5px;background:rgba(10,14,12,.58)}
+.causal-step:not(:last-child)::after{content:"→";position:absolute;right:-8px;top:50%;z-index:2;transform:translateY(-50%);color:#5bc8d6;background:#0b0f0d;padding:2px 0;font-family:'JetBrains Mono',monospace;font-size:12px}
+.causal-n{display:block;font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.12em;color:#52655d;margin-bottom:7px}
+.causal-step strong{display:block;font-size:12.5px;font-weight:500;line-height:1.42;color:#cfe0d8}
+.block{margin-top:32px;padding-top:30px;border-top:1px solid rgba(120,160,145,.12)}
+.block h2{margin:0 0 14px;font-size:clamp(19px,2.4vw,23px);font-weight:500;line-height:1.35;color:#eafff5}
+.block p{margin:0 0 14px;font-size:15.5px;line-height:1.74;color:#b4c6bd;text-wrap:pretty;max-width:76ch}
+.block p:last-child{margin-bottom:0}
+.fn{font-family:'JetBrains Mono',monospace;font-size:9px;color:#5bc8d6;text-decoration:none;vertical-align:super;margin-left:2px}
+.fn:hover{color:#8fe3ee}
+.gloss{position:relative;border-bottom:1px dotted rgba(91,200,214,.7);cursor:help}
+.gloss-tip{position:absolute;left:50%;bottom:calc(100% + 8px);transform:translateX(-50%) translateY(3px);z-index:10;width:max-content;max-width:230px;padding:7px 10px;border:1px solid rgba(91,200,214,.38);border-radius:5px;background:#0d1311;box-shadow:0 8px 24px rgba(0,0,0,.6);font-size:11.5px;line-height:1.45;color:#cfe0d8;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .14s,transform .14s}
+.gloss:hover .gloss-tip,.gloss:focus .gloss-tip{opacity:1;visibility:visible;transform:translateX(-50%) translateY(0)}
+.delegation{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px;margin:19px 0 5px}
+.delegation>div{padding:16px;border:1px solid rgba(91,200,214,.18);border-radius:5px;background:rgba(10,14,12,.48)}
+.delegation strong{display:block;margin-bottom:7px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;color:#5bc8d6}
+.delegation span{display:block;font-size:13px;line-height:1.55;color:#9fb3aa}
+.reliability-read{margin:19px 0 0;padding:17px 19px;border:1px solid rgba(70,226,160,.2);border-radius:5px;background:rgba(70,226,160,.035);font-size:14px;line-height:1.65;color:#cdd9d1;max-width:76ch}
+.read-label{font-family:'JetBrains Mono',monospace;font-size:10px;color:#46e2a0;letter-spacing:.07em}
+.pattern-wrap{overflow-x:auto}
+.pattern-map{width:100%;border-collapse:collapse;margin:18px 0 4px;font-size:13px;line-height:1.5}
+.pattern-map th,.pattern-map td{padding:11px 12px;text-align:left;vertical-align:top;border-bottom:1px solid rgba(120,160,145,.12)}
+.pattern-map th{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;font-weight:500;color:#7fb8ad;background:rgba(120,160,145,.035)}
+.pattern-map td:first-child{width:29%;color:#d8b25a;font-weight:500}
+.pattern-map td:last-child{color:#a9bcb3}
+.meta-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:18px}
+.meta-list>div{padding:14px 15px;border-left:2px solid rgba(239,107,107,.58);background:rgba(239,107,107,.025);font-size:13px;line-height:1.58;color:#a9bcb3}
+.meta-list strong{color:#ef6b6b}
+.conclusion{color:#eafff5!important;font-size:16.5px!important}
+.sources{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 16px;margin-top:18px}
+.source{display:flex;gap:8px;align-items:flex-start;color:#71867e;text-decoration:none;font-family:'JetBrains Mono',monospace;font-size:10px;line-height:1.55}
+.source:hover{color:#5bc8d6}
+.source span{color:#5bc8d6;flex:none}
+.source-note{margin-top:16px!important;font-family:'JetBrains Mono',monospace;font-size:10px!important;line-height:1.65!important;color:#52655d!important}
+.footer{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:22px 4px 0;font-family:'JetBrains Mono',monospace;font-size:10px;color:#52655d}
+.footer a{text-decoration:none;color:#71867e}
+.footer a:hover{color:#5bc8d6}
+@media(max-width:820px){.causal{grid-template-columns:repeat(3,minmax(0,1fr))}.causal-step:nth-child(3)::after{display:none}}
+@media(max-width:640px){.shell{width:min(100% - 20px,1040px);margin-top:10px}.article-inner{padding:32px 20px}.causal,.delegation,.meta-list,.sources{grid-template-columns:1fr}.causal-step{min-height:0}.causal-step:nth-child(3)::after{display:block}.causal-step:not(:last-child)::after{content:"↓";right:auto;left:50%;top:auto;bottom:-12px;transform:translateX(-50%);padding:0 3px}.pattern-map,.pattern-map tbody,.pattern-map tr,.pattern-map td{display:block}.pattern-map thead{display:none}.pattern-map tr{padding:10px 0;border-bottom:1px solid rgba(120,160,145,.12)}.pattern-map td{width:auto!important;padding:2px 0;border:0}.thesis{padding:18px 19px}.gloss-tip{max-width:min(70vw,220px)}}
+</style>
+</head>
+<body>
+<div class="shell">
+  <nav class="topbar" aria-label="Article navigation">
+    <div class="brand"><span class="status-dot"></span><span>OBSERVATORY</span><span style="color:#52655d;font-weight:400;letter-spacing:0;">reliability notes</span></div>
+    <a class="back" href="../../index.html#aci-logs">← incident logs</a>
+  </nav>
+
+  <main class="article">
+    <article class="article-inner">
+      <header>
+        <div class="head">
+          <div>
+            <div class="kicker">FEATURED CASE · DESIGN / CONTROL / OVERSIGHT</div>
+            <h1>Boeing 737 MAX — when known anti-patterns coupled</h1>
+            <div class="meta">Lion Air 610 · 29 OCT 2018 · 189 dead<br>Ethiopian Airlines 302 · 10 MAR 2019 · 157 dead</div>
+          </div>
+          <div class="chips">
+            <span class="chip">automation authority</span><span class="chip">corrupt input</span><span class="chip">mixed signals</span><span class="chip">no fail-safe</span><span class="chip">blame gradient</span><span class="commercial-chip">commercial</span>
+          </div>
+        </div>
+
+        <div class="why">
+          <div class="kicker">WHY THIS CASE IS FEATURED</div>
+          <p>Most incidents in the ledger expose one or two recurring failure modes. The MAX binds nearly all of the most transferable ones into a single, recent system: a commercial constraint became an architectural constraint; hidden automation acted on one bad sensor; the operator was made the fail-safe without being told what had been delegated; compliance fragments obscured the whole; and the first response looked harder at the operator than at the design. A card could name those failures. It could not show how they reinforced one another.</p>
+        </div>
+
+        <blockquote class="thesis">The MAX was not produced because modern engineers suddenly forgot how to build safe aircraft. It was produced because commercial constraints shaped the architecture, the architecture created new risk, and the safety case transferred that risk to operators who were neither informed nor equipped to carry it.</blockquote>
+        <p class="lede">Its recency matters, but not because recent failures are intrinsically more important. It matters because this happened with modern sensors, software, simulation, regulation, and decades of accumulated safety knowledge. Technology had advanced. The organisational problem had not.</p>
+
+        <div class="causal" aria-label="Causal chain from market pressure to redesign">
+          <div class="causal-step"><span class="causal-n">01 · MARKET</span><strong>Answer the A320neo quickly</strong></div>
+          <div class="causal-step"><span class="causal-n">02 · CONSTRAINT</span><strong>Preserve 737 commonality</strong></div>
+          <div class="causal-step"><span class="causal-n">03 · CONTROL</span><strong>Delegate handling correction to MCAS</strong></div>
+          <div class="causal-step"><span class="causal-n">04 · DEPENDENCY</span><strong>Trust one active AOA sensor</strong></div>
+          <div class="causal-step"><span class="causal-n">05 · BACKSTOP</span><strong>Assume rapid pilot recovery</strong></div>
+          <div class="causal-step"><span class="causal-n">06 · REPAIR</span><strong>Redesign authority, inputs, alerts &amp; training</strong></div>
+        </div>
+      </header>
+
+      <section class="block">
+        <h2>1 · The commercial constraint became an architectural constraint</h2>
+        <p>When Airbus launched the more fuel-efficient A320neo, Boeing concluded it did not have time to answer with a clean-sheet aircraft. It chose another derivative of the low-slung 737. The larger engines had to sit farther forward and higher on the wing; in parts of the high-angle-of-attack flight envelope, the changed aerodynamics produced a stronger pitch-up tendency. MCAS was introduced to move the stabilizer nose-down so the MAX would retain the handling characteristics expected of the 737 family.<a class="fn" href="#source-1" aria-label="Source 1">[1]</a></p>
+        <p>That is not, by itself, a scandal. Commercial requirements always shape engineering. The consequential requirement was the bundle around it: answer Airbus quickly, preserve a common type, let airlines mix NG and MAX operations, and avoid expensive simulator transition training. Boeing marketed that continuity before the FAA had made its final training determination, and contracts created financial exposure if the promised training level was not achieved.<a class="fn" href="#source-1" aria-label="Source 1">[1]</a></p>
+        <p>The evidence does not show an executive ordering an engineer to make MCAS depend on one sensor. It shows something more familiar: commercial pressure narrowed the acceptable solution space. Inside that space, choices that protected schedule, commonality, and training assumptions repeatedly won. The commercial strategy was upstream of the design risk without being a complete explanation for every design decision.</p>
+        <div class="reliability-read"><span class="read-label">RELIABILITY READ → </span>A commercial promise can harden into a hidden design constraint. By the time the risk is assessed, safer options may already sit outside the boundaries the organisation considers acceptable.</div>
+      </section>
+
+      <section class="block">
+        <h2>2 · The deputized control point</h2>
+        <p>MCAS was not merely a warning. It was deputized to act: under qualifying conditions in manual flight, it could command the horizontal stabilizer without a pilot asking it to. That gave an automated control path authority over a safety-critical actuator. Yet most line pilots were not told MCAS existed, it had no dedicated annunciation, and the flight manuals and transition training did not give crews a mental model of the new authority.<a class="fn" href="#source-2" aria-label="Source 2">[2]</a><a class="fn" href="#source-6" aria-label="Source 6">[6]</a></p>
+        <p>The ambiguity was structural. Pilots remained responsible for the aircraft, but a system they could not directly observe could act against their inputs. If it failed, responsibility snapped back to the pilots: diagnose the symptoms, counter-trim, recognise a runaway stabilizer, use the cutout switches, and recover. Control had been delegated to the machine; risk had been delegated back to the human.</p>
+        <div class="delegation">
+          <div><strong>CONTROL DELEGATION</strong><span>Handling correction moved to MCAS, which could command stabilizer trim automatically.</span></div>
+          <div><strong>RISK DELEGATION</strong><span>Recovery moved back to pilots expected to identify and disable an automation they had not been taught.</span></div>
+          <div><strong>CERTIFICATION DELEGATION</strong><span>Many compliance findings moved through Boeing's authorised unit while FAA visibility into MCAS remained incomplete.</span></div>
+        </div>
+        <p>None of these delegations is inherently unsafe. Automation can reduce workload; operators can be valid recovery layers; regulators must draw on industry expertise. The unsafe combination is delegated authority without equivalent observability, independent challenge, or a clear owner of the end-to-end risk.</p>
+        <div class="reliability-read"><span class="read-label">RELIABILITY READ → </span>Authority and accountability must travel together. When a system can act automatically, the people responsible for its outcome need to know that it exists, see what it is doing, understand why it acted, and retain a dependable way to stop it.</div>
+      </section>
+
+      <section class="block">
+        <h2>3 · Two sensors on the aircraft; one sensor in the decision</h2>
+        <p>The MAX carried two angle-of-attack (<span class="gloss" tabindex="0">AOA<span class="gloss-tip">Angle of Attack — the angle between the wing and the oncoming airflow</span></span>) sensors, but the original MCAS logic used the one associated with the active flight-control computer on that flight. It did not vote the two readings or reject an outlier before commanding trim. A single plausible-but-wrong input could therefore cross the automation boundary with full confidence.<a class="fn" href="#source-2" aria-label="Source 2">[2]</a></p>
+        <p>This dependency had the same shape as Aeroperú 603, Birgenair 301, and Qantas 72: bad sensor data entered automation, the machine acted as if the data were true, and the operators saw consequences rather than a clean diagnosis. On the accident flights, erroneous AOA did not present as one tidy “MCAS failed” alert. It could produce a continuous stick shaker, airspeed and altitude disagreements, alerts, and uncommanded trim at once. The crew had to infer that these apparently separate symptoms shared one poisoned source.</p>
+        <p>The sensor failure was therefore only the trigger. The design risk was the authority granted to an unvalidated input, the absence of a useful dependency view, and a cockpit that exposed the cascade without exposing the causal graph.</p>
+        <div class="reliability-read"><span class="read-label">RELIABILITY READ → </span>Redundancy in inventory is not redundancy in the decision path. Multiple sensors add little protection if the controller acts on one, and multiple warnings add little clarity when they all inherit the same corrupt dependency.</div>
+      </section>
+
+      <section class="block">
+        <h2>4 · The mitigation that became part of the risk</h2>
+        <p>Boeing's safety case did not assume MCAS could never fail. It assumed a trained 737 pilot would recognise unintended stabilizer movement quickly, counter it with electric trim, and use the established runaway-stabilizer procedure and cutout switches. Assessments commonly credited a response in roughly four seconds. Yet Boeing also had simulator evidence that a response beyond ten seconds could become catastrophic; that result did not reach the FAA, customers, or pilots in a way that changed the operational design.<a class="fn" href="#source-1" aria-label="Source 1">[1]</a><a class="fn" href="#source-3" aria-label="Source 3">[3]</a></p>
+        <p>The model pictured a recognisable failure followed by an orderly response. The real crews entered a high-workload, low-altitude environment with contradictory indications and no knowledge of MCAS. The original logic could activate repeatedly after pilot counter-trim, steadily returning the aircraft toward nose-down stabilizer. The NTSB found that actual crew responses were inconsistent with the assumptions used in certification and that the effects of multiple alerts had not been adequately considered.<a class="fn" href="#source-3" aria-label="Source 3">[3]</a></p>
+        <p>Lion Air 610 and Ethiopian 302 were not identical operational sequences, and the official participants later disagreed over how fully the Ethiopian report analysed crew performance. They did agree on the design's central role: erroneous AOA activated MCAS, and the resulting trim commands contributed to the loss of control.<a class="fn" href="#source-4" aria-label="Source 4">[4]</a><a class="fn" href="#source-5" aria-label="Source 5">[5]</a></p>
+        <div class="reliability-read"><span class="read-label">RELIABILITY READ → </span>A human cannot be the primary fail-safe for automation they cannot observe, identify, or reliably override. Human recovery is a real safeguard only when people have the information, practice, time, and usable controls the failure scenario demands.</div>
+      </section>
+
+      <section class="block">
+        <h2>5 · How it passed: compliance fragments without a system view</h2>
+        <p>The MAX did not simply sneak around a rule that plainly prohibited it. The international Joint Authorities Technical Review found that Boeing and the FAA followed the applicable framework when treating the MAX as a derivative rather than requiring a new type certificate. It also found that those rules left substantial room for interpretation—and that the certification process missed the integrated risk.<a class="fn" href="#source-2" aria-label="Source 2">[2]</a></p>
+        <p>MCAS evolved during development, gaining authority and operating in a wider part of the flight envelope, while key certification deliverables did not remain fully aligned. Its description was fragmented across documents; it was not evaluated as a complete, integrated function including the flight crew; FAA specialists had inadequate awareness of its architecture, inputs, and authority. A high proportion of findings had been delegated to Boeing's Organization Designation Authorization unit, where reviewers were also reported to face undue pressure.<a class="fn" href="#source-2" aria-label="Source 2">[2]</a></p>
+        <p>Each slice could look acceptable inside its own boundary: a derivative aircraft, an augmentation inside an existing trim system, a hazardous failure recoverable by trained pilots, a delegated finding completed through an authorised process. The aircraft-level interaction was the thing no single slice owned.</p>
+        <div class="reliability-read"><span class="read-label">RELIABILITY READ → </span>Passing every component check does not prove the whole system is safe. A change must be reviewed together with its authority, dependencies, human response, operating environment, and credible combinations of failure.</div>
+      </section>
+
+      <section class="block">
+        <h2>6 · After the first crash: reinforce the procedure, keep the system in service</h2>
+        <p>Eight days after Lion Air 610, Boeing issued an operations bulletin describing uncommanded nose-down trim from erroneous AOA and directing crews to existing procedures. The FAA followed with an emergency directive. Neither named MCAS. Boeing defended the adequacy of the manual and emphasised the maintenance and crew actions in the accident sequence; the FAA continued to permit the fleet to fly while relying on pilot intervention and a future software change.<a class="fn" href="#source-1" aria-label="Source 1">[1]</a><a class="fn" href="#source-4" aria-label="Source 4">[4]</a></p>
+        <p>That response addressed a symptom path without giving operators the missing system model. It resembled a familiar weak incident response: reinforce the emergency procedure and leave the automated control active. The House investigation later concluded that Boeing and the FAA were quick to focus on the Lion Air pilots and slow to acknowledge the danger created by MCAS's design authority.<a class="fn" href="#source-1" aria-label="Source 1">[1]</a></p>
+        <p>After Ethiopian 302 crashed less than five months later, regulators grounded the fleet. Boeing subsequently acknowledged erroneous MCAS activation as a common link and accepted responsibility for removing that risk, while still describing the update as making an already safe aircraft safer.<a class="fn" href="#source-7" aria-label="Source 7">[7]</a> The wording matters: a mature post-mortem cannot redesign the system while preserving the claim that the old design needed no fundamental correction.</p>
+      </section>
+
+      <section class="block">
+        <h2>7 · The fix was a new safety model, not one software patch</h2>
+        <p>The return-to-service design compared both AOA inputs and inhibited the affected flight-control functions when they disagreed; limited MCAS to one activation for a high-AOA event; constrained its total authority; ensured pilot electric trim opposed it; and added a functioning AOA-disagree indication. The FAA also required revised flight-manual procedures, simulator training, an AOA sensor-system test, an operational-readiness flight, and a separate stabilizer-trim wire-routing change.<a class="fn" href="#source-8" aria-label="Source 8">[8]</a></p>
+        <p>The important fix was layered: validate the input, bound the automation, preserve human authority, expose the dependency failure, train the operator, and verify each aircraft. Telling pilots to react faster was no longer the primary control.</p>
+      </section>
+
+      <section class="block">
+        <h2>8 · One aircraft, the ledger's repeated anti-patterns</h2>
+        <div class="pattern-wrap">
+          <table class="pattern-map">
+            <thead><tr><th scope="col">KNOWN PATTERN</th><th scope="col">HOW IT REAPPEARED IN THE MAX</th></tr></thead>
+            <tbody>
+              <tr><td>Automation authority</td><td>MCAS could move a primary flight-control surface against the crew without a dedicated indication of what was acting.</td></tr>
+              <tr><td>One corrupt input</td><td>A single active AOA sensor could trigger a high-authority response without comparison to the other sensor.</td></tr>
+              <tr><td>Mixed signals</td><td>One bad dependency surfaced through stick shaker, unreliable air data, alerts, and trim rather than one causal diagnosis.</td></tr>
+              <tr><td>No fail-safe</td><td>The design relied on rapid, correct pilot intervention after the automated barrier had already failed.</td></tr>
+              <tr><td>“Compliant” is not safe</td><td>Component-level findings and derivative rules did not produce an integrated aircraft-and-crew safety assessment.</td></tr>
+              <tr><td>Risk transfer</td><td>Commercial and architectural risk moved downstream to pilots, who were made responsible for an undocumented failure mode.</td></tr>
+              <tr><td>Blame gradient</td><td>The first response foregrounded crew and maintenance performance before fully confronting the automation's authority.</td></tr>
+              <tr><td>Commercial pressure</td><td>Schedule, commonality, training cost, and competitive positioning constrained design and certification choices.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="block">
+        <h2>9 · Why known anti-patterns stay invisible</h2>
+        <p>Nothing here was conceptually new. Aviation already understood sensor failure, runaway trim, human startle, automation surprise, fail-safe design, independent oversight, and the danger of schedule pressure. The blind spot was holistic: the anti-patterns were managed as separate concerns even as the system coupled them.</p>
+        <div class="meta-list">
+          <div><strong>Local optimisation.</strong> Each group can meet its visible target—handling, training, certification, schedule—while the combined system inherits the trade-offs.</div>
+          <div><strong>Boundary ownership.</strong> Engineering owns the function, operations owns the response, the regulator owns compliance; nobody clearly owns their interaction.</div>
+          <div><strong>Inherited assumptions.</strong> A derivative change carries forward the confidence and operating model of its predecessor even when its authority and dependencies change.</div>
+          <div><strong>The human as spare capacity.</strong> Safety models treat an operator as an elastic recovery layer without pricing knowledge, startle, workload, or physical control limits.</div>
+          <div><strong>Success as false evidence.</strong> Long nominal operation validates the model only until the rare sensor, automation, workload, and timing combination arrives.</div>
+          <div><strong>Legible compliance.</strong> A passed requirement is easy to record; emergent safety across organisational and technical seams is harder to measure, reward, or refuse.</div>
+        </div>
+        <p>Known anti-patterns remain dangerous not because organisations forget each one. They remain dangerous because each arrives under a different owner, in a different document, with a locally reasonable justification. The catastrophe exists in the joins.</p>
+        <p class="conclusion">The deepest MAX lesson for reliability and risk is therefore not “never automate” or even “never let commerce shape design.” It is this: whenever authority is delegated, map the dependency, expose the action, bound its power, rehearse its failure, and name who owns the whole path. If the operator is the last barrier, they must know they have been deputized too.</p>
+      </section>
+
+      <section class="block" aria-labelledby="sources-heading">
+        <div id="sources-heading" class="kicker">PRIMARY RECORD · SOURCES</div>
+        <div class="sources">
+          <a id="source-1" class="source" href="https://democrats-transportation.house.gov/imo/media/doc/2020.09.15%20FINAL%20737%20MAX%20Report%20for%20Public%20Release.pdf" target="_blank" rel="noopener"><span>[1]</span>U.S. House Committee final investigative report · 2020 ↗</a>
+          <a id="source-2" class="source" href="https://www.faa.gov/sites/faa.gov/files/2022-08/Final_JATR_Submittal_to_FAA_Oct_2019.pdf" target="_blank" rel="noopener"><span>[2]</span>Joint Authorities Technical Review · certification of the MAX flight-control system ↗</a>
+          <a id="source-3" class="source" href="https://www.ntsb.gov/investigations/AccidentReports/Reports/ASR1901.pdf" target="_blank" rel="noopener"><span>[3]</span>NTSB · pilot-response assumptions and multiple alerts ↗</a>
+          <a id="source-4" class="source" href="https://knkt.go.id/Repo/Files/Laporan/Penerbangan/2018/KNKT.18.10.33.04-Final-Report.pdf" target="_blank" rel="noopener"><span>[4]</span>KNKT · Lion Air 610 final accident report ↗</a>
+          <a id="source-5" class="source" href="https://bea.aero/en/investigation-reports/notified-events/detail/accident-to-the-boeing-737-registered-et-avj-and-operated-by-ethiopian-airlines-on-10-03-2019-near-bishoftu-investigation-led-by-eaib-ethiopia/" target="_blank" rel="noopener"><span>[5]</span>EAIB report summary and BEA comments · Ethiopian 302 ↗</a>
+          <a id="source-6" class="source" href="https://www.justice.gov/archives/opa/pr/boeing-charged-737-max-fraud-conspiracy-and-agrees-pay-over-25-billion" target="_blank" rel="noopener"><span>[6]</span>U.S. Department of Justice · withheld MCAS training information ↗</a>
+          <a id="source-7" class="source" href="https://boeing.mediaroom.com/2019-04-04-Boeing-CEO-Dennis-Muilenburg-Addresses-the-Ethiopian-Airlines-Flight-302-Preliminary-Report" target="_blank" rel="noopener"><span>[7]</span>Boeing · acknowledgement of erroneous MCAS activation and continued safety position ↗</a>
+          <a id="source-8" class="source" href="https://www.faa.gov/foia/electronic_reading_room/boeing_reading_room" target="_blank" rel="noopener"><span>[8]</span>FAA · return-to-service design, training, testing, and directives ↗</a>
+        </div>
+        <p class="source-note">The commercial-pressure findings are attributed to the House investigation. The accident reports and participating agencies agree on MCAS's central contribution but differ on parts of the operational and crew-performance analysis; those differences are retained rather than flattened.</p>
+      </section>
+    </article>
+  </main>
+
+  <footer class="footer">
+    <a href="../../index.html#aci-logs">← return to incident logs</a>
+    <span>ehsanrahman.com · reliability notes</span>
+  </footer>
+</div>
+</body>
+</html>

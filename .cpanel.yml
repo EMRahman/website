@@ -4,7 +4,7 @@ deployment:
     - export DEPLOYPATH=/home/ehsan101/public_html/
     - export SRC=/home/ehsan101/github_website
     # Publish only the site assets — not docs/, README, LICENSE, AUDIT.md, or dotfiles.
-    - /bin/cp -R $SRC/index.html $SRC/support.js $SRC/images $SRC/vendor $DEPLOYPATH
+    - /bin/cp -R $SRC/index.html $SRC/support.js $SRC/articles $SRC/images $SRC/vendor $DEPLOYPATH
     # Prune previously-published non-site files (cp never removes; targeted rm avoids nuking
     # unrelated files that may live in public_html).
     - /bin/rm -rf $DEPLOYPATH/docs $DEPLOYPATH/README.md $DEPLOYPATH/LICENSE $DEPLOYPATH/AUDIT.md
