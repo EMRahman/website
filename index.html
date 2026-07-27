@@ -437,14 +437,15 @@ details[open]>summary .aci-chevron{transform:rotate(225deg);margin-bottom:-1px;b
           <details class="aci-mode" data-aci-exclusive="failure-modes">
             <summary><span class="aci-badge" style="margin:0;background:rgba(239,107,107,0.13);color:#ef6b6b;">CRITICAL</span><span class="aci-mode-title">Monitoring &amp; alerting</span><span class="aci-mode-takeaway">Alerts must be readable, trusted, and actionable.</span><span class="aci-chevron" aria-hidden="true"></span></summary>
             <div class="aci-mode-body">
-              <p>The link between the machine's state and the human's grasp of it breaks five ways: <span style="color:#5bc8d6;">can't read it</span> (a plausible lie, Alitalia 404); <span style="color:#5bc8d6;">mixed signals</span> (Birgenair 301, Aeroperú 603); <span style="color:#5bc8d6;">too much of it</span> (Qantas 32, Qantas 72); <span style="color:#5bc8d6;">didn't fire</span> (Delta 1141, Ansett 703); and <span style="color:#5bc8d6;">cried wolf</span> (Trigana 267, Linate 686). Only the last is alert fatigue.</p>
+              <p>The link between the machine's state and the human's grasp of it breaks five ways: <span style="color:#5bc8d6;">can't read it</span> (a plausible lie); <span style="color:#5bc8d6;">mixed signals</span> (contradictory readings); <span style="color:#5bc8d6;">too much of it</span> (an alert cascade); <span style="color:#5bc8d6;">didn't fire</span> (a silent or late warning); and <span style="color:#5bc8d6;">cried wolf</span> (repeated false alarms). Only the last is alert fatigue.</p>
               <p><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#5bc8d6;">SAME SHAPE →</span> Ambiguity, contradiction, overload, silent failure, and false alarms defeat monitoring differently. “Add more alerts” is rarely the answer.</p>
+              <div class="aci-evidence"><span class="aci-chip">Alitalia 404</span><span class="aci-chip">Birgenair 301</span><span class="aci-chip">Aeroperú 603</span><span class="aci-chip">Qantas 32</span><span class="aci-chip">Qantas 72</span><span class="aci-chip">Delta 1141</span><span class="aci-chip">Ansett 703</span><span class="aci-chip">Trigana 267</span><span class="aci-chip">Linate 686</span></div>
             </div>
           </details>
           <details class="aci-mode" data-aci-exclusive="failure-modes">
             <summary><span class="aci-badge" style="margin:0;background:rgba(239,107,107,0.13);color:#ef6b6b;">CRITICAL</span><span class="aci-mode-title">Automation authority</span><span class="aci-mode-takeaway">Define precedence, visibility, and override.</span><span class="aci-chevron" aria-hidden="true"></span></summary>
             <div class="aci-mode-body">
-              <p>When machine and human gave opposite orders, nothing said who won. At Überlingen, collision avoidance said climb while the controller said descend. On Qantas 72, a flight computer pushed the nose down on data the pilots knew was false and could not instantly countermand.</p>
+              <p>When machine and human gave opposite orders, nothing said who won. In one case collision avoidance said climb while the controller said descend; in another, a flight computer pushed the nose down on data the pilots knew was false and could not instantly countermand.</p>
               <p><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#5bc8d6;">SAME SHAPE →</span> High-authority automation must surface what it is doing and why, then stand down the moment its inputs are suspect.</p>
               <div class="aci-evidence"><span class="aci-chip">Überlingen</span><span class="aci-chip">Qantas 72</span><span class="aci-chip">Birgenair 301</span><span class="aci-chip">Aeroperú 603</span><span class="aci-chip">TransAsia 235</span></div>
             </div>
@@ -470,15 +471,16 @@ details[open]>summary .aci-chevron{transform:rotate(225deg);margin-bottom:-1px;b
             <div class="aci-mode-body">
               <p>A windscreen bolted on from outside, a cargo latch that read “locked” without being locked, and a single jackscrew nut with no backup left no margin. One ordinary slip downstream was enough.</p>
               <p><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#5bc8d6;">SAME SHAPE →</span> Use redundancy, reject incompatible parts or states, and make the default failure safe.</p>
-              <div class="aci-risk-note"><strong>RISK TRANSFERS →</strong> A weak design hands risk to every installer, inspector, and operator downstream, who must now be perfect forever. <span style="color:#71867e;">· BA 5390 · United 811 · Turkish 981 · Alaska 261 · Propair 420</span></div>
+              <div class="aci-risk-note"><strong>RISK TRANSFERS →</strong> A weak design hands risk to every installer, inspector, and operator downstream, who must now be perfect forever.</div>
+              <div class="aci-evidence"><span class="aci-chip">BA 5390</span><span class="aci-chip">United 811</span><span class="aci-chip">Turkish 981</span><span class="aci-chip">Alaska 261</span><span class="aci-chip">Propair 420</span></div>
             </div>
           </details>
           <details class="aci-mode" data-aci-exclusive="failure-modes">
             <summary><span class="aci-badge" style="margin:0;background:rgba(240,183,63,0.13);color:#f0b73f;">WARNING</span><span class="aci-mode-title">Deferred reliability &amp; feature risk</span><span class="aci-mode-takeaway">Debt compounds; features add risk.</span><span class="aci-chevron" aria-hidden="true"></span></summary>
             <div class="aci-mode-body">
               <p>An inspection interval stretched four-fold, flammable material stayed because retrofit cost, a mismatched part was forced in for the schedule, and one unverified hand owned a safety-critical task. Maintenance debt accrues silently and comes due at the worst moment, rarely on the watch of whoever deferred it.</p>
-              <div class="aci-risk-note"><strong>RISK ACCUMULATES →</strong> Deferring known work compounds exposure over time. <span style="color:#71867e;">· Alaska 261 · Air Transat 236 · Air Midwest 5481 · Continental 2574</span></div>
-              <div class="aci-risk-note"><strong>RISK MULTIPLIES →</strong> A feature added to make a product desirable brings new surface area the appeal can hide: Swissair 111's premium entertainment was the draw; its wiring was the fire. Treat every feature as risk surface, not only a selling point.</div>
+              <div class="aci-risk-note"><strong>RISK ACCUMULATES →</strong> Deferring known work compounds exposure over time.</div>
+              <div class="aci-risk-note"><strong>RISK MULTIPLIES →</strong> A feature added to make a product desirable brings new surface area the appeal can hide: premium entertainment was the draw; its wiring was the fire. Treat every feature as risk surface, not only a selling point.</div>
               <p style="margin-top:12px;">The exit is a feedback loop: record what maintenance repeatedly catches and bake that learning into the next design.</p>
               <div class="aci-evidence"><span class="aci-chip">Alaska 261</span><span class="aci-chip">Air Transat 236</span><span class="aci-chip">Swissair 111</span><span class="aci-chip">Air Midwest 5481</span><span class="aci-chip">Continental 2574</span></div>
             </div>
