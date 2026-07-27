@@ -74,8 +74,20 @@ html,body{margin:0;padding:0;background:#080b0a;}
 .aci-jump:hover{color:#5bc8d6;border-color:rgba(91,200,214,0.4);}
 .aci-card{scroll-margin-top:80px;}
 .aci-hl{white-space:nowrap;}
+.aci-feature{scroll-margin-top:20px;background:linear-gradient(180deg,rgba(91,200,214,0.045),rgba(10,14,12,0.25));}
+.aci-feature-head{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:22px;}
+.aci-feature-kicker{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.16em;color:#5bc8d6;}
+.aci-feature-title{margin:8px 0 8px;font-size:clamp(25px,3vw,38px);font-weight:400;line-height:1.18;color:#eafff5;letter-spacing:-0.02em;}
+.aci-feature-meta{font-family:'JetBrains Mono',monospace;font-size:10px;line-height:1.7;color:#71867e;}
+.aci-feature-why{padding:17px 19px;border:1px solid rgba(91,200,214,0.2);border-radius:5px;background:rgba(91,200,214,0.035);max-width:76ch;}
+.aci-feature-why p{margin:0;font-size:14.5px;line-height:1.68;color:#cdd9d1;text-wrap:pretty;}
+.aci-thesis{margin:24px 0 0;padding:20px 22px;border-left:3px solid #5bc8d6;background:rgba(91,200,214,0.055);font-size:clamp(17px,1.8vw,21px);font-weight:300;line-height:1.55;color:#eafff5;max-width:76ch;}
+.aci-feature-footer{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;flex-wrap:wrap;margin-top:20px;}
+.aci-feature-footer p{margin:0;font-size:14px;line-height:1.66;color:#b4c6bd;max-width:63ch;text-wrap:pretty;}
+.aci-feature-link{display:inline-flex;align-items:center;gap:9px;padding:10px 13px;border:1px solid rgba(91,200,214,0.32);border-radius:4px;color:#5bc8d6;text-decoration:none;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.06em;transition:color .15s,border-color .15s,background .15s;}
+.aci-feature-link:hover{color:#8fe3ee;border-color:rgba(91,200,214,0.65);background:rgba(91,200,214,0.055);}
 #aci-logs .aci-pad p{max-width:76ch;}
-@media (max-width:640px){.aci-tip{max-width:min(60vw,196px);font-size:11px;padding:6px 9px;line-height:1.4;}.aci-hl{white-space:normal;}}
+@media (max-width:640px){.aci-tip{max-width:min(60vw,196px);font-size:11px;padding:6px 9px;line-height:1.4;}.aci-hl{white-space:normal;}.aci-feature-head{gap:10px;}.aci-thesis{padding:17px 18px;}.aci-feature-link{width:100%;justify-content:space-between;}}
 </style>
 </helmet>
 
@@ -275,7 +287,7 @@ html,body{margin:0;padding:0;background:#080b0a;}
       <div style="display:flex;align-items:center;flex-wrap:wrap;gap:4px 14px;justify-content:space-between;padding:11px 16px;border-bottom:1px solid rgba(120,160,145,0.12);font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:0.15em;color:#7fb8ad;">
         <span class="aci-hl">INCIDENT LOGS · ACI · <a href="https://en.wikipedia.org/wiki/List_of_Mayday_episodes" target="_blank" rel="noopener" style="color:#5f7d72;text-decoration:none;" style-hover="color:#5bc8d6;">AIR CRASH INVESTIGATION ↗</a></span><span style="color:#52655d;">$ cat post-mortem.md</span>
       </div>
-      <div style="display:flex;align-items:baseline;gap:9px;padding:9px 16px 10px;border-bottom:1px solid rgba(120,160,145,0.1);background:rgba(91,200,214,0.022);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.02em;line-height:1.55;color:#71867e;"><span style="color:#5bc8d6;flex:none;letter-spacing:0.12em;">METHOD</span><span>Primary intake from the Air Crash Investigation series and general reading. AI used to cross-check each case against the official accident report, correcting for documentary perspectives. Cards reviewed and analysed by me; conclusions drawn from the objective record, not the screen narrative.</span></div>
+      <div style="display:flex;align-items:baseline;gap:9px;padding:9px 16px 10px;border-bottom:1px solid rgba(120,160,145,0.1);background:rgba(91,200,214,0.022);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.02em;line-height:1.55;color:#71867e;"><span style="color:#5bc8d6;flex:none;letter-spacing:0.12em;">METHOD</span><span>Primary intake from the Air Crash Investigation series and general reading. AI used to cross-check each case against the official accident report, correcting for documentary perspectives. Cases reviewed and analysed by me; conclusions drawn from the objective record, not the screen narrative.</span></div>
 
       <!-- intro / thesis -->
       <div class="sec-pad aci-pad" style="padding:42px 44px;border-bottom:1px solid rgba(120,160,145,0.1);">
@@ -285,7 +297,7 @@ html,body{margin:0;padding:0;background:#080b0a;}
         <p style="margin:0 0 16px;font-size:16px;line-height:1.7;color:#b4c6bd;max-width:76ch;text-wrap:pretty;">I find myself reading them the way an engineer might read a production post-mortem: slowly, looking past the immediate failure and asking what had to be true in the wider system for that failure to become possible.</p>
         <p style="margin:0 0 16px;font-size:16px;line-height:1.7;color:#b4c6bd;max-width:76ch;text-wrap:pretty;">The pattern is rarely simple. A pilot, controller, mechanic, dispatcher, or maintainer may appear at the sharp end of the incident. But beneath that moment there is often a quieter set of conditions: an alarm that had become too noisy to trust, a sensor feeding bad information into automation, a deferred fix, a procedure that worked in theory but not under pressure, or a test environment that never really resembled the real world.</p>
         <p style="margin:0 0 16px;font-size:16px;line-height:1.7;color:#b4c6bd;max-width:76ch;text-wrap:pretty;">What interests me is not blame as an endpoint, but the recurring conditions — technical, organisational, and political — that make failure possible.</p>
-        <p style="margin:0 0 16px;font-size:16px;line-height:1.7;color:#b4c6bd;max-width:76ch;text-wrap:pretty;">Below are <span style="color:#cfe0d8;">32 cases</span>, cross-referenced against their official reports, and read through two lenses: the proximate explanation that made the event visible, and the deeper organisational, technical, and operational conditions that allowed it to unfold.</p>
+        <p style="margin:0 0 16px;font-size:16px;line-height:1.7;color:#b4c6bd;max-width:76ch;text-wrap:pretty;">Below are <span style="color:#cfe0d8;">33 cases</span> — one featured study and 32 compact ledger entries — cross-referenced against their official reports, and read through two lenses: the proximate explanation that made the event visible, and the deeper organisational, technical, and operational conditions that allowed it to unfold.</p>
         <p style="margin:0;font-size:16px;line-height:1.7;color:#b4c6bd;max-width:76ch;text-wrap:pretty;">The aim is not to draw easy analogies between aviation and software, but to ask a more useful question: what failure modes keep reappearing in <span style="color:#5bc8d6;">complex systems</span>, whether or not they have wings?</p>
 
         <!-- two-layer legend -->
@@ -453,12 +465,38 @@ html,body{margin:0;padding:0;background:#080b0a;}
         </div>
       </div>
 
+      <!-- featured case: Boeing 737 MAX -->
+      <article id="case-737-max" class="sec-pad aci-pad aci-feature" style="padding:40px 44px;border-bottom:1px solid rgba(120,160,145,0.1);">
+        <div class="aci-feature-head">
+          <div style="max-width:760px;">
+            <div class="aci-feature-kicker">FEATURED CASE · DESIGN / CONTROL / OVERSIGHT</div>
+            <h2 class="aci-feature-title">Boeing 737 MAX — when known anti-patterns coupled</h2>
+            <div class="aci-feature-meta">Lion Air 610 · 29 OCT 2018 · 189 dead<br>Ethiopian Airlines 302 · 10 MAR 2019 · 157 dead</div>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:5px;max-width:330px;">
+            <span class="aci-chip">automation authority</span><span class="aci-chip">corrupt input</span><span class="aci-chip">mixed signals</span><span class="aci-chip">no fail-safe</span><span class="aci-chip">blame gradient</span><span class="aci-cchip">commercial</span>
+          </div>
+        </div>
+
+        <div class="aci-feature-why">
+          <div class="aci-feature-kicker" style="margin-bottom:8px;">WHY THIS CASE IS FEATURED</div>
+          <p>Most incidents in this ledger expose one or two recurring failure modes. The MAX coupled nearly all of the most transferable ones in a single, recent system: commercial constraint became design constraint; hidden automation acted on one bad sensor; recovery risk moved to operators who did not know what had been delegated; and compliance fragments hid the whole.</p>
+        </div>
+
+        <blockquote class="aci-thesis">The MAX was not produced because modern engineers suddenly forgot how to build safe aircraft. It was produced because commercial constraints shaped the architecture, the architecture created new risk, and the safety case transferred that risk to operators who were neither informed nor equipped to carry it.</blockquote>
+
+        <div class="aci-feature-footer">
+          <p>Technology had advanced. The organisational blind spot had not. The full analysis follows the chain from market pressure to delegated control, hidden sensor dependency, assumed human mitigation, certification, incident response, and the layered redesign.</p>
+          <a class="aci-feature-link" href="./articles/boeing-737-max/">READ THE FULL RELIABILITY &amp; RISK ANALYSIS <span aria-hidden="true">→</span></a>
+        </div>
+      </article>
+
       <!-- ledger -->
       <div class="sec-pad aci-pad" style="padding:38px 44px;">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.14em;flex-wrap:wrap;gap:8px;">
-          <span style="color:#7fb8ad;">THE LEDGER · ~/incidents</span><span style="color:#52655d;">32 cases · most-transferable first</span>
+          <span style="color:#7fb8ad;">THE LEDGER · ~/incidents</span><span style="color:#52655d;">32 compact cases · featured MAX study above</span>
         </div>
-        <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin:-2px 0 18px;font-family:'JetBrains Mono',monospace;font-size:10px;color:#71867e;"><span style="color:#7fb8ad;letter-spacing:0.1em;">START HERE · 5 MOST TRANSFERABLE →</span><a href="#case-uberlingen" class="aci-jump">Überlingen</a><a href="#case-qantas72" class="aci-jump">Qantas 72</a><a href="#case-aeroperu" class="aci-jump">Aeroperú 603</a><a href="#case-alaska261" class="aci-jump">Alaska 261</a><a href="#case-swissair" class="aci-jump">Swissair 111</a></div>
+        <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin:-2px 0 18px;font-family:'JetBrains Mono',monospace;font-size:10px;color:#71867e;"><span style="color:#7fb8ad;letter-spacing:0.1em;">START HERE · FEATURE + 5 MOST TRANSFERABLE →</span><a href="./articles/boeing-737-max/" class="aci-jump" style="color:#5bc8d6;border-color:rgba(91,200,214,0.4);">737 MAX · featured ↗</a><a href="#case-uberlingen" class="aci-jump">Überlingen</a><a href="#case-qantas72" class="aci-jump">Qantas 72</a><a href="#case-aeroperu" class="aci-jump">Aeroperú 603</a><a href="#case-alaska261" class="aci-jump">Alaska 261</a><a href="#case-swissair" class="aci-jump">Swissair 111</a></div>
         <div class="aci-grid">
 
           <!-- ===== automation authority (critical) ===== -->
