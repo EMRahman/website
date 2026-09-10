@@ -66,10 +66,13 @@ html,body{margin:0;padding:0;background:#080b0a;}
   .rail{
     grid-column:1/-1;
     display:grid !important;
-    grid-template-columns:repeat(3,minmax(0,1fr)) minmax(280px,2fr);
+    grid-template-columns:minmax(0,1fr) minmax(280px,2fr);
+    grid-template-rows:repeat(3,auto);
     gap:13px !important;
   }
   .rail>div{min-width:0;}
+  .rail-stat{grid-column:1;}
+  .event-log{grid-column:2;grid-row:1 / span 3;}
 }
 /* ---- ACI incident-logs section ---- */
 .aci-threecol{display:grid;grid-template-columns:1fr 1fr 1fr;gap:13px;}
@@ -291,7 +294,7 @@ details[open]>summary .aci-chevron{transform:rotate(225deg);margin-bottom:-1px;b
       <div class="rail" style="flex:1 1 240px;min-width:220px;display:flex;flex-direction:column;gap:13px;">
 
         <!-- stat tile: known -->
-        <div onMouseEnter="{{ hlKnown }}" onMouseLeave="{{ hlClear }}" style="flex:none;border:1px solid rgba(120,160,145,0.14);background:rgba(16,22,20,0.5);border-radius:5px;overflow:hidden;cursor:default;">
+        <div class="rail-stat" onMouseEnter="{{ hlKnown }}" onMouseLeave="{{ hlClear }}" style="flex:none;border:1px solid rgba(120,160,145,0.14);background:rgba(16,22,20,0.5);border-radius:5px;overflow:hidden;cursor:default;">
           <div style="display:flex;align-items:center;justify-content:space-between;padding:7px 12px;border-bottom:1px solid rgba(120,160,145,0.1);font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:0.13em;color:#7fb8ad;">
             <span>KNOWN KNOWNS</span><span style="width:7px;height:7px;border-radius:50%;background:#46e2a0;box-shadow:0 0 7px #46e2a0;"></span>
           </div>
@@ -305,7 +308,7 @@ details[open]>summary .aci-chevron{transform:rotate(225deg);margin-bottom:-1px;b
         </div>
 
         <!-- stat tile: known unknown -->
-        <div onMouseEnter="{{ hlKU }}" onMouseLeave="{{ hlClear }}" style="flex:none;border:1px solid rgba(120,160,145,0.14);background:rgba(16,22,20,0.5);border-radius:5px;overflow:hidden;cursor:default;">
+        <div class="rail-stat" onMouseEnter="{{ hlKU }}" onMouseLeave="{{ hlClear }}" style="flex:none;border:1px solid rgba(120,160,145,0.14);background:rgba(16,22,20,0.5);border-radius:5px;overflow:hidden;cursor:default;">
           <div style="display:flex;align-items:center;justify-content:space-between;padding:7px 12px;border-bottom:1px solid rgba(120,160,145,0.1);font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:0.13em;color:#7fb8ad;">
             <span>KNOWN UNKNOWNS</span><span style="width:7px;height:7px;border-radius:50%;background:#f0b73f;box-shadow:0 0 7px #f0b73f;"></span>
           </div>
@@ -319,7 +322,7 @@ details[open]>summary .aci-chevron{transform:rotate(225deg);margin-bottom:-1px;b
         </div>
 
         <!-- stat tile: unknown unknown -->
-        <div onMouseEnter="{{ hlUnknown }}" onMouseLeave="{{ hlClear }}" style="flex:none;border:1px solid rgba(120,160,145,0.14);background:rgba(16,22,20,0.5);border-radius:5px;overflow:hidden;cursor:default;">
+        <div class="rail-stat" onMouseEnter="{{ hlUnknown }}" onMouseLeave="{{ hlClear }}" style="flex:none;border:1px solid rgba(120,160,145,0.14);background:rgba(16,22,20,0.5);border-radius:5px;overflow:hidden;cursor:default;">
           <div style="display:flex;align-items:center;justify-content:space-between;padding:7px 12px;border-bottom:1px solid rgba(120,160,145,0.1);font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:0.13em;color:#7fb8ad;">
             <span>UNKNOWN UNKNOWNS</span><span style="width:7px;height:7px;border-radius:50%;background:#ef6b6b;box-shadow:0 0 7px #ef6b6b;animation:pulsedot 1.6s ease-in-out infinite;"></span>
           </div>
@@ -333,7 +336,7 @@ details[open]>summary .aci-chevron{transform:rotate(225deg);margin-bottom:-1px;b
         </div>
 
         <!-- event log -->
-        <div style="flex:1;min-height:120px;display:flex;flex-direction:column;border:1px solid rgba(120,160,145,0.14);background:rgba(10,14,12,0.7);border-radius:5px;overflow:hidden;">
+        <div class="event-log" style="flex:1;min-height:120px;display:flex;flex-direction:column;border:1px solid rgba(120,160,145,0.14);background:rgba(10,14,12,0.7);border-radius:5px;overflow:hidden;">
           <div style="flex:none;display:flex;align-items:center;justify-content:space-between;padding:7px 12px;border-bottom:1px solid rgba(120,160,145,0.1);font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:0.13em;color:#7fb8ad;">
             <span>EVENT LOG · realtime</span><span style="color:#52655d;">tail -f</span>
           </div>
