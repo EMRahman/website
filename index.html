@@ -50,6 +50,27 @@ html,body{margin:0;padding:0;background:#080b0a;}
   .aci-pad{padding:30px 22px !important;}
   .aci-threecol{grid-template-columns:1fr !important;}
 }
+/* A tall desktop viewport should not turn the hero into three full-height columns.
+   Keep the directive and scopes together, then use the width below them for the
+   status tiles and event log. */
+@media (min-width:850px) and (orientation:portrait){
+  .hero-shell{min-height:auto !important;}
+  .hero-grid{
+    flex:none !important;
+    display:grid !important;
+    grid-template-columns:minmax(300px,.85fr) minmax(430px,1.25fr);
+    align-items:stretch !important;
+  }
+  .quote-panel,.scope-panel,.rail{min-width:0 !important;}
+  .scope-panel{min-height:620px !important;}
+  .rail{
+    grid-column:1/-1;
+    display:grid !important;
+    grid-template-columns:repeat(3,minmax(0,1fr)) minmax(280px,2fr);
+    gap:13px !important;
+  }
+  .rail>div{min-width:0;}
+}
 /* ---- ACI incident-logs section ---- */
 .aci-threecol{display:grid;grid-template-columns:1fr 1fr 1fr;gap:13px;}
 .aci-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(286px,100%),1fr));gap:13px;}
